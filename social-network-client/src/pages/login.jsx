@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import Joi from 'joi';
-import { RegisterSchema as schema } from '../validations/joiSchemas';
-
-export default class Register extends Component {
+import { Link } from 'react-router-dom';
+import { LoginSchema as schema } from '../validations/joiSchemas';
+export default class Login extends Component {
   state = {
     data: {
       username: '',
       email: '',
-      password: '',
-      password2: ''
+      password: ''
     },
     error: ''
   };
@@ -33,13 +32,13 @@ export default class Register extends Component {
       this.setState({ error: error.details[0].message });
       return;
     }
-    this.setState({ error: '' });
     const data = JSON.stringify({
       username: this.state.data.username,
       email: this.state.data.email,
       password: this.state.data.password
     });
     console.log(data);
+    this.setState({ error: '' });
     // fetch('http://localhost:52589/api/register');
     fetch('http://localhost:52589/api/register', {
       method: 'POST',
@@ -56,7 +55,7 @@ export default class Register extends Component {
   render() {
     return (
       <>
-        <h1 className="text-center">Register</h1>
+        <h1 className="text-center">Login</h1>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
@@ -92,21 +91,14 @@ export default class Register extends Component {
               onChange={this.handleChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="password2">Confirm password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password2"
-              placeholder="Confirm password"
-              value={this.state.password2}
-              onChange={this.handleChange}
-            />
-          </div>
           {this.state.error && <div className="alert alert-danger">{this.state.error}</div>}
+
           <button type="submit" className="btn btn-dark">
-            Register
+            Login
           </button>
+          <div className="float-right text-right">
+            <Link to="/reset-password">reset password</Link>
+          </div>
         </form>
       </>
     );
