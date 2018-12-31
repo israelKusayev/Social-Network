@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Joi from 'joi';
-import { RegisterSchema as schema } from '../validations/joiSchemas';
+import { ResetPasswordSchema as schema } from '../validations/joiSchemas';
 
-export default class Register extends Component {
+export default class ResetPassword extends Component {
   state = {
     data: {
       username: '',
@@ -14,14 +14,8 @@ export default class Register extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
-    // const errors = { ...this.state.errors };
-    // const errorMessage = this.validateProperty(input);
-    // if (errorMessage) errors[input.name] = errorMessage;
-    // else delete errors[input.name];
-
     const data = { ...this.state.data };
     data[input.id] = input.value;
-
     this.setState({ data });
   };
 
@@ -34,41 +28,12 @@ export default class Register extends Component {
       return;
     }
     this.setState({ error: '' });
-    const data = JSON.stringify({
-      username: this.state.data.username,
-      email: this.state.data.email,
-      password: this.state.data.password
-    });
-    console.log(data);
-    // fetch('http://localhost:52589/api/register');
-    fetch('http://localhost:52589/api/register', {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => console.log(res));
-  };
-
-  facebookLogin = (res) => {
-    console.log(res);
   };
   render() {
     return (
       <>
-        <h1 className="text-center">Register</h1>
+        <h1 className="text-center">Reset password</h1>
         <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              value={this.state.username}
-              onChange={this.handleChange}
-              className="form-control"
-              type="text"
-              id="username"
-              placeholder="username"
-            />
-          </div>
           <div className="form-group">
             <label htmlFor="email">Email address</label>
             <input
@@ -82,7 +47,7 @@ export default class Register extends Component {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">New password</label>
             <input
               type="password"
               className="form-control"
@@ -93,7 +58,7 @@ export default class Register extends Component {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password2">Confirm password</label>
+            <label htmlFor="password2">Confirm new password</label>
             <input
               type="password"
               className="form-control"
@@ -105,7 +70,7 @@ export default class Register extends Component {
           </div>
           {this.state.error && <div className="alert alert-danger">{this.state.error}</div>}
           <button type="submit" className="btn btn-dark">
-            Register
+            Reset
           </button>
         </form>
       </>
