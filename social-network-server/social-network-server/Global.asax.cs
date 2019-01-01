@@ -11,6 +11,8 @@ namespace social_network_server
     {
         protected void Application_Start()
         {
+            var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All;
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }
