@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import FacebookLogin from './facebookLoginBtn';
-
+import { FacebookLogin as onLogin } from '../services/authService';
 function Navbar() {
   return (
     <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -32,7 +32,7 @@ function Navbar() {
             </NavLink>
           </li>
           <li className="nav-item">
-            <FacebookLogin className="nav-link mt-3" />
+            <FacebookLogin onLogin={onLogin} className="nav-link mt-3" />
           </li>
         </ul>
       </div>

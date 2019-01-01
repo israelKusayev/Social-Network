@@ -4,10 +4,6 @@ export const LoginSchema = {
   username: Joi.string()
     .required()
     .label('Username'),
-  email: Joi.string()
-    .email()
-    .required()
-    .label('Email'),
   password: Joi.string()
     .min(8)
     .required()

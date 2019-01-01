@@ -8,7 +8,7 @@ export default function FacebookLoginBtn(props) {
       cssClass="loginBtn loginBtn--facebook"
       textButton="Login with facebook"
       appId="529273954223639"
-      callback={props.facebookLogin}
+      callback={props.onLogin}
       size="medium"
       fields="name,email,picture"
     />

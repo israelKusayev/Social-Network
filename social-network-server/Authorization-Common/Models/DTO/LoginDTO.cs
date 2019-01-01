@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace social_network_server.Models.DTO
+namespace Authorization_Common.Models.DTO
 {
-    public class RegisterDTO
+    public class LoginDTO
     {
         public string Username { get; set; }
-        public string Email { get; set; }
         public string Password { get; set; }
     }
 }

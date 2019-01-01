@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Joi from 'joi';
 import { RegisterSchema as schema } from '../validations/joiSchemas';
+import { Register as RegisterUser } from '../services/authService';
 
 export default class Register extends Component {
   state = {
@@ -28,31 +29,25 @@ export default class Register extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
+    //validate
     const { error } = Joi.validate({ ...this.state.data }, schema);
     if (error) {
       this.setState({ error: error.details[0].message });
       return;
     }
     this.setState({ error: '' });
+
+    //register
     const data = JSON.stringify({
       username: this.state.data.username,
       email: this.state.data.email,
       password: this.state.data.password
     });
-    console.log(data);
-    // fetch('http://localhost:52589/api/register');
-    fetch('http://localhost:52589/api/register', {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => console.log(res));
+    RegisterUser(data);
+
+    // todo if error else redirect
   };
 
-  facebookLogin = (res) => {
-    console.log(res);
-  };
   render() {
     return (
       <>

@@ -2,25 +2,19 @@ import React, { Component } from 'react';
 import Joi from 'joi';
 import { Link } from 'react-router-dom';
 import { LoginSchema as schema } from '../validations/joiSchemas';
+import { Login as LoginUser } from '../services/authService';
 export default class Login extends Component {
   state = {
     data: {
       username: '',
-      email: '',
       password: ''
     },
     error: ''
   };
 
   handleChange = ({ currentTarget: input }) => {
-    // const errors = { ...this.state.errors };
-    // const errorMessage = this.validateProperty(input);
-    // if (errorMessage) errors[input.name] = errorMessage;
-    // else delete errors[input.name];
-
     const data = { ...this.state.data };
     data[input.id] = input.value;
-
     this.setState({ data });
   };
 
@@ -32,26 +26,11 @@ export default class Login extends Component {
       this.setState({ error: error.details[0].message });
       return;
     }
-    const data = JSON.stringify({
-      username: this.state.data.username,
-      email: this.state.data.email,
-      password: this.state.data.password
-    });
-    console.log(data);
     this.setState({ error: '' });
-    // fetch('http://localhost:52589/api/register');
-    fetch('http://localhost:52589/api/register', {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => console.log(res));
+    const data = JSON.stringify({ ...this.state.data });
+    LoginUser(data);
   };
 
-  facebookLogin = (res) => {
-    console.log(res);
-  };
   render() {
     return (
       <>
@@ -66,18 +45,6 @@ export default class Login extends Component {
               type="text"
               id="username"
               placeholder="username"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              id="email"
-              aria-describedby="emailHelp"
-              placeholder="Enter email"
-              value={this.state.email}
-              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
