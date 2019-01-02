@@ -1,4 +1,4 @@
-﻿using Identity_Common.interfaces;
+﻿using Identity_Common.Interfaces.Repositories;
 using Identity_Common.models;
 using Idetity_dal;
 using Unity;

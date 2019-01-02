@@ -1,6 +1,6 @@
 ﻿using Identity_Common.models;
 
-namespace Identity_Common.interfaces
+namespace Identity_Common.Interfaces.Helppers
 {
     public interface IRquestsValidator
     {

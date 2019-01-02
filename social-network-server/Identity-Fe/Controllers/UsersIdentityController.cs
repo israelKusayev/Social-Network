@@ -1,12 +1,12 @@
 ﻿using Identity_Bl.Managers;
-using Identity_Common.interfaces;
+using Identity_Common.Interfaces.Helppers;
+using Identity_Common.Interfaces.Managers;
+using Identity_Common.Loggers;
 using Identity_Common.models;
 using Identity_Fe.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace Identity_Fe.Controllers
@@ -15,11 +15,15 @@ namespace Identity_Fe.Controllers
     {
         private IIdentiryManager _identityManager;
         private IRquestsValidator _rquestsValidator;
+        private LoggerManager _logger;
+
         public UsersIdentityController(IIdentiryManager identiryManager, 
             IRquestsValidator rquestsValidator)
         {
             _identityManager = identiryManager;
             _rquestsValidator = rquestsValidator;
+            string path = ConfigurationManager.AppSettings["IdentityLogsPath"];
+            _logger = new LoggerManager(new FileLogger(), path);
         }
 
         [HttpPost]
@@ -48,7 +52,9 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger here
+                string err = e.ToString();
+                _logger.Log(err);
+
                 return InternalServerError();
             }
         }
@@ -59,6 +65,7 @@ namespace Identity_Fe.Controllers
         {
             try
             {
+                throw new Exception("test");
                 var user = _identityManager.FindUser(id);
                 if (user!=null)
                 {
@@ -71,7 +78,8 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger here
+                string err = e.ToString();
+                _logger.Log(err);
                 return InternalServerError();
             }
         }
@@ -102,7 +110,8 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger here
+                string err = e.ToString();
+                _logger.Log(err);
                 return InternalServerError();
             }
         }

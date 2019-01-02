@@ -1,4 +1,5 @@
-﻿using Identity_Common.interfaces;
+﻿using Identity_Common.Interfaces.Managers;
+using Identity_Common.Interfaces.Repositories;
 using Identity_Common.models;
 
 namespace Identity_Bl.Managers
