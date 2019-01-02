@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "social-network-server", "social-network-server\social-network-server.csproj", "{0EE32C0C-D1B7-4E65-AE69-8EA78E558C03}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authorization-Service", "Authorization-Service", "{4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-Fe", "Authorization-Fe\Authorization-Fe.csproj", "{D1DD65E1-843A-4A25-9969-0F5D612EC7D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-Common", "Authorization-Common\Authorization-Common.csproj", "{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-Bl", "Authorization-Bl\Authorization-Bl.csproj", "{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-Dal", "Authorization-Dal\Authorization-Dal.csproj", "{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +19,31 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0EE32C0C-D1B7-4E65-AE69-8EA78E558C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EE32C0C-D1B7-4E65-AE69-8EA78E558C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EE32C0C-D1B7-4E65-AE69-8EA78E558C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EE32C0C-D1B7-4E65-AE69-8EA78E558C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1DD65E1-843A-4A25-9969-0F5D612EC7D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1DD65E1-843A-4A25-9969-0F5D612EC7D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1DD65E1-843A-4A25-9969-0F5D612EC7D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1DD65E1-843A-4A25-9969-0F5D612EC7D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D1DD65E1-843A-4A25-9969-0F5D612EC7D3} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
+		{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
+		{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
+		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F2EC892C-BD57-496B-9663-46DF5DD9B7CB}
