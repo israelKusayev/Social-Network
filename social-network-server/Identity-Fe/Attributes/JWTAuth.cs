@@ -1,4 +1,5 @@
-﻿using Identity_Bl;
+﻿using Identity_Bl.Managers;
+using Identity_Common.interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +11,17 @@ namespace Identity_Fe.Attributes
 {
     public class JWTAuth : AuthorizeAttribute
     {
-        private TokenManager _tokenManager;
-        public JWTAuth(TokenManager tokenManager)
-        {
-            _tokenManager = tokenManager;
-        }
-
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
-            bool isAuthorized = base.IsAuthorized(actionContext);
-            string token = actionContext.Request.Headers.GetValues("x-auth-token").First();
-            bool validToken = _tokenManager.IsValid(token);
-            return isAuthorized && validToken;
+            if (actionContext.Request.Headers.Contains("x-auth-token"))
+            {
+                string token = actionContext.Request.Headers.GetValues("x-auth-token").First();
+                return new TokenManager().IsValid(token);
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

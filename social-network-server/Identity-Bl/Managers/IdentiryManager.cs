@@ -1,13 +1,13 @@
 ﻿using Identity_Common.interfaces;
 using Identity_Common.models;
 
-namespace Identity_Bl
+namespace Identity_Bl.Managers
 {
     public class IdentiryManager : IIdentiryManager
     {
-        private IUsersIdentityRepository _usersIdentityRepository;
+        private IDynamoDbRepository<User> _usersIdentityRepository;
 
-        public IdentiryManager(IUsersIdentityRepository usersIdentityRepository)
+        public IdentiryManager(IDynamoDbRepository<User> usersIdentityRepository)
         {
             _usersIdentityRepository = usersIdentityRepository;
         }

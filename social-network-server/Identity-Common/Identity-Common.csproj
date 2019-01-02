@@ -48,7 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="interfaces\IIdentiryManager.cs" />
-    <Compile Include="interfaces\IUsersIdentityRepository.cs" />
+    <Compile Include="interfaces\IDynamoDbRepository.cs" />
+    <Compile Include="interfaces\IRquestsValidator.cs" />
+    <Compile Include="interfaces\ITokenManager.cs" />
     <Compile Include="models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -5,12 +5,12 @@ using Identity_Common.interfaces;
 
 namespace Idetity_dal
 {
-    class UsersIdentityRepository : IUsersIdentityRepository
+    public class DynamoDbRepository<T> : IDynamoDbRepository<T>
     {
 
         private DynamoDBContext _DbContext;
 
-        public UsersIdentityRepository()
+        public DynamoDbRepository()
         {
             var DynamoClient = new AmazonDynamoDBClient();
             _DbContext = new DynamoDBContext(DynamoClient, new DynamoDBContextConfig
@@ -21,39 +21,39 @@ namespace Idetity_dal
             });
         }
 
-        ~UsersIdentityRepository()
+        ~DynamoDbRepository()
         {
             _DbContext.Dispose();
         }
 
         
 
-        public bool Add(User user)
+        public bool Add(T record)
         {
-            User savedItem = _DbContext.Load(user);
+            T savedItem = _DbContext.Load(record);
             if (savedItem != null)
             {
                 return false;
             }
-            _DbContext.Save<User>(user);
+            _DbContext.Save<T>(record);
             return true;
         }
 
-        public bool Update(User user)
+        public bool Update(T record)
         {
-            User savedItem = _DbContext.Load(user);
+            T savedItem = _DbContext.Load(record);
 
             if (savedItem == null)
             {
                 return false;
             }            
-            _DbContext.Save(user);
+            _DbContext.Save(record);
             return true;
         }
 
-        public User Get(string userId)
+        public T Get<K>(K recordId)
         {
-            return _DbContext.Load<User>(userId);
+            return _DbContext.Load<T>(recordId);
         }
     }
 }
