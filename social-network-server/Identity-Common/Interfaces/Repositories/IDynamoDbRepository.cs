@@ -1,6 +1,6 @@
 ﻿using Identity_Common.models;
 
-namespace Identity_Common.interfaces
+namespace Identity_Common.Interfaces.Repositories
 {
     public interface IDynamoDbRepository<T>
     {

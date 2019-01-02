@@ -1,6 +1,8 @@
 using Identity_Bl;
+using Identity_Bl.Helppers;
 using Identity_Bl.Managers;
-using Identity_Common.interfaces;
+using Identity_Common.Interfaces.Helppers;
+using Identity_Common.Interfaces.Managers;
 using System;
 
 using Unity;
@@ -48,6 +50,7 @@ namespace Identity_Fe
             UnityInjectorBl.RegisterTypes(container);            
             container.RegisterType<IIdentiryManager, IdentiryManager>();
             container.RegisterType<IRquestsValidator, RequestsValidator>();
+            
         }
     }
 }

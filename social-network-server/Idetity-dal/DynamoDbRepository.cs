@@ -1,7 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Identity_Common.models;
-using Identity_Common.interfaces;
+using Identity_Common.Interfaces.Repositories;
 
 namespace Idetity_dal
 {

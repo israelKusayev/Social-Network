@@ -1,4 +1,4 @@
-﻿namespace Identity_Common.interfaces
+﻿namespace Identity_Common.Interfaces.Managers
 {
     public interface ITokenManager
     {

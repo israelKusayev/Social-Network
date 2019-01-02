@@ -1,9 +1,9 @@
-﻿using Identity_Common.interfaces;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Jose;
 using System;
 using System.Configuration;
 using System.Text;
+using Identity_Common.Interfaces.Managers;
 
 namespace Identity_Bl.Managers
 {

@@ -1,4 +1,4 @@
-﻿using Identity_Common.interfaces;
+﻿using Identity_Common.Interfaces.Helppers;
 using Identity_Common.models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Identity_Bl
+namespace Identity_Bl.Helppers
 {
     public class RequestsValidator : IRquestsValidator
     {
