@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Joi from 'joi';
-import FacebookLoginBtn from '../components/facebookLoginBtn';
+import { RegisterSchema as schema } from '../validations/joiSchemas';
+import { Register as RegisterUser } from '../services/authService';
+
 export default class Register extends Component {
   state = {
     data: {
@@ -12,24 +14,6 @@ export default class Register extends Component {
     error: ''
   };
 
-  schema = {
-    username: Joi.string()
-      .required()
-      .label('Username'),
-    email: Joi.string()
-      .email()
-      .required()
-      .label('Email'),
-    password: Joi.string()
-      .min(8)
-      .required()
-      .label('Password'),
-    password2: Joi.string()
-      .min(8)
-      .required()
-      .label('Confirm password')
-  };
-
   handleChange = ({ currentTarget: input }) => {
     // const errors = { ...this.state.errors };
     // const errorMessage = this.validateProperty(input);
@@ -37,24 +21,39 @@ export default class Register extends Component {
     // else delete errors[input.name];
 
     const data = { ...this.state.data };
-    data[input.name] = input.value;
+    data[input.id] = input.value;
 
     this.setState({ data });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { error } = Joi.validate({ ...this.state.data }, this.schema);
+    //validate
+    const { error } = Joi.validate({ ...this.state.data }, schema);
     if (error) {
       this.setState({ error: error.details[0].message });
       return;
     }
+    this.setState({ error: '' });
+
+    //register
+    const data = JSON.stringify({
+      username: this.state.data.username,
+      email: this.state.data.email,
+      password: this.state.data.password
+    });
+
+    try {
+      const e = await RegisterUser(data);
+      this.props.history.push('/');
+    } catch (error) {
+      this.setState({ error: 'faild to register' });
+    }
+
+    // todo if error else redirect
   };
 
-  facebookLogin = (res) => {
-    console.log(res);
-  };
   render() {
     return (
       <>
@@ -63,7 +62,6 @@ export default class Register extends Component {
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
-              name="username"
               value={this.state.username}
               onChange={this.handleChange}
               className="form-control"
@@ -75,7 +73,6 @@ export default class Register extends Component {
           <div className="form-group">
             <label htmlFor="email">Email address</label>
             <input
-              name="email"
               type="email"
               className="form-control"
               id="email"
@@ -88,7 +85,6 @@ export default class Register extends Component {
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
-              name="password"
               type="password"
               className="form-control"
               id="password"
@@ -98,23 +94,21 @@ export default class Register extends Component {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="Confirm password">Confirm password</label>
+            <label htmlFor="password2">Confirm password</label>
             <input
-              name="password2"
               type="password"
               className="form-control"
-              id="Confirm password"
+              id="password2"
               placeholder="Confirm password"
               value={this.state.password2}
               onChange={this.handleChange}
             />
           </div>
           {this.state.error && <div className="alert alert-danger">{this.state.error}</div>}
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-dark">
             Register
           </button>
         </form>
-        <FacebookLoginBtn facebookLogin={this.facebookLogin} />
       </>
     );
   }

@@ -14,7 +14,7 @@ namespace social_network_server.Controllers
     {
         [Route("api/register")]
         [HttpPost]
-        public IHttpActionResult Register([FromBody] object s)
+        public IHttpActionResult Register([FromBody] RegisterDTO s)
         {
             return Ok();
         }
