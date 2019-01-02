@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Joi from 'joi';
 import { Link } from 'react-router-dom';
 import { LoginSchema as schema } from '../validations/joiSchemas';
-import { Login as LoginUser } from '../services/authService';
+import { login } from '../services/authService';
 
 export default class Login extends Component {
   state = {
@@ -29,7 +29,7 @@ export default class Login extends Component {
     }
     this.setState({ error: '' });
     const data = JSON.stringify({ ...this.state.data });
-    LoginUser(data);
+    login(data);
   };
 
   render() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import FacebookLogin from '../facebookLoginBtn';
-import { FacebookLogin as onLogin } from '../../services/authService';
+import { facebookLogin as onLogin } from '../../services/authService';
 
 function LoginRegisterNav() {
   return (

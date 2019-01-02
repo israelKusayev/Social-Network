@@ -50,6 +50,7 @@
     <Compile Include="Models\DTO\FacebookLoginDTO.cs" />
     <Compile Include="Models\DTO\LoginDTO.cs" />
     <Compile Include="Models\DTO\RegisterDTO.cs" />
+    <Compile Include="Models\DTO\ResetPasswordDTO.cs" />
     <Compile Include="Models\TokenHistory.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserAuth.cs" />

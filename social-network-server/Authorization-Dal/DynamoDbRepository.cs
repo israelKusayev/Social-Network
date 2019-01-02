@@ -49,7 +49,7 @@ namespace Authorization_Dal
             return _DbContext.Load(item);
         }
 
-        public T Get(string id)
+        public T Get<K>(K id)
         {
             return _DbContext.Load<T>(id);
         }

@@ -1,4 +1,4 @@
-const urlEndPoint = process.env.REACT_APP_API_URl;
+const urlEndPoint = process.env.REACT_APP_AUTH_URL;
 
 export function Get(url) {
   return fetch(urlEndPoint + url);

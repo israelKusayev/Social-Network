@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Joi from 'joi';
 import { RegisterSchema as schema } from '../validations/joiSchemas';
-import { Register as RegisterUser } from '../services/authService';
+import { register } from '../services/authService';
 
 export default class Register extends Component {
   state = {
@@ -45,8 +45,8 @@ export default class Register extends Component {
     });
 
     try {
-      const e = await RegisterUser(data);
-      this.props.history.push('/');
+      register(data);
+      //this.props.history.push('/');
     } catch (error) {
       this.setState({ error: 'faild to register' });
     }

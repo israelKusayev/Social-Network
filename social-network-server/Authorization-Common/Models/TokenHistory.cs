@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Authorization_Common.Models
 {
-    [DynamoDBTable("Auth")]
+    [DynamoDBTable("Tokens")]
     public class TokenHistory
     {
         [DynamoDBHashKey]

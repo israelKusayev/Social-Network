@@ -1,31 +1,37 @@
-import { Post } from './httpService';
+import { Post, Put } from './httpService';
 
 const tokenKey = 'token';
 
-export function Register(data) {
-  return new Promise(function(resolve, reject) {
-    Post('api/register', data)
-      .then((res) => {
-        const jwt = res.headers.get('x-auth-token');
-        setJwt(jwt);
-        debugger;
-        resolve(1);
-      })
-      .catch((err) => {
-        debugger;
-        reject(err); // reject
-      });
-  });
+export function register(data) {
+  // return new Promise(function(resolve, reject) {
+  //   Post('api/register', data)
+  //     .then((res) => {
+  //       const jwt = res.headers.get('x-auth-token');
+  //       setJwt(jwt);
+  //       debugger;
+  //       resolve(1);
+  //     })
+  //     .catch((err) => {
+  //       debugger;
+  //       reject(err); // reject
+  //     });
+
+  Post('api/register', data)
+    .then((res) => {
+      const jwt = res.headers.get('x-auth-token');
+      setJwt(jwt);
+    })
+    .catch((err) => {});
 }
 
-export function Login(data) {
+export function login(data) {
   Post('api/login', data).then((res) => {
     const jwt = res.headers.get('x-auth-token');
     setJwt(jwt);
   });
 }
 
-export function FacebookLogin(facebookToken) {
+export function facebookLogin(facebookToken) {
   console.log(facebookToken);
   const data = JSON.stringify({
     FacebookId: facebookToken.id,
@@ -34,10 +40,15 @@ export function FacebookLogin(facebookToken) {
   });
   console.log(data);
 
-  Post('api/LoginFacebook', data).then((res) => {
+  Post('api/loginFacebook', data).then((res) => {
     const jwt = res.headers.get('x-auth-token');
     setJwt(jwt);
   });
+}
+
+export function resetPassword(data) {
+  console.log(data);
+  Put('api/resetPassword', data).then((res) => {});
 }
 
 export function getJwt() {

@@ -37,10 +37,9 @@ export const RegisterSchema = {
 };
 
 export const ResetPasswordSchema = {
-  email: Joi.string()
-    .email()
+  username: Joi.string()
     .required()
-    .label('Email'),
+    .label('Username'),
   password: Joi.string()
     .min(8)
     .required()

@@ -31,7 +31,7 @@ namespace Authorization_Bl.Managers
         public UserAuth Login(LoginDTO model)
         {
             var user = _authRepository.Get(model.Username);
-            if (user == null && user.Password != model.Password)
+            if (user == null || user.Password != model.Password)
             {
                 return null;
             }
@@ -61,6 +61,7 @@ namespace Authorization_Bl.Managers
         public User AddUserToDb(string userId, string email, string token)
         {
             string url = ConfigurationManager.AppSettings["IdentityServiceUrl"];
+            url += "UsersIdentity";
             User user = new User() { UserId = userId, Email = email };
             using (var http = new HttpClient())
             {
@@ -70,5 +71,13 @@ namespace Authorization_Bl.Managers
             }
         }
 
+        public bool ResetPassword(ResetPasswordDTO model)
+        {
+            var user = _authRepository.Get(model.Username);
+            if (user == null) return false;
+            user.Password = model.NewPassword;
+            _authRepository.Update(user);
+            return true;
+        }
     }
 }
