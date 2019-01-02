@@ -3,9 +3,18 @@ import { Post } from './httpService';
 const tokenKey = 'token';
 
 export function Register(data) {
-  Post('api/register', data).then((res) => {
-    const jwt = res.headers.get('x-auth-token');
-    setJwt(jwt);
+  return new Promise(function(resolve, reject) {
+    Post('api/register', data)
+      .then((res) => {
+        const jwt = res.headers.get('x-auth-token');
+        setJwt(jwt);
+        debugger;
+        resolve(1);
+      })
+      .catch((err) => {
+        debugger;
+        reject(err); // reject
+      });
   });
 }
 

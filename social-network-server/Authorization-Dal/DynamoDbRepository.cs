@@ -26,32 +26,32 @@ namespace Authorization_Dal
 
 
 
-        public T Add(T user)
+        public T Add(T item)
         {
-            T savedItem = _DbContext.Load(user);
+            T savedItem = _DbContext.Load(item);
             if (savedItem != null)
             {
                 return default(T);
             }
-            _DbContext.Save<T>(user);
-            return _DbContext.Load(user);
+            _DbContext.Save<T>(item);
+            return _DbContext.Load(item);
         }
 
-        public T Update(T user)
+        public T Update(T item)
         {
-            T savedItem = _DbContext.Load(user);
+            T savedItem = _DbContext.Load(item);
 
             if (savedItem == null)
             {
                 return default(T);
             }
-            _DbContext.Save(user);
-            return _DbContext.Load(user);
+            _DbContext.Save(item);
+            return _DbContext.Load(item);
         }
 
-        public T Get(string userId)
+        public T Get(string id)
         {
-            return _DbContext.Load<T>(userId);
+            return _DbContext.Load<T>(id);
         }
     }
 }

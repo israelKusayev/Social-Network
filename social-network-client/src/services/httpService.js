@@ -1,11 +1,11 @@
-const _url = 'http://localhost:62262/';
+const urlEndPoint = process.env.REACT_APP_API_URl;
 
 export function Get(url) {
-  return fetch(_url + url);
+  return fetch(urlEndPoint + url);
 }
 
 export function Post(url, data) {
-  return fetch(_url + url, {
+  return fetch(urlEndPoint + url, {
     method: 'POST',
     body: data,
     headers: {
@@ -15,7 +15,7 @@ export function Post(url, data) {
 }
 
 export function Put(url, data) {
-  return fetch(_url + url, {
+  return fetch(urlEndPoint + url, {
     method: 'PUT',
     body: data,
     headers: {
