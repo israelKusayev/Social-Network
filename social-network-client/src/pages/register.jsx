@@ -26,7 +26,7 @@ export default class Register extends Component {
     this.setState({ data });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
     //validate
@@ -43,7 +43,13 @@ export default class Register extends Component {
       email: this.state.data.email,
       password: this.state.data.password
     });
-    RegisterUser(data);
+
+    try {
+      const e = await RegisterUser(data);
+      this.props.history.push('/');
+    } catch (error) {
+      this.setState({ error: 'faild to register' });
+    }
 
     // todo if error else redirect
   };
