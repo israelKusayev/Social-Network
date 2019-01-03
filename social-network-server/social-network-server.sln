@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-Bl", "Authori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-Dal", "Authorization-Dal\Authorization-Dal.csproj", "{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization-BlTests", "Authorization-BlTests\Authorization-BlTests.csproj", "{73DFB53B-0BEA-4081-9D6A-7831B529674A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73DFB53B-0BEA-4081-9D6A-7831B529674A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73DFB53B-0BEA-4081-9D6A-7831B529674A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73DFB53B-0BEA-4081-9D6A-7831B529674A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73DFB53B-0BEA-4081-9D6A-7831B529674A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{0BFB187A-A3F2-4BF4-B002-71A5C43E3C48} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
 		{BF35C9E5-7BD6-4524-9FBA-E9C8597DCDEE} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
 		{F78B8F0F-EAF7-4FF9-9F64-51BE7E5D62F3} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
+		{73DFB53B-0BEA-4081-9D6A-7831B529674A} = {4627FD90-4EE0-4791-B2DD-D06F13F3E4AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F2EC892C-BD57-496B-9663-46DF5DD9B7CB}
