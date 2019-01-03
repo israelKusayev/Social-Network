@@ -1,12 +1,12 @@
-import { Post, Put } from './httpService';
-import jwtDecode from 'jwt-decode';
+import { Post, Put, Get } from './httpService';
+import { setJwt, getJwt, deleteJwt } from './jwtService';
 const authUrl = process.env.REACT_APP_AUTH_URL;
-const tokenKey = 'token';
-
 export async function register(data) {
   const res = await Post(authUrl + 'register', data);
 
-  if (res.status !== 200) throw new Error();
+  if (res.status !== 200) {
+    return await res.json();
+  }
 
   const jwt = res.headers.get('x-auth-token');
   if (jwt) {
@@ -17,22 +17,20 @@ export async function register(data) {
 export async function login(data) {
   const res = await Post(authUrl + 'login', data);
 
-  if (res.status !== 200) throw new Error();
+  if (res.status !== 200) {
+    return await res.json();
+  }
 
   const jwt = res.headers.get('x-auth-token');
   setJwt(jwt);
 }
 
 export async function facebookLogin(facebookToken) {
-  const data = JSON.stringify({
-    FacebookId: facebookToken.id,
-    Username: facebookToken.name,
-    Email: facebookToken.email
-  });
+  const res = await Post(authUrl + 'loginFacebook', JSON.stringify(facebookToken.accessToken));
 
-  const res = await Post(authUrl + 'loginFacebook', data);
-
-  if (res.status !== 200) throw new Error();
+  if (res.status !== 200) {
+    return await res.json();
+  }
 
   const jwt = res.headers.get('x-auth-token');
   setJwt(jwt);
@@ -41,26 +39,18 @@ export async function facebookLogin(facebookToken) {
 export async function resetPassword(data) {
   const res = await Put(authUrl + 'resetPassword', data);
 
-  if (res.status !== 200) throw new Error();
+  if (res.status !== 200) {
+    return await res.json();
+  }
 }
 
-export function getJwt() {
-  return localStorage.getItem(tokenKey);
-}
-
-function setJwt(jwt) {
-  localStorage.setItem(tokenKey, jwt);
-}
-
-export function logout() {
-  localStorage.removeItem(tokenKey);
-}
-
-export function getUserId() {
-  const payload = jwtDecode(getJwt());
-  return payload.sub;
-}
-export function getUsername() {
-  const payload = jwtDecode(getJwt());
-  return payload.username;
+export async function refreshToken() {
+  const res = await Get(authUrl + 'refreshToken', getJwt());
+  if (res.status !== 200) {
+    deleteJwt();
+    window.location.reload();
+  } else {
+    const jwt = res.headers.get('x-auth-token');
+    setJwt(jwt);
+  }
 }

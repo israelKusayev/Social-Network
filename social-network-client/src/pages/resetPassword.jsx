@@ -20,7 +20,7 @@ export default class ResetPassword extends Component {
     this.setState({ data });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
     // validate
@@ -33,13 +33,8 @@ export default class ResetPassword extends Component {
 
     //reset password
     const data = JSON.stringify({ username: this.state.data.username, newPassword: this.state.data.password });
-    resetPassword(data)
-      .then(() => {
-        this.setState({ success: 'Your password has been successfully changed', error: '' });
-      })
-      .catch(() => {
-        this.setState({ error: 'Username does not exist', success: '' });
-      });
+    const err = await resetPassword(data);
+    if (err) this.setState({ error: err.Message });
   };
   render() {
     const { data, error, success } = this.state;

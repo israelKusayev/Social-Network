@@ -6,12 +6,8 @@ import { facebookLogin } from '../../services/authService';
 
 class LoginRegisterNav extends Component {
   onLogin = (res) => {
-    console.log('b');
-
     facebookLogin(res)
       .then(() => {
-        console.log('a');
-
         this.props.history.push('/');
       })
       .catch(() => {});

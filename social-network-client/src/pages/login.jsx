@@ -19,7 +19,7 @@ export default class Login extends Component {
     this.setState({ data });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
     const { error } = Joi.validate({ ...this.state.data }, schema);
@@ -30,13 +30,9 @@ export default class Login extends Component {
 
     const data = JSON.stringify({ ...this.state.data });
 
-    login(data)
-      .then(() => {
-        this.props.history.push('/');
-      })
-      .catch(() => {
-        this.setState({ error: 'Username does not exist' });
-      });
+    const err = await login(data);
+    if (err) this.setState({ error: err.Message });
+    else this.props.history.push('/');
   };
 
   render() {

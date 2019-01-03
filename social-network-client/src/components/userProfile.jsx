@@ -51,13 +51,13 @@ export default function UserProfile({ updateProfile, onChange, user }) {
                       </div>
                     </div>
                     <div className="form-group row">
-                      <label htmlFor="lastname" className="col-4 col-form-label">
+                      <label htmlFor="lastName" className="col-4 col-form-label">
                         Last Name
                       </label>
                       <div className="col-8">
                         <input
-                          id="lastname"
-                          name="lastname"
+                          id="lastName"
+                          name="lastName"
                           placeholder="Last Name"
                           className="form-control here"
                           type="text"
@@ -110,6 +110,8 @@ export default function UserProfile({ updateProfile, onChange, user }) {
                           placeholder="Age"
                           className="form-control here"
                           type="number"
+                          min={0}
+                          max={120}
                           value={user.age}
                           onChange={onChange}
                         />

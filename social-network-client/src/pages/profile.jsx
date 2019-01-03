@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import User from '../models/user';
 import { Get, Put } from '../services/httpService';
-import { getJwt, getUserId, getUsername } from '../services/authService';
+import { getJwt, getUserId, getUsername } from '../services/jwtService';
 import { convertJsonToUser } from '../converters/userConvertor';
 import UserProfile from '../components/userProfile';
+import RouteProtector from '../HOC/routeProtector';
 
-export default class Profile extends Component {
+class Profile extends Component {
   state = {
     user: new User()
   };
@@ -47,3 +48,5 @@ export default class Profile extends Component {
     return <UserProfile onChange={this.handleChange} updateProfile={this.handleSubmit} user={user} />;
   }
 }
+
+export default RouteProtector(Profile);

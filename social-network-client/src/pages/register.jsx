@@ -20,7 +20,7 @@ export default class Register extends Component {
     this.setState({ data });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
     //validate
@@ -36,13 +36,9 @@ export default class Register extends Component {
       email: this.state.data.email,
       password: this.state.data.password
     });
-    register(data)
-      .then(() => {
-        this.props.history.push('/');
-      })
-      .catch(() => {
-        this.setState({ error: 'Username already exists in the database' });
-      });
+    const err = await register(data);
+    if (err) this.setState({ error: err.Message });
+    else this.props.history.push('/');
   };
 
   render() {

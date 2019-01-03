@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { getJwt } from '../services/authService';
+import { getJwt } from '../services/jwtService';
 
 const RouteProtector = (WrappedComponent) =>
   class WithLoading extends React.Component {
