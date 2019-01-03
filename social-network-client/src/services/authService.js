@@ -1,5 +1,5 @@
 import { Post, Put } from './httpService';
-
+import jwtDecode from 'jwt-decode';
 const authUrl = process.env.REACT_APP_AUTH_URL;
 const tokenKey = 'token';
 
@@ -54,4 +54,13 @@ function setJwt(jwt) {
 
 export function logout() {
   localStorage.removeItem(tokenKey);
+}
+
+export function getUserId() {
+  const payload = jwtDecode(getJwt());
+  return payload.sub;
+}
+export function getUsername() {
+  const payload = jwtDecode(getJwt());
+  return payload.username;
 }
