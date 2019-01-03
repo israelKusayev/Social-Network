@@ -11,6 +11,8 @@ import Navbar from './components/navbar/navbar';
 import NotFound from './components/notFound';
 import Profile from './pages/profile';
 import Notifications from './pages/notifications';
+import CreatePost from './pages/createPost';
+import Followers from './components/profile/followers';
 
 class App extends Component {
   render() {
@@ -22,9 +24,13 @@ class App extends Component {
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/reset-password" component={ResetPassword} />
+
             <Route path="/feed" component={Feed} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/create-post" component={CreatePost} />
             <Route path="/notifications" component={Notifications} />
+            <Route path="/profile/followers" component={Followers} />
+            <Route path="/profile" component={Profile} />
+
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact={true} component={Feed} />
             <Redirect to="/not-found" />

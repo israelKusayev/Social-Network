@@ -1,0 +1,30 @@
+.profile {
+  background-color: #ff0087;
+  color: white;
+  display: inline-block;
+  font-size: 1em;
+  width: 2.5em;
+  height: 2.5em;
+  line-height: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 1em;
+}
+.list-group-item-dark {
+  background-color: #343a40;
+  color: #ff0087;
+  font-weight: 600;
+}
+.list-group-item-dark:hover {
+  color: #ff0087;
+  cursor: pointer;
+}
+
+.list-group-border {
+  border-radius: 2%;
+}
+.selected {
+  background-color: black;
+}

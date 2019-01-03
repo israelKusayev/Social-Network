@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { deleteJwt } from '../../services/jwtService';
 
 function MainNav() {
   return (
@@ -11,18 +10,18 @@ function MainNav() {
         </NavLink>
       </li>
       <li className="nav-item ">
+        <NavLink className="nav-link" to="/create-post">
+          Create post
+        </NavLink>
+      </li>
+      <li className="nav-item ">
         <NavLink className="nav-link" to="/notifications">
           Notifications
         </NavLink>
       </li>
       <li className="nav-item">
-        <NavLink className="nav-link" to="/profile">
+        <NavLink className="nav-link " to="/profile">
           Profile
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" onClick={deleteJwt} to="/login">
-          Logout
         </NavLink>
       </li>
     </ul>

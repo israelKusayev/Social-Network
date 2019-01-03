@@ -31,8 +31,10 @@ export default class Login extends Component {
     const data = JSON.stringify({ ...this.state.data });
 
     const err = await login(data);
-    if (err) this.setState({ error: err.Message });
-    else this.props.history.push('/');
+    if (err) {
+      console.log(err);
+      this.setState({ error: err.Message });
+    } else this.props.history.push('/');
   };
 
   render() {

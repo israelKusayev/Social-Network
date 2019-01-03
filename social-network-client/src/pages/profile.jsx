@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import User from '../models/user';
+
 import { Get, Put } from '../services/httpService';
 import { getJwt, getUserId, getUsername } from '../services/jwtService';
 import { convertJsonToUser } from '../converters/userConvertor';
 import UserProfile from '../components/userProfile';
 import RouteProtector from '../HOC/routeProtector';
+import { refreshToken } from '../services/authService';
+import ListGroup from '../components/listGroup';
+import Followers from '../components/profile/followers';
+import Following from '../components/profile/following';
+import BlockedUsers from '../components/profile/blockedUsers';
 
 class Profile extends Component {
   state = {
-    user: new User()
+    user: new User(),
+    selected: 'Profile'
   };
 
   identityUrl = process.env.REACT_APP_IDENTITY_URL;
@@ -18,6 +25,7 @@ class Profile extends Component {
   };
 
   getUser = async () => {
+    // refreshToken();
     const res = await Get(`${this.identityUrl}UsersIdentity/${getUserId()}`, getJwt());
     var data = await res.json();
     let user = convertJsonToUser(data);
@@ -26,7 +34,6 @@ class Profile extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
-    debugger;
     const user = { ...this.state.user };
     user[input.id] = input.value;
     this.setState({ user });
@@ -35,6 +42,7 @@ class Profile extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
+    refreshToken();
     const user = JSON.stringify(this.state.user);
     const res = await Put(`${this.identityUrl}UsersIdentity`, user, getJwt());
 
@@ -43,9 +51,34 @@ class Profile extends Component {
     }
   };
 
+  handleSelect = ({ name }) => {
+    this.setState({ selected: name });
+  };
+
   render() {
     const { user } = this.state;
-    return <UserProfile onChange={this.handleChange} updateProfile={this.handleSubmit} user={user} />;
+
+    const items = [
+      {
+        id: '1',
+        name: 'Profile',
+        payload: <UserProfile onChange={this.handleChange} updateProfile={this.handleSubmit} user={user} />
+      },
+      { id: '2', name: 'Followers', payload: <Followers /> },
+      { id: '3', name: 'Following', payload: <Following /> },
+      { id: '4', name: 'BlockedUsers', payload: <BlockedUsers /> },
+      { id: '5', name: 'Logout' }
+    ];
+    return (
+      <div className="container mt-1">
+        <div className="row">
+          <div className="col-md-3 ">
+            <ListGroup items={items} selectedItem={this.state.selected} onItemSelect={this.handleSelect} />
+          </div>
+          <div className="col-md-9">{items.find((i) => i.name === this.state.selected).payload}</div>
+        </div>
+      </div>
+    );
   }
 }
 
