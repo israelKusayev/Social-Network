@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.Net.Http;
+using Authorization_Common.Exceptions;
+using Authorization_Common.Interfaces;
 using Authorization_Common.Interfaces.Managers;
 using Authorization_Common.Interfaces.Repositories;
 using Authorization_Common.Models;
@@ -12,11 +14,18 @@ namespace Authorization_Bl.Managers
     {
         IDynamoDbRepository<UserAuth> _authRepository;
         IDynamoDbRepository<UserFacebook> _oAuthRepository;
+        IDynamoDbRepository<BlockedUser> _blockedRepository;
+        IToken _token;
+
         public AuthManager(IDynamoDbRepository<UserAuth> authRepository,
-            IDynamoDbRepository<UserFacebook> oAuthRepository)
+            IDynamoDbRepository<UserFacebook> oAuthRepository,
+            IDynamoDbRepository<BlockedUser> blockedRepository,
+            IToken token)
         {
             _authRepository = authRepository;
             _oAuthRepository = oAuthRepository;
+            _blockedRepository = blockedRepository;
+            _token = token;
         }
 
         public UserAuth Register(RegisterDTO model)
@@ -32,14 +41,29 @@ namespace Authorization_Bl.Managers
             {
                 return null;
             }
+            if(IsBlocked(user.UserId))
+            {
+                throw new UserBlockedException();
+            }
             return user;
+        }
+
+        private bool IsBlocked(string userId)
+        {
+            if (_blockedRepository.Get(userId) == null)
+                return false;
+            return true;
         }
 
         public UserFacebook LoginFacebook(FacebookLoginDTO model)
         {
             var existingUser = _oAuthRepository.Get(model.FacebookId);
-            if (existingUser != null)
+            if (existingUser != null )
             {
+                if (IsBlocked(existingUser.UserId))
+                {
+                    throw new UserBlockedException();
+                }
                 return existingUser;
             }
             else
@@ -75,6 +99,14 @@ namespace Authorization_Bl.Managers
             user.Password = model.NewPassword;
             _authRepository.Update(user);
             return true;
+        }
+
+        public string RefreshToken(string token)
+        {
+            var data = _token.ValidaleToken(token);
+            if (data == null)
+                return data;
+            return _token.GenerateKey(data.sub, data.username, data.IsAdmin);
         }
     }
 }

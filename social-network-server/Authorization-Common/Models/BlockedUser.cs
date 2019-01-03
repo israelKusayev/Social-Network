@@ -7,15 +7,10 @@ using System.Threading.Tasks;
 
 namespace Authorization_Common.Models
 {
-    [DynamoDBTable("OAuth")]
-    public class UserFacebook
+    [DynamoDBTable("BlockedUsers")]
+    public class BlockedUser
     {
         [DynamoDBHashKey]
-        public string FacebookId { get; set; }
-
-        public string Username { get; set; }
         public string UserId { get; set; }
-
-        public bool IsAdmin { get; set; }
     }
 }

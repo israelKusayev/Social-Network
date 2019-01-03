@@ -2,6 +2,7 @@
 using Authorization_Common.Interfaces.Repositories;
 using Authorization_Common.Models;
 using Jose;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,7 +17,7 @@ namespace Authorization_Bl
         {
             _tokenReposirory = tokenReposirory;
         }
-        public string GenerateKey(string userId, string username)
+        public string GenerateKey(string userId, string username,bool isAdmin = false)
         {
             int ttl = int.Parse(ConfigurationManager.AppSettings["TokenTTL"]);
             long exp = (long)(DateTime.UtcNow.AddMinutes(15) - new DateTime(1970, 1, 1)).TotalSeconds;
@@ -28,7 +29,8 @@ namespace Authorization_Bl
                     { "exp",exp  },
                     { "iat",iat  },
                     { "aud","social network"},
-                    { "username",username}
+                    { "username",username},
+                    { "IsAdmin", isAdmin }
                 };
 
             string key = ConfigurationManager.AppSettings["tokenSignKey"];
@@ -39,6 +41,22 @@ namespace Authorization_Bl
             _tokenReposirory.Add(history);
 
             return token;
+        }
+
+        public dynamic ValidaleToken(string token)
+        {
+            string key = ConfigurationManager.AppSettings["tokenSignKey"];
+            int refrshTime =int.Parse(ConfigurationManager.AppSettings["RefreshTime"])*60;
+            string paylod = JWT.Decode(token, Encoding.ASCII.GetBytes(key));
+            dynamic data = JObject.Parse(paylod);
+
+            long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            if (data.iat > now || data.exp < now+refrshTime ||
+                data.aud != "social network")
+            {
+                return data;
+            }
+            return null;
         }
     }
 }

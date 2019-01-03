@@ -2,6 +2,8 @@
 {
     public interface IToken
     {
-        string GenerateKey(string userId, string username);
+        string GenerateKey(string userId, string username,bool isAdmin = false);
+
+        dynamic ValidaleToken(string token);
     }
 }
