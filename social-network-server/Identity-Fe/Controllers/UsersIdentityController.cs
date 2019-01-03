@@ -4,6 +4,7 @@ using Identity_Common.Interfaces.Managers;
 using Identity_Common.Loggers;
 using Identity_Common.models;
 using Identity_Fe.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Configuration;
 using System.Linq;
@@ -65,11 +66,11 @@ namespace Identity_Fe.Controllers
         {
             try
             {
-                throw new Exception("test");
+                //throw new Exception("test");
                 var user = _identityManager.FindUser(id);
                 if (user!=null)
                 {
-                    return Ok(user);
+                    return Ok(JsonConvert.SerializeObject(user));
                 }
                 else
                 {

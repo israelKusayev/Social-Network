@@ -1,25 +1,26 @@
-const urlEndPoint = process.env.REACT_APP_API_URl;
+const myHeaders = new Headers({
+  'Content-Type': 'application/json'
+});
 
-export function Get(url) {
-  return fetch(urlEndPoint + url);
+export function Get(url, jwt = null) {
+  if (jwt) myHeaders.append('x-auth-token', jwt);
+  return fetch(url, { headers: myHeaders });
 }
 
-export function Post(url, data) {
-  return fetch(urlEndPoint + url, {
+export function Post(url, data, jwt = null) {
+  if (jwt) myHeaders.append('x-auth-token', jwt);
+  return fetch(url, {
     method: 'POST',
     body: data,
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: myHeaders
   });
 }
 
-export function Put(url, data) {
-  return fetch(urlEndPoint + url, {
+export function Put(url, data, jwt = null) {
+  if (jwt) myHeaders.append('x-auth-token', jwt);
+  return fetch(url, {
     method: 'PUT',
     body: data,
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: myHeaders
   });
 }

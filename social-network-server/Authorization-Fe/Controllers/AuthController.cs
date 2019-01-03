@@ -14,10 +14,12 @@ namespace Authorization_Fe.Controllers
 {
     public class AuthController : ApiController
     {
-        AuthManager authManager;
+        Token _token;
+        AuthManager _authManager;
         public AuthController()
         {
-            authManager = new AuthManager();
+            _authManager = new AuthManager();
+            _token = new Token();
         }
         [Route("api/register")]
         [HttpPost]
@@ -29,21 +31,22 @@ namespace Authorization_Fe.Controllers
                 return BadRequest(error);
             }
             UserAuth auth;
+            string token;
             try
             {
-                auth = authManager.Register(model);
+                auth = _authManager.Register(model);
                 if (auth == null)
                 {
                     return BadRequest("Username already exists in the db");
                 }
+                token = _token.GenerateKey(auth.UserId, model.Username);
+                _authManager.AddUserToDb(auth.UserId, model.Email, token);
             }
             catch (Exception)
             {
                 return InternalServerError(new Exception("Something went worng"));
             }
 
-            var token = Token.GenerateKey(auth.UserId, model.Username);
-            authManager.AddUserToDb(auth.UserId, model.Email, token);
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Headers.Add("x-auth-token", token);
             return ResponseMessage(response);
@@ -58,20 +61,20 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest(error);
             }
-            var auth = authManager.Login(model);
+            var auth = _authManager.Login(model);
             if (auth == null)
             {
                 return BadRequest("incorrect details");
             }
 
-            var token = Token.GenerateKey(auth.UserId, model.Username);
+            var token = _token.GenerateKey(auth.UserId, model.Username);
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Headers.Add("x-auth-token", token);
             return ResponseMessage(response);
         }
 
-        [Route("api/LoginFacebook")]
+        [Route("api/loginFacebook")]
         [HttpPost]
         public IHttpActionResult LoginFacebook([FromBody] FacebookLoginDTO model)
         {
@@ -80,14 +83,39 @@ namespace Authorization_Fe.Controllers
                 return BadRequest("Token is missing");
             }
 
-            UserFacebook facebookUser = authManager.LoginFacebook(model);
+            UserFacebook facebookUser = _authManager.LoginFacebook(model);
 
-            var token = Token.GenerateKey(facebookUser.UserId, model.Username);
-            authManager.AddUserToDb(facebookUser.UserId, model.Email, token);
+            var token = _token.GenerateKey(facebookUser.UserId, model.Username);
+            _authManager.AddUserToDb(facebookUser.UserId, model.Email, token);
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Headers.Add("x-auth-token", token);
             return ResponseMessage(response);
+        }
+
+        [HttpPut]
+        [Route("api/resetPassword")]
+        public IHttpActionResult ResetPassword(ResetPasswordDTO model)
+        {
+            string error = Validations.ValidateResetPassword(model);
+            if (error != null)
+            {
+                return BadRequest(error);
+            }
+
+            try
+            {
+                if (!_authManager.ResetPassword(model))
+                {
+                    return BadRequest("incorrect details");
+                }
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

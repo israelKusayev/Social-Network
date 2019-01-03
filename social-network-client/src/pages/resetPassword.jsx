@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import Joi from 'joi';
 import { ResetPasswordSchema as schema } from '../validations/joiSchemas';
+import { resetPassword } from '../services/authService';
 
 export default class ResetPassword extends Component {
   state = {
     data: {
       username: '',
-      email: '',
       password: '',
       password2: ''
     },
+    success: '',
     error: ''
   };
 
@@ -22,27 +23,38 @@ export default class ResetPassword extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
+    // validate
     const { error } = Joi.validate({ ...this.state.data }, schema);
     if (error) {
       this.setState({ error: error.details[0].message });
       return;
     }
     this.setState({ error: '' });
+
+    //reset password
+    const data = JSON.stringify({ username: this.state.data.username, newPassword: this.state.data.password });
+    resetPassword(data)
+      .then(() => {
+        this.setState({ success: 'Your password has been successfully changed', error: '' });
+      })
+      .catch(() => {
+        this.setState({ error: 'Username does not exist', success: '' });
+      });
   };
   render() {
+    const { data, error, success } = this.state;
     return (
       <>
         <h1 className="text-center">Reset password</h1>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="username">Username</label>
             <input
-              type="email"
+              type="text"
               className="form-control"
-              id="email"
-              aria-describedby="emailHelp"
-              placeholder="Enter email"
-              value={this.state.email}
+              id="username"
+              placeholder="Username"
+              value={data.username}
               onChange={this.handleChange}
             />
           </div>
@@ -53,7 +65,7 @@ export default class ResetPassword extends Component {
               className="form-control"
               id="password"
               placeholder="Password"
-              value={this.state.password}
+              value={data.password}
               onChange={this.handleChange}
             />
           </div>
@@ -64,11 +76,12 @@ export default class ResetPassword extends Component {
               className="form-control"
               id="password2"
               placeholder="Confirm password"
-              value={this.state.password2}
+              value={data.password2}
               onChange={this.handleChange}
             />
           </div>
-          {this.state.error && <div className="alert alert-danger">{this.state.error}</div>}
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
           <button type="submit" className="btn btn-dark">
             Reset
           </button>

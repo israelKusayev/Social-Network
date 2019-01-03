@@ -1,43 +1,47 @@
-import { Post } from './httpService';
+import { Post, Put } from './httpService';
 
+const authUrl = process.env.REACT_APP_AUTH_URL;
 const tokenKey = 'token';
 
-export function Register(data) {
-  return new Promise(function(resolve, reject) {
-    Post('api/register', data)
-      .then((res) => {
-        const jwt = res.headers.get('x-auth-token');
-        setJwt(jwt);
-        debugger;
-        resolve(1);
-      })
-      .catch((err) => {
-        debugger;
-        reject(err); // reject
-      });
-  });
-}
+export async function register(data) {
+  const res = await Post(authUrl + 'register', data);
 
-export function Login(data) {
-  Post('api/login', data).then((res) => {
-    const jwt = res.headers.get('x-auth-token');
+  if (res.status !== 200) throw new Error();
+
+  const jwt = res.headers.get('x-auth-token');
+  if (jwt) {
     setJwt(jwt);
-  });
+  }
 }
 
-export function FacebookLogin(facebookToken) {
-  console.log(facebookToken);
+export async function login(data) {
+  const res = await Post(authUrl + 'login', data);
+
+  if (res.status !== 200) throw new Error();
+
+  const jwt = res.headers.get('x-auth-token');
+  setJwt(jwt);
+}
+
+export async function facebookLogin(facebookToken) {
   const data = JSON.stringify({
     FacebookId: facebookToken.id,
     Username: facebookToken.name,
     Email: facebookToken.email
   });
-  console.log(data);
 
-  Post('api/LoginFacebook', data).then((res) => {
-    const jwt = res.headers.get('x-auth-token');
-    setJwt(jwt);
-  });
+  const res = await Post(authUrl + 'loginFacebook', data);
+
+  if (res.status !== 200) throw new Error();
+
+  const jwt = res.headers.get('x-auth-token');
+  setJwt(jwt);
+}
+
+export async function resetPassword(data) {
+  const res = await Put(authUrl + 'resetPassword', data);
+
+  if (res.status !== 200) throw new Error();
 }
 
 export function getJwt() {

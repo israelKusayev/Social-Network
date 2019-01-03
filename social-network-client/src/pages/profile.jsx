@@ -1,23 +1,34 @@
 import React, { Component } from 'react';
 import User from '../models/user';
+import { Put, Get } from '../services/httpService';
+import { getJwt } from '../services/authService';
 
 export default class Profile extends Component {
   state = {
     user: new User()
   };
+  identityUrl = process.env.REACT_APP_IDENTITY_URL;
 
   handleChange = ({ currentTarget: input }) => {
     const user = { ...this.state.user };
-    console.log(user);
-
     user[input.id] = input.value;
+    this.setState({ user });
+  };
+  componentDidMount = async () => {
+    const res = await Get(
+      `${this.identityUrl}UsersIdentity/c959d9a6-f976-4013-88cc-79ca62f6deb0
+    `,
+      getJwt()
+    );
+    var data = await res.json();
+    let user = new User();
+    user = { ...JSON.parse(data) };
+    console.log(user);
 
     this.setState({ user });
   };
 
-  handleSubmit = () => {
-    //todo put data to server.
-  };
+  handleSubmit = () => {};
 
   render() {
     const { user } = this.state;
