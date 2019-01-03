@@ -16,7 +16,7 @@ namespace Authorization_Bl.Helppers
         {
             string fbAppSecret = ConfigurationManager.AppSettings["FbAppSecret"];
             string prof = ComputeHmacSha256Hash(facebookToken, fbAppSecret);
-            string url = "graph.facebook.com/v2.5/me?fields=id,email,name&access_token=" + facebookToken
+            string url = "https://graph.facebook.com/v2.5/me?fields=id,email,name&access_token=" + facebookToken
                 + "&appsecret_proof=" + prof;
             using (var client = new HttpClient())
             {
@@ -68,10 +68,16 @@ namespace Authorization_Bl.Helppers
 
         private bool IsPropertyExist(dynamic settings, string name)
         {
-            if (settings is ExpandoObject)
-                return ((IDictionary<string, object>)settings).ContainsKey(name);
+            try
+            {
+                var x = settings[name];
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
 
-            return settings.GetType().GetProperty(name) != null;
         }
     }
 }

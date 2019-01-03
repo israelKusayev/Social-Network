@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { getJwt } from '../../services/authService';
+import { getJwt } from '../../services/jwtService';
 import LoginRegisterNav from './loginRegisterNav';
 import MainNav from './mainNav';
 

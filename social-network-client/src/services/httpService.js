@@ -23,7 +23,6 @@ export function Put(url, data, jwt = null) {
     'Content-Type': 'application/json'
   });
   if (jwt) myHeaders.append('x-auth-token', jwt);
-  console.log(jwt);
 
   return fetch(url, {
     method: 'PUT',
