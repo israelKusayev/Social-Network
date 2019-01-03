@@ -37,9 +37,9 @@ namespace Authorization_Bl
 
         public static string ValidateResetPassword(ResetPasswordDTO model)
         {
-            if (model.Username == null)
+            if (string.IsNullOrWhiteSpace(model.Username))
                 return "Identifier is required";
-            if (model.NewPassword == null)
+            if (string.IsNullOrWhiteSpace(model.NewPassword))
                 return "New password is required";
             if (model.NewPassword.Length < 8)
                 return "password must be at least 8 characters";
