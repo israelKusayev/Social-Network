@@ -27,9 +27,16 @@ export default class Login extends Component {
       this.setState({ error: error.details[0].message });
       return;
     }
-    this.setState({ error: '' });
+
     const data = JSON.stringify({ ...this.state.data });
-    login(data);
+
+    login(data)
+      .then(() => {
+        this.props.history.push('/');
+      })
+      .catch(() => {
+        this.setState({ error: 'Username does not exist' });
+      });
   };
 
   render() {

@@ -10,6 +10,7 @@ export default class ResetPassword extends Component {
       password: '',
       password2: ''
     },
+    success: '',
     error: ''
   };
 
@@ -32,10 +33,16 @@ export default class ResetPassword extends Component {
 
     //reset password
     const data = JSON.stringify({ username: this.state.data.username, newPassword: this.state.data.password });
-    resetPassword(data);
+    resetPassword(data)
+      .then(() => {
+        this.setState({ success: 'Your password has been successfully changed', error: '' });
+      })
+      .catch(() => {
+        this.setState({ error: 'Username does not exist', success: '' });
+      });
   };
   render() {
-    const { data, error } = this.state;
+    const { data, error, success } = this.state;
     return (
       <>
         <h1 className="text-center">Reset password</h1>
@@ -74,6 +81,7 @@ export default class ResetPassword extends Component {
             />
           </div>
           {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
           <button type="submit" className="btn btn-dark">
             Reset
           </button>

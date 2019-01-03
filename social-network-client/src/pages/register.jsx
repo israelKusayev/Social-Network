@@ -15,18 +15,12 @@ export default class Register extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
-    // const errors = { ...this.state.errors };
-    // const errorMessage = this.validateProperty(input);
-    // if (errorMessage) errors[input.name] = errorMessage;
-    // else delete errors[input.name];
-
     const data = { ...this.state.data };
     data[input.id] = input.value;
-
     this.setState({ data });
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     //validate
@@ -35,7 +29,6 @@ export default class Register extends Component {
       this.setState({ error: error.details[0].message });
       return;
     }
-    this.setState({ error: '' });
 
     //register
     const data = JSON.stringify({
@@ -43,18 +36,17 @@ export default class Register extends Component {
       email: this.state.data.email,
       password: this.state.data.password
     });
-
-    try {
-      register(data);
-      //this.props.history.push('/');
-    } catch (error) {
-      this.setState({ error: 'faild to register' });
-    }
-
-    // todo if error else redirect
+    register(data)
+      .then(() => {
+        this.props.history.push('/');
+      })
+      .catch(() => {
+        this.setState({ error: 'Username already exists in the database' });
+      });
   };
 
   render() {
+    const { data } = this.state;
     return (
       <>
         <h1 className="text-center">Register</h1>
@@ -62,7 +54,7 @@ export default class Register extends Component {
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
-              value={this.state.username}
+              value={data.username}
               onChange={this.handleChange}
               className="form-control"
               type="text"
@@ -78,7 +70,7 @@ export default class Register extends Component {
               id="email"
               aria-describedby="emailHelp"
               placeholder="Enter email"
-              value={this.state.email}
+              value={data.email}
               onChange={this.handleChange}
             />
           </div>
@@ -89,7 +81,7 @@ export default class Register extends Component {
               className="form-control"
               id="password"
               placeholder="Password"
-              value={this.state.password}
+              value={data.password}
               onChange={this.handleChange}
             />
           </div>
@@ -100,7 +92,7 @@ export default class Register extends Component {
               className="form-control"
               id="password2"
               placeholder="Confirm password"
-              value={this.state.password2}
+              value={data.password2}
               onChange={this.handleChange}
             />
           </div>

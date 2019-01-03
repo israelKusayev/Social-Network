@@ -31,6 +31,7 @@ namespace Authorization_Fe.Controllers
                 return BadRequest(error);
             }
             UserAuth auth;
+            string token;
             try
             {
                 auth = _authManager.Register(model);
@@ -38,14 +39,14 @@ namespace Authorization_Fe.Controllers
                 {
                     return BadRequest("Username already exists in the db");
                 }
+                token = _token.GenerateKey(auth.UserId, model.Username);
+                _authManager.AddUserToDb(auth.UserId, model.Email, token);
             }
             catch (Exception)
             {
                 return InternalServerError(new Exception("Something went worng"));
             }
 
-            var token = _token.GenerateKey(auth.UserId, model.Username);
-            _authManager.AddUserToDb(auth.UserId, model.Email, token);
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Headers.Add("x-auth-token", token);
             return ResponseMessage(response);
