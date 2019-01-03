@@ -8,6 +8,8 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Authorization_Common.Exceptions;
+using System.Linq;
 
 namespace Authorization_Fe.Controllers
 {
@@ -64,17 +66,28 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest(error);
             }
-            var auth = _authManager.Login(model);
-            if (auth == null)
+            try
             {
-                return BadRequest("incorrect details");
+                var auth = _authManager.Login(model);
+                if (auth == null)
+                {
+                    return BadRequest("incorrect details");
+                }
+
+                var token = _token.GenerateKey(auth.UserId, model.Username,auth.IsAdmin);
+
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("x-auth-token", token);
+                return ResponseMessage(response);
             }
-
-            var token = _token.GenerateKey(auth.UserId, model.Username);
-
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Headers.Add("x-auth-token", token);
-            return ResponseMessage(response);
+            catch (UserBlockedException ube)
+            {
+                return BadRequest(ube.Message);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
 
         [Route("api/loginFacebook")]
@@ -85,20 +98,31 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest("Token is missing");
             }
-
-            FacebookLoginDTO model = _facebookValidator.ValidateAndGet(facebookToken);
-            if (model == null)
+            try
             {
-                return BadRequest("invalid token");
+                FacebookLoginDTO model = _facebookValidator.ValidateAndGet(facebookToken);
+                if (model == null)
+                {
+                    return BadRequest("invalid token");
+                }
+                UserFacebook facebookUser = _authManager.LoginFacebook(model);
+
+                var token = _token.GenerateKey(facebookUser.UserId, model.Username,facebookUser.IsAdmin);
+                _authManager.AddUserToDb(facebookUser.UserId, model.Email, token);
+
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("x-auth-token", token);
+                return ResponseMessage(response);
             }
-            UserFacebook facebookUser = _authManager.LoginFacebook(model);
+            catch (UserBlockedException ube)
+            {
+                return BadRequest(ube.Message);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
 
-            var token = _token.GenerateKey(facebookUser.UserId, model.Username);
-            _authManager.AddUserToDb(facebookUser.UserId, model.Email, token);
-
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Headers.Add("x-auth-token", token);
-            return ResponseMessage(response);
         }
 
         [HttpPut]
@@ -124,6 +148,25 @@ namespace Authorization_Fe.Controllers
 
                 throw;
             }
+        }
+
+        [HttpGet]
+        [Route("api/resetPassword")]
+        public IHttpActionResult RefreshToken()
+        {
+            if (Request.Headers.Contains("x-auth-token"))
+            {
+                string token = Request.Headers.GetValues("x-auth-token").First();
+                token = _authManager.RefreshToken(token);
+                if(token!=null)
+                {
+                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response.Headers.Add("x-auth-token", token);
+                    return ResponseMessage(response);
+                }
+                return BadRequest("invalid token");
+            }
+            return BadRequest("No token was given");
         }
     }
 }

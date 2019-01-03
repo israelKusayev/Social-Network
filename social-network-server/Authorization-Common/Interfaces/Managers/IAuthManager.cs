@@ -10,5 +10,7 @@ namespace Authorization_Common.Interfaces.Managers
         UserFacebook LoginFacebook(FacebookLoginDTO model);
         UserAuth Register(RegisterDTO model);
         bool ResetPassword(ResetPasswordDTO model);
+
+        string RefreshToken(string token)
     }
 }

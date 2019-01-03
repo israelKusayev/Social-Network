@@ -24,6 +24,7 @@ namespace Authorization_Bl
             container.RegisterType<IDynamoDbRepository<UserAuth>, DynamoDbRepository<UserAuth>>();
             container.RegisterType<IDynamoDbRepository<UserFacebook>, DynamoDbRepository<UserFacebook>>();
             container.RegisterType<IDynamoDbRepository<TokenHistory>, DynamoDbRepository <TokenHistory>> ();
+            container.RegisterType<IDynamoDbRepository<BlockedUser>, DynamoDbRepository<BlockedUser>>();
         }
     }
 }

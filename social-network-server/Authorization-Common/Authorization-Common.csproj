@@ -47,10 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\UserBlockedException.cs" />
     <Compile Include="Interfaces\Helppers\IFaceBookTokenValidator.cs" />
     <Compile Include="Interfaces\IToken.cs" />
     <Compile Include="Interfaces\Managers\IAuthManager.cs" />
     <Compile Include="Interfaces\Repositories\IDynamoDbRepository.cs" />
+    <Compile Include="Models\BlockedUser.cs" />
     <Compile Include="Models\DTO\FacebookLoginDTO.cs" />
     <Compile Include="Models\DTO\LoginDTO.cs" />
     <Compile Include="Models\DTO\RegisterDTO.cs" />
