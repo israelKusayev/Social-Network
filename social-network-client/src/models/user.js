@@ -1,12 +1,11 @@
 export default class User {
-  constructor() {
-    this.username = '';
-    this.firstName = '';
-    this.lastname = '';
-    this.address = '';
-    this.email = '';
-    this.age = '';
-    this.bio = '';
-    this.workPlace = '';
-  }
+  userId = '';
+  firstName = '';
+  lastName = '';
+  address = '';
+  email = '';
+  age = '';
+  bio = '';
+  workPlace = '';
+  username = '';
 }
