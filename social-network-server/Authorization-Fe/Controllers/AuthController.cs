@@ -1,11 +1,10 @@
 ﻿using Authorization_Bl;
-using Authorization_Bl.Managers;
+using Authorization_Common.Interfaces;
+using Authorization_Common.Interfaces.Managers;
+using Authorization_Common.Interfaces.Helppers;
 using Authorization_Common.Models;
 using Authorization_Common.Models.DTO;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -14,12 +13,16 @@ namespace Authorization_Fe.Controllers
 {
     public class AuthController : ApiController
     {
-        Token _token;
-        AuthManager _authManager;
-        public AuthController()
+        IToken _token;
+        IAuthManager _authManager;
+        IFaceBookTokenValidator _facebookValidator;
+
+        public AuthController(IToken token, IAuthManager authManager,
+            IFaceBookTokenValidator facebookValidator)
         {
-            _authManager = new AuthManager();
-            _token = new Token();
+            _authManager = authManager;
+            _token = token;
+            _facebookValidator = facebookValidator;
         }
         [Route("api/register")]
         [HttpPost]
@@ -76,13 +79,18 @@ namespace Authorization_Fe.Controllers
 
         [Route("api/loginFacebook")]
         [HttpPost]
-        public IHttpActionResult LoginFacebook([FromBody] FacebookLoginDTO model)
+        public IHttpActionResult LoginFacebook([FromBody] string facebookToken)
         {
-            if (model == null)
+            if (facebookToken == null)
             {
                 return BadRequest("Token is missing");
             }
 
+            FacebookLoginDTO model = _facebookValidator.ValidateAndGet(facebookToken);
+            if (model == null)
+            {
+                return BadRequest("invalid token");
+            }
             UserFacebook facebookUser = _authManager.LoginFacebook(model);
 
             var token = _token.GenerateKey(facebookUser.UserId, model.Username);

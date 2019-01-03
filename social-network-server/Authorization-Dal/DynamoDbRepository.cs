@@ -1,10 +1,10 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Authorization_Common.Models;
+using Authorization_Common.Interfaces.Repositories;
 
 namespace Authorization_Dal
 {
-    public class DynamoDbRepository<T>
+    public class DynamoDbRepository<T> : Authorization_Common.Interfaces.Repositories.IDynamoDbRepository<T>
     {
         private DynamoDBContext _DbContext;
 
