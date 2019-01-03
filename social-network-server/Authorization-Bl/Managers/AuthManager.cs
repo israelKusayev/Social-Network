@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using Authorization_Common.Interfaces.Managers;
+using Authorization_Common.Interfaces.Repositories;
 using Authorization_Common.Models;
 using Authorization_Common.Models.DTO;
-using Authorization_Dal;
 
 namespace Authorization_Bl.Managers
 {
-    public class AuthManager
+    public class AuthManager : IAuthManager
     {
-        DynamoDbRepository<UserAuth> _authRepository;
-        DynamoDbRepository<UserFacebook> _oAuthRepository;
-        public AuthManager()
+        IDynamoDbRepository<UserAuth> _authRepository;
+        IDynamoDbRepository<UserFacebook> _oAuthRepository;
+        public AuthManager(IDynamoDbRepository<UserAuth> authRepository,
+            IDynamoDbRepository<UserFacebook> oAuthRepository)
         {
-            _authRepository = new DynamoDbRepository<UserAuth>();
-            _oAuthRepository = new DynamoDbRepository<UserFacebook>();
+            _authRepository = authRepository;
+            _oAuthRepository = oAuthRepository;
         }
 
         public UserAuth Register(RegisterDTO model)

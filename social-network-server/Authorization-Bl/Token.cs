@@ -1,24 +1,24 @@
-﻿using Authorization_Common.Models;
-using Authorization_Dal;
+﻿using Authorization_Common.Interfaces;
+using Authorization_Common.Interfaces.Repositories;
+using Authorization_Common.Models;
 using Jose;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Authorization_Bl
 {
-    public class Token
+    public class Token : IToken
     {
-        private DynamoDbRepository<TokenHistory> _tokenReposirory;
-        public Token()
+        private IDynamoDbRepository<TokenHistory> _tokenReposirory;
+        public Token(IDynamoDbRepository<TokenHistory> tokenReposirory)
         {
-            _tokenReposirory = new DynamoDbRepository<TokenHistory>();
+            _tokenReposirory = tokenReposirory;
         }
         public string GenerateKey(string userId, string username)
         {
-
+            int ttl = int.Parse(ConfigurationManager.AppSettings["TokenTTL"]);
             long exp = (long)(DateTime.UtcNow.AddMinutes(15) - new DateTime(1970, 1, 1)).TotalSeconds;
             long iat = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
