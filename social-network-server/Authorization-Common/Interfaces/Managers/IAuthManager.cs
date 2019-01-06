@@ -11,6 +11,6 @@ namespace Authorization_Common.Interfaces.Managers
         UserAuth Register(RegisterDTO model);
         bool ResetPassword(ResetPasswordDTO model);
 
-        string RefreshToken(string token)
+        string RefreshToken(string token);
     }
 }

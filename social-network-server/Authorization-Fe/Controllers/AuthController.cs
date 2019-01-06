@@ -151,7 +151,7 @@ namespace Authorization_Fe.Controllers
         }
 
         [HttpGet]
-        [Route("api/resetPassword")]
+        [Route("api/refreshToken")]
         public IHttpActionResult RefreshToken()
         {
             if (Request.Headers.Contains("x-auth-token"))

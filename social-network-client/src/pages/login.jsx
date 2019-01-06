@@ -31,44 +31,47 @@ export default class Login extends Component {
     const data = JSON.stringify({ ...this.state.data });
 
     const err = await login(data);
-    if (err) this.setState({ error: err.Message });
-    else this.props.history.push('/');
+    if (err) {
+      this.setState({ error: err.Message });
+    } else this.props.history.push('/');
   };
 
   render() {
     return (
       <>
         <h1 className="text-center">Login</h1>
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              value={this.state.username}
-              onChange={this.handleChange}
-              className="form-control"
-              type="text"
-              id="username"
-              placeholder="username"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              placeholder="Password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </div>
-          {this.state.error && <div className="alert alert-danger">{this.state.error}</div>}
+        <form className="row" onSubmit={this.handleSubmit}>
+          <div className="col-md-6 offset-3">
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                value={this.state.username}
+                onChange={this.handleChange}
+                className="form-control"
+                type="text"
+                id="username"
+                placeholder="username"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                placeholder="Password"
+                value={this.state.password}
+                onChange={this.handleChange}
+              />
+            </div>
+            {this.state.error && <div className="alert alert-danger">{this.state.error}</div>}
 
-          <button type="submit" className="btn btn-dark">
-            Login
-          </button>
-          <div className="float-right text-right">
-            <Link to="/reset-password">reset password</Link>
+            <button type="submit" className="btn btn-dark">
+              Login
+            </button>
+            <div className="float-right text-right">
+              <Link to="/reset-password">reset password</Link>
+            </div>
           </div>
         </form>
       </>
