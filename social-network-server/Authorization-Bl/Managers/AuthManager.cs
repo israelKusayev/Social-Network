@@ -41,7 +41,7 @@ namespace Authorization_Bl.Managers
             {
                 return null;
             }
-            if(IsBlocked(user.UserId))
+            if (IsBlocked(user.UserId))
             {
                 throw new UserBlockedException();
             }
@@ -58,7 +58,7 @@ namespace Authorization_Bl.Managers
         public UserFacebook LoginFacebook(FacebookLoginDTO model)
         {
             var existingUser = _oAuthRepository.Get(model.FacebookId);
-            if (existingUser != null )
+            if (existingUser != null)
             {
                 if (IsBlocked(existingUser.UserId))
                 {
@@ -106,7 +106,7 @@ namespace Authorization_Bl.Managers
             var data = _token.ValidaleToken(token);
             if (data == null)
                 return data;
-            return _token.GenerateKey(data.sub, data.username, data.IsAdmin);
+            return _token.GenerateKey((string)data.sub, (string)data.username, (bool) data.IsAdmin);
         }
     }
 }

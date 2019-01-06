@@ -15,14 +15,17 @@ class LoginRegisterNav extends Component {
   render() {
     return (
       <ul className="navbar-nav ml-auto">
-        <li className="nav-item ">
+        <li className="nav-item mr-2">
           <NavLink className="nav-link" to="/register">
-            Register
+            <i className="fa fa-user-plus" />
+
+            <span> Register</span>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to="/login">
-            Login
+          <NavLink className="nav-link mr-3" to="/login">
+            <i className="fa fa-sign-in" />
+            <span> Login</span>
           </NavLink>
         </li>
         <li className="nav-item">

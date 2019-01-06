@@ -28,3 +28,23 @@
 .selected {
   background-color: black;
 }
+
+.follow {
+  background-color: #ff0087;
+  position: relative;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+.font-size-bigger {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.btn-followTab {
+  width: 110px;
+}
+
+.text-pink {
+  color: #ff0087;
+}

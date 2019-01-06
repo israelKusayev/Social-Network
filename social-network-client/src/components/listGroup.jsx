@@ -1,19 +1,19 @@
 import React from 'react';
 
-const ListGroup = ({ items, textProperty, valueProperty, selectedItem, onItemSelect }) => {
+const ListGroup = ({ items, labelProperty, textProperty, keyProperty, selectedItem, onItemSelect }) => {
   return (
-    <ul className="list-group">
+    <ul className="list-group ">
       {items.map((item) => (
         <li
           onClick={() => onItemSelect(item)}
-          key={item[valueProperty]}
+          key={item[keyProperty]}
           className={
             item[textProperty] === selectedItem
               ? 'list-group-item list-group-item-dark selected'
               : 'list-group-item list-group-item-dark'
           }
         >
-          {item[textProperty]}
+          {item[labelProperty] || item[textProperty]}
         </li>
       ))}
     </ul>
@@ -21,8 +21,9 @@ const ListGroup = ({ items, textProperty, valueProperty, selectedItem, onItemSel
 };
 
 ListGroup.defaultProps = {
+  labelProperty: 'label',
   textProperty: 'name',
-  valueProperty: 'id'
+  keyProperty: 'id'
 };
 
 export default ListGroup;

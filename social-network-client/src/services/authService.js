@@ -46,11 +46,11 @@ export async function resetPassword(data) {
 
 export async function refreshToken() {
   const res = await Get(authUrl + 'refreshToken', getJwt());
-  if (res.status !== 200) {
-    deleteJwt();
-    window.location.reload();
-  } else {
+  if (res.status === 200) {
     const jwt = res.headers.get('x-auth-token');
     setJwt(jwt);
+  } else {
+    deleteJwt();
+    window.location.reload();
   }
 }

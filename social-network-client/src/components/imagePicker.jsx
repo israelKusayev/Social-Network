@@ -26,7 +26,14 @@ export default class ImagePicker extends Component {
   render() {
     return (
       <div>
-        <input ref="file" type="file" className="form-control-file" onChange={this.onChange} />
+        <div className="custom-file">
+          <input ref="file" type="file" id="customFile" onChange={this.onChange} />
+          <label className="custom-file-label" for="customFile">
+            Upload image
+          </label>
+        </div>
+        <div className="py-2" />
+
         <img className="card-img-bottom" src={this.state.imgSrc} alt="" />
       </div>
     );

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ImagePicker from '../components/imagePicker';
+import RouteProtector from '../HOC/routeProtector';
 class CreatePost extends Component {
   state = {
     data: {
@@ -70,7 +71,7 @@ class CreatePost extends Component {
                         </div>
                       </div>
                       <div className="form-group row">
-                        <label className="col-4 col-form-label">Photo</label>
+                        <label className="col-4 col-form-label">Image</label>
                         <div className="col-8">
                           <ImagePicker />
                         </div>
@@ -95,4 +96,4 @@ class CreatePost extends Component {
   }
 }
 
-export default CreatePost;
+export default RouteProtector(CreatePost);

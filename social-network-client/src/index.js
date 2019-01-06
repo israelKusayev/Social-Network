@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import dotenv from 'dotenv';
+import 'font-awesome/css/font-awesome.css';
+
 dotenv.config();
 ReactDOM.render(
   <BrowserRouter>

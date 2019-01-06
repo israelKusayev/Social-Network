@@ -23,6 +23,7 @@ function Navbar() {
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
         {getJwt() ? <MainNav /> : <LoginRegisterNav />}
+        {/* {getJwt() ? <LoginRegisterNav /> : <MainNav />} */}
       </div>
     </nav>
   );

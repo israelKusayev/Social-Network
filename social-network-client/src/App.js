@@ -5,19 +5,23 @@ import Login from './pages/login';
 import Feed from './pages/feed';
 import ResetPassword from './pages/resetPassword';
 
-import './App.css';
-import './styles/customButtons.css';
 import Navbar from './components/navbar/navbar';
 import NotFound from './components/notFound';
 import Profile from './pages/profile';
 import Notifications from './pages/notifications';
 import CreatePost from './pages/createPost';
 import Followers from './components/profile/followers';
+import { ToastContainer } from 'react-toastify';
+
+import './App.css';
+import './styles/customButtons.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
   render() {
     return (
       <>
+        <ToastContainer />
         <Navbar />
         <div className="container">
           <Switch>
