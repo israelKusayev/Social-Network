@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Net.Http;
 using Authorization_Common.Exceptions;
 using Authorization_Common.Interfaces;
+using Authorization_Common.Interfaces.Helppers;
 using Authorization_Common.Interfaces.Managers;
 using Authorization_Common.Interfaces.Repositories;
 using Authorization_Common.Models;
@@ -15,16 +16,19 @@ namespace Authorization_Bl.Managers
         IDynamoDbRepository<UserAuth> _authRepository;
         IDynamoDbRepository<UserFacebook> _oAuthRepository;
         IDynamoDbRepository<BlockedUser> _blockedRepository;
+        ITokenValidator _tokenValidator;
         IToken _token;
 
         public AuthManager(IDynamoDbRepository<UserAuth> authRepository,
             IDynamoDbRepository<UserFacebook> oAuthRepository,
             IDynamoDbRepository<BlockedUser> blockedRepository,
+            ITokenValidator tokenValidator,
             IToken token)
         {
             _authRepository = authRepository;
             _oAuthRepository = oAuthRepository;
             _blockedRepository = blockedRepository;
+            _tokenValidator = tokenValidator;
             _token = token;
         }
 
@@ -103,7 +107,7 @@ namespace Authorization_Bl.Managers
 
         public string RefreshToken(string token)
         {
-            var data = _token.ValidaleToken(token);
+            var data = _tokenValidator.ValidaleRefreshToken(token);
             if (data == null)
                 return data;
             return _token.GenerateKey((string)data.sub, (string)data.username, (bool) data.IsAdmin);

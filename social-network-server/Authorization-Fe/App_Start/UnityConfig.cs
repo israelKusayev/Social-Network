@@ -52,6 +52,7 @@ namespace Authorization_Fe
             container.RegisterType<IAuthManager, AuthManager>();
             container.RegisterType<IFaceBookTokenValidator, FaceBookTokenValidator>();
             container.RegisterType<IToken, Token>();
+            container.RegisterType<ITokenValidator, TokenValidator>();
         }
     }
 }
