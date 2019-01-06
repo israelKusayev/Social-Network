@@ -122,7 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helppers\FaceBookTokenValidator.cs" />
+    <Compile Include="Helppers\TokenValidator.cs" />
     <Compile Include="Managers\AuthManager.cs" />
+    <Compile Include="Managers\BlockedUsersManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="UnityInjectorBl.cs" />

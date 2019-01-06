@@ -53,5 +53,11 @@ namespace Authorization_Dal
         {
             return _DbContext.Load<T>(id);
         }
+
+        public bool Delete<K>(K id)
+        {
+            _DbContext.Delete<T>(id);
+            return _DbContext.Load<T>(id) == null;
+        }
     }
 }

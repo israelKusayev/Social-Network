@@ -5,5 +5,6 @@
         T Add(T item);
         T Get<K>(K id);
         T Update(T item);
+        bool Delete<K>(K id);
     }
 }

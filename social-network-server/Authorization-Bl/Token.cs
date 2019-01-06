@@ -42,21 +42,6 @@ namespace Authorization_Bl
 
             return token;
         }
-
-        public dynamic ValidaleToken(string token)
-        {
-            string key = ConfigurationManager.AppSettings["tokenSignKey"];
-            int refrshTime =int.Parse(ConfigurationManager.AppSettings["RefreshTime"])*60;
-            string paylod = JWT.Decode(token, Encoding.ASCII.GetBytes(key));
-            dynamic data = JObject.Parse(paylod);
-
-            long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            if (data.iat > now || data.exp < now+refrshTime ||
-                data.aud != "social network")
-            {
-                return data;
-            }
-            return null;
-        }
+        
     }
 }

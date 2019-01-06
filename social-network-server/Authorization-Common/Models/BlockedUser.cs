@@ -12,5 +12,15 @@ namespace Authorization_Common.Models
     {
         [DynamoDBHashKey]
         public string UserId { get; set; }
+
+        public BlockedUser()
+        {
+                
+        }
+
+        public BlockedUser(string userId)
+        {
+            UserId = userId;
+        }
     }
 }
