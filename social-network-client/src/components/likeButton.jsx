@@ -7,7 +7,7 @@ const LikeButton = (props) => {
     <>
       <span onClick={props.onClick} style={{ cursor: 'pointer' }}>
         <i className={classes} />
-        <span> Like </span>
+        <span> Likes </span>
       </span>
     </>
   );
