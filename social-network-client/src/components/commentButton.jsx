@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CommentPopup from './commentsPopup';
+import Comments from './comments';
 
 export default class CommentButton extends Component {
   state = {
@@ -19,7 +19,7 @@ export default class CommentButton extends Component {
           <i className="fa fa-comments" />
           <span className="text-pink"> Comment</span>
         </span>
-        <CommentPopup isVisible={this.state.commentsVisible} onClose={this.closeComments} />
+        <Comments postId={this.props.postId} isVisible={this.state.commentsVisible} onClose={this.closeComments} />
       </>
     );
   }

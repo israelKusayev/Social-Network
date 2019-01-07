@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import ImagePicker from '../components/imagePicker';
 import RouteProtector from '../HOC/routeProtector';
+import { Post } from '../services/httpService';
+
 class CreatePost extends Component {
+  socialUrl = process.env.REACT_APP_SOCIAL_URL;
   state = {
     data: {
-      whoIsWatching: '',
+      whoIsWatching: 'all',
       content: '',
-      image: []
+      image: ''
     }
   };
 
@@ -16,16 +19,34 @@ class CreatePost extends Component {
     this.setState({ data });
   };
 
+  handleImageSelect = (image) => {
+    const data = { ...this.state.data };
+    data.image = image;
+    this.setState({ data });
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!this.state.data.content.trim()) {
+      this.setState({ error: 'content is required!' });
+      return;
+    }
+    console.log(this.state);
+
+    const res = await Post(`${this.socialUrl}createPost`, this.state.data);
+    if (res.status === 200) {
+      this.props.history.push('/');
+    } else {
+      this.setState({ error: 'somthing went worng please try again' });
+    }
   };
   render() {
     const { data } = this.state;
     return (
       <div className="container mt-1">
         <div className="row">
-          <div className="col-md-2 " />
-          <div className="col-md-8">
+          <div className="col-md-8 offset-2">
             <div className="card bg-dark text-white">
               <div className="card-body">
                 <div className="row">
@@ -36,7 +57,7 @@ class CreatePost extends Component {
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <form>
+                    <form onSubmit={this.handleSubmit}>
                       <div className="form-group row">
                         <label htmlFor="bio" className="col-4 col-form-label">
                           Who can see your story?
@@ -73,7 +94,7 @@ class CreatePost extends Component {
                       <div className="form-group row">
                         <label className="col-4 col-form-label">Image</label>
                         <div className="col-8">
-                          <ImagePicker />
+                          <ImagePicker onUpload={this.handleImageSelect} />
                         </div>
                       </div>
 
@@ -85,6 +106,7 @@ class CreatePost extends Component {
                         </div>
                       </div>
                     </form>
+                    {this.state.error && <div className="alert alert-danger">{this.state.error} </div>}
                   </div>
                 </div>
               </div>

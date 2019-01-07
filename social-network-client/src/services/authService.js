@@ -1,5 +1,5 @@
-import { Post, Put, Get } from './httpService';
-import { setJwt, getJwt, deleteJwt } from './jwtService';
+import { Post, Put } from './httpService';
+import { setJwt } from './jwtService';
 const authUrl = process.env.REACT_APP_AUTH_URL;
 export async function register(data) {
   const res = await Post(authUrl + 'register', data);
@@ -16,6 +16,7 @@ export async function register(data) {
 
 export async function login(data) {
   const res = await Post(authUrl + 'login', data);
+  console.log(res);
 
   if (res.status !== 200) {
     return await res.json();
@@ -41,16 +42,5 @@ export async function resetPassword(data) {
 
   if (res.status !== 200) {
     return await res.json();
-  }
-}
-
-export async function refreshToken() {
-  const res = await Get(authUrl + 'refreshToken', getJwt());
-  if (res.status === 200) {
-    const jwt = res.headers.get('x-auth-token');
-    setJwt(jwt);
-  } else {
-    deleteJwt();
-    window.location.reload();
   }
 }

@@ -1,23 +1,37 @@
-import React, { Component } from 'react';
+import React, { Component, ReactDOM } from 'react';
 import { Switch, Redirect, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import Navbar from './components/navbar/navbar';
+
 import Register from './pages/register';
 import Login from './pages/login';
-import Feed from './pages/feed';
 import ResetPassword from './pages/resetPassword';
 
-import Navbar from './components/navbar/navbar';
+import Feed from './pages/feed';
 import NotFound from './components/notFound';
 import Profile from './pages/profile';
 import Notifications from './pages/notifications';
 import CreatePost from './pages/createPost';
-import Followers from './components/profile/followers';
-import { ToastContainer } from 'react-toastify';
 
 import './App.css';
 import './styles/customButtons.css';
 import 'react-toastify/dist/ReactToastify.css';
+import UserProfile from './components/userProfile';
 
 class App extends Component {
+  state = { pageUp: false };
+  componentDidMount = () => {
+    window.onscroll = () => {
+      if (window.pageYOffset > 0) {
+        this.setState({ pageUp: true });
+        console.log(window.pageYOffset);
+      } else this.setState({ pageUp: false });
+    };
+  };
+  onPageUp = () => {
+    window.scrollTo(0, 0);
+  };
+
   render() {
     return (
       <>
@@ -32,13 +46,18 @@ class App extends Component {
             <Route path="/feed" component={Feed} />
             <Route path="/create-post" component={CreatePost} />
             <Route path="/notifications" component={Notifications} />
-            <Route path="/profile/followers" component={Followers} />
+            <Route path="/profile/:id" component={UserProfile} />
             <Route path="/profile" component={Profile} />
 
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact={true} component={Feed} />
             <Redirect to="/not-found" />
           </Switch>
+          {this.state.pageUp && (
+            <div onClick={this.onPageUp} className="pageUp">
+              <i class="fa fa-chevron-circle-up" />
+            </div>
+          )}
         </div>
       </>
     );

@@ -12,6 +12,7 @@
     "react-bootstrap4-modal": "^1.7.0",
     "react-dom": "^16.7.0",
     "react-facebook-login": "^4.1.1",
+    "react-infinite-scroller": "^1.2.4",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.2",
     "react-toastify": "^4.5.2"

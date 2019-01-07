@@ -1,3 +1,7 @@
+body {
+  scroll-behavior: smooth;
+}
+
 .profile {
   background-color: #ff0087;
   color: white;
@@ -47,4 +51,16 @@
 
 .text-pink {
   color: #ff0087;
+}
+
+.pageUp {
+  position: fixed;
+  bottom: 1%;
+  color: #ff0087;
+  right: 3%;
+  font-size: 3em;
+}
+.pageUp :hover {
+  cursor: pointer;
+  opacity: 0.8;
 }

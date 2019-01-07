@@ -1,7 +1,7 @@
 import React from 'react';
 import { getJwt } from '../services/jwtService';
 
-export default function NotFound(props) {
+function NotFound(props) {
   return (
     <div className="text-center">
       <h1 className="font-weight-bold mb-3">Page not found!</h1>
@@ -23,3 +23,5 @@ export default function NotFound(props) {
     </div>
   );
 }
+
+export default NotFound;
