@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialDal
+namespace SocialDal.Repositories.Neo4j
 {
-    public class Class1
+    public class Neo4jLikesRepository : Neo4jBaseRepository
     {
     }
 }
