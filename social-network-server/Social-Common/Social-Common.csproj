@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Enum\PostVisabilityOptions.cs" />
+    <Compile Include="Models\Dtos\PostListDto.cs" />
     <Compile Include="Models\Dtos\ReturnedPostDto.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\User.cs" />
