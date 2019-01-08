@@ -367,8 +367,7 @@ class Feed extends Component {
 
   render() {
     return (
-      <div>
-        <h1>feed</h1>
+      <div className="mt-3">
         <InfiniteScroll
           pageStart={0}
           loadMore={this.getPosts}

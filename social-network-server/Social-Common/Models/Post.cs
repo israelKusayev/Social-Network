@@ -6,9 +6,9 @@ namespace Social_Common.Models
     public class Post
     {
         public string PostId { get; set; }
-        string ImgUrl { get; set; }
-        string Content { get; set; }
-        DateTime CreatedOn { get; set; }
-        PostVisabilityOptions Visability { get; set; }
+        public string ImgUrl { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public PostVisabilityOptions Visability { get; set; }
     }
 }

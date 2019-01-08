@@ -34,8 +34,10 @@ class CreatePost extends Component {
     }
     console.log(this.state);
 
-    const res = await Post(`${this.socialUrl}createPost`, this.state.data);
+    const res = await Post(`${this.socialUrl}post`, JSON.stringify(this.state.data), true);
     if (res.status === 200) {
+      console.log('ok');
+
       this.props.history.push('/');
     } else {
       this.setState({ error: 'somthing went worng please try again' });
@@ -44,7 +46,7 @@ class CreatePost extends Component {
   render() {
     const { data } = this.state;
     return (
-      <div className="container mt-1">
+      <div className="container mt-3">
         <div className="row">
           <div className="col-md-8 offset-2">
             <div className="card bg-dark text-white">

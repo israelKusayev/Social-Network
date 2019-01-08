@@ -33,7 +33,7 @@ class Profile extends Component {
       { id: '5', name: 'Logout' }
     ];
     return (
-      <div className="container mt-1">
+      <div className="container mt-3">
         <div className="row">
           <div className="col-md-3 ">
             <ListGroup items={items} selectedItem={this.state.selected} onItemSelect={this.handleSelect} />

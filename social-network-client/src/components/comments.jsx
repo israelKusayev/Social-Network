@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'react-bootstrap4-modal';
 import Comment from './comment';
 import ImagePicker from './imagePicker';
-import { get } from 'http';
 import { Put } from '../services/httpService';
 
 export default class Comments extends React.Component {
