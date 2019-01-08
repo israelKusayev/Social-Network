@@ -22,10 +22,10 @@ namespace Authorization_Bl
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
-            container.RegisterType<IDynamoDbRepository<UserAuth>, DynamoDbRepository<UserAuth>>();
-            container.RegisterType<IDynamoDbRepository<UserFacebook>, DynamoDbRepository<UserFacebook>>();
-            container.RegisterType<IDynamoDbRepository<TokenHistory>, DynamoDbRepository <TokenHistory>> ();
-            container.RegisterType<IDynamoDbRepository<BlockedUser>, DynamoDbRepository<BlockedUser>>();
+            container.RegisterSingleton<IDynamoDbRepository<UserAuth>, DynamoDbRepository<UserAuth>>();
+            container.RegisterSingleton<IDynamoDbRepository<UserFacebook>, DynamoDbRepository<UserFacebook>>();
+            container.RegisterSingleton<IDynamoDbRepository<TokenHistory>, DynamoDbRepository <TokenHistory>> ();
+            container.RegisterSingleton<IDynamoDbRepository<BlockedUser>, DynamoDbRepository<BlockedUser>>();
         }
     }
 }

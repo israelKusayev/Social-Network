@@ -10,10 +10,10 @@ using System.Text;
 
 namespace Authorization_Bl
 {
-    public class Token : IToken
+    public class TokenBulider : IToken
     {
         private IDynamoDbRepository<TokenHistory> _tokenReposirory;
-        public Token(IDynamoDbRepository<TokenHistory> tokenReposirory)
+        public TokenBulider(IDynamoDbRepository<TokenHistory> tokenReposirory)
         {
             _tokenReposirory = tokenReposirory;
         }
