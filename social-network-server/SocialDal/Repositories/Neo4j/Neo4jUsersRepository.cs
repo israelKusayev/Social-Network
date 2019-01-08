@@ -14,19 +14,53 @@ namespace SocialDal.Repositories.Neo4j
             Create(user);
         }
 
-        public List<User> Find(string name)
+        public List<User> Find(string name,string userId)
         {
-            string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' return u;";
+            string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' " +
+                "WHERE NOT EXSISTS((u)-[:Blocked]-(:User{UserId:"+ userId + "}))" +
+                "return u;";
             var res = Query(query);
             return RecordsToList<User>(res);
         }
 
-        public User Get(string userId)
+        public User Get(string userId,string myId)
         {
-            string query = "match(u:User{UserId:'"+userId+"'}) return u";
+            string query = "match(u:User{UserId:'"+userId+"'})" +
+                "WHERE NOT EXSISTS((u)-[:Blocked]-(:User{UserId:" + myId + "}))" +
+                " return u";
             var res = Query(query);
             var user = res.Single();
             return user!=null ? RecordToObject<User>(user) : null;
+        }
+
+        public void Block(string blockingUserId, string blockedUserId)
+        {
+            string query = "MATCH (blocking:User{UserId:"+blockingUserId+"})," +
+                "(blocked:User{UserId:"+ blockedUserId + "})" +    
+                "CREATE (blocking)-[r:Blocked]->(blocked)" +
+                "RETURN type(r)";
+        }
+
+        public void UnBlock(string blockingUserId, string blockedUserId)
+        {
+            string query = "MATCH (:User{UserId:" + blockingUserId + "})-[r:Blocked]->" +
+                "(:User{UserId:" + blockedUserId + "})" +
+                "DELETE r";
+        }
+
+        public void Follow(string followingUserId, string followedUserId)
+        {
+            string query = "MATCH (following:User{UserId:" + followingUserId + "})," +
+                "(followed:User{UserId:" + followedUserId + "})" +
+                "CREATE (following)-[r:Following]->(followed)" +
+                "RETURN type(r)";
+        }
+
+        public void UnFollow(string followingUserId, string followedUserId)
+        {
+            string query = "MATCH (:User{UserId:" + followingUserId + "})-[r:Following]->" +
+                "(:User{UserId:" + followedUserId + "})" +
+                "DELETE r";
         }
     }
 }
