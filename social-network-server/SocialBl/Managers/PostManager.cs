@@ -18,21 +18,33 @@ namespace SocialBl.Managers
             s3 = new AmazonS3Uploader();
             _postsRepository = new Neo4jPostsRepository();
         }
-        public Post CreatePost(CreatePostDto postDto,string userId)
+
+        public Post CreatePost(CreatePostDto postDto, string userId)
         {
             string postId = Guid.NewGuid().ToString();
 
-            string imgUrl = s3.UploadFile(postDto.Image, postId);
-            Post post = new Post()
+            string imgUrl = null;
+            try
             {
-                Content = postDto.Content,
-                CreatedOn = DateTime.UtcNow,
-                PostId = postId,
-                Visability = postDto.WhoCanWatching,
-                ImgUrl = imgUrl
-            };
-            _postsRepository.Create(post, userId);
-            return post;
+                imgUrl = imgUrl == null ? null : s3.UploadFile(postDto.Image, postId);
+
+                Post post = new Post()
+                {
+                    Content = postDto.Content,
+                    CreatedOn = DateTime.UtcNow,
+                    PostId = postId,
+                    Visability = postDto.WhoCanWatching,
+                    ImgUrl = imgUrl
+                };
+
+                _postsRepository.Create(post, userId);
+                return post;
+            }
+            catch (Exception)
+            {
+                //todo logger
+                return null;
+            }
         }
     }
 }

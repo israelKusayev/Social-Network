@@ -45,7 +45,8 @@ namespace Authorization_Fe.Controllers
                     return BadRequest("Username already exists in the db");
                 }
                 token = _token.GenerateKey(auth.UserId, model.Username);
-                _authManager.AddUserToDb(auth.UserId, model.Email, token);
+                _authManager.AddUserToIdentity(auth.UserId, model.Email, token);
+                _authManager.AddUserToSocial(auth.UserId, model.Username, token);
             }
             catch (Exception)
             {
@@ -108,7 +109,7 @@ namespace Authorization_Fe.Controllers
                 UserFacebook facebookUser = _authManager.LoginFacebook(model);
 
                 var token = _token.GenerateKey(facebookUser.UserId, model.Username,facebookUser.IsAdmin);
-                _authManager.AddUserToDb(facebookUser.UserId, model.Email, token);
+                _authManager.AddUserToIdentity(facebookUser.UserId, model.Email, token);
 
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Headers.Add("x-auth-token", token);

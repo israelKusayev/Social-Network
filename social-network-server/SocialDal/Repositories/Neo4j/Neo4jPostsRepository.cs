@@ -33,6 +33,7 @@ namespace SocialDal.Repositories.Neo4j
         public void Create(Post post, string postedByUserId)
         {
             Create(post);
+
             string postedByQuery = $@"MATCH (p:Post),(u:User)
                 WHERE p.PostId = '{post.PostId}' AND u.UserId = '{postedByUserId}'
                 CREATE(p) -[r:PostedBy]->(u)

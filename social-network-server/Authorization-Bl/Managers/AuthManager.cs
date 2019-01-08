@@ -80,7 +80,7 @@ namespace Authorization_Bl.Managers
         /// <summary>
         /// create new user in user table on dynamoDB
         /// </summary>
-        public string AddUserToDb(string userId, string email, string token)
+        public string AddUserToIdentity(string userId, string email, string token)
         {
             string url = ConfigurationManager.AppSettings["IdentityServiceUrl"];
             url += "/UsersIdentity";
@@ -107,7 +107,20 @@ namespace Authorization_Bl.Managers
             var data = _tokenValidator.ValidaleRefreshToken(token);
             if (data == null)
                 return data;
-            return _token.GenerateKey((string)data.sub, (string)data.username, (bool) data.IsAdmin);
+            return _token.GenerateKey((string)data.sub, (string)data.username, (bool)data.IsAdmin);
+        }
+
+        public bool AddUserToSocial(string userId, string username, string token)
+        {
+            string url = ConfigurationManager.AppSettings["SocialServiceUrl"];
+            url += "/users";
+            User user = new User() { UserId = userId, UserName = username };
+            using (var http = new HttpClient())
+            {
+                http.DefaultRequestHeaders.Add("x-auth-token", token);
+                var response = http.PostAsJsonAsync(url, user).Result;
+                return response.IsSuccessStatusCode;
+            }
         }
     }
 }
