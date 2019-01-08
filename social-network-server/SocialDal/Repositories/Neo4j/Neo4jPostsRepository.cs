@@ -13,7 +13,7 @@ namespace SocialDal.Repositories.Neo4j
 {
     public class Neo4jPostsRepository : Neo4jBaseRepository
     {
-        private static int _postsPerPage = int.Parse(ConfigurationManager.AppSettings["PostsPerPage"]);
+        private static int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
 
         public ReturnedPostDto Get(string postId, string userId)
         {
@@ -40,9 +40,10 @@ namespace SocialDal.Repositories.Neo4j
             Query(postedByQuery);
         }
 
-        public PostListDto GetFeed(int page, string userId)
+        public PostListDto GetFeed(int startIdx, int count, string userId)
         {
-            int start = page * _postsPerPage;
+            if (count > _maxPostsPerPage)
+                count = _maxPostsPerPage;
             string query = "match(p:Post)-[:PostedBy]->(posting:User)," +
                 "(p)<-[l:Like]-(:User), (p)-[:Referencing]->(ref:User)," +
                 " (me:User{UserId:'" + userId + "'})" +
@@ -54,11 +55,10 @@ namespace SocialDal.Repositories.Neo4j
                 "return p, posting AS User ," +
                 "EXISTS( (p)<-[:Like]-(me) ) AS IsLiked," +
                 "COUNT(l) AS Likes, COLLECT(ref) AS Referencing" +
-                $"ORDER BY p.CreatedOn DESC SKIP {start} LIMIT {_postsPerPage}";
+                $"ORDER BY p.CreatedOn DESC SKIP {startIdx} LIMIT {count}";
             var res = Query(query);
             PostListDto postListDto = new PostListDto()
             {
-                Page = page,
                 Posts = RecordsToList<ReturnedPostDto>(res)
             };
             return postListDto;
