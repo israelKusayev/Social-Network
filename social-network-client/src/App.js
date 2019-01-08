@@ -55,7 +55,7 @@ class App extends Component {
           </Switch>
           {this.state.pageUp && (
             <div onClick={this.onPageUp} className="pageUp">
-              <i class="fa fa-chevron-circle-up" />
+              <i className="fa fa-chevron-circle-up" />
             </div>
           )}
         </div>

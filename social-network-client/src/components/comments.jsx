@@ -114,6 +114,8 @@ export default class Comments extends React.Component {
 
   render() {
     const { error, data, comments } = this.state;
+    console.log('comments renderd');
+
     return (
       <Modal dialogClassName="modal-lg " visible={this.props.isVisible} onClickBackdrop={this.modalBackdropClicked}>
         <div className="bg-dark text-white">
@@ -150,7 +152,7 @@ export default class Comments extends React.Component {
               </div>
             </div>
             {comments.map((comment) => {
-              return <Comment onLiked={this.onLiked} comment={comment} />;
+              return <Comment key={comment.commentId} onLiked={this.onLiked} comment={comment} />;
             })}
           </div>
           <div className="modal-footer">

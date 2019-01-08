@@ -59,6 +59,7 @@
     <Compile Include="Managers\AmazonS3Uploader.cs" />
     <Compile Include="Managers\PostManager.cs" />
     <Compile Include="Managers\TokenManager.cs" />
+    <Compile Include="Managers\UsersManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

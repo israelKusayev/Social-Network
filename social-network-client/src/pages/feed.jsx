@@ -3,6 +3,7 @@ import RouteProtector from '../HOC/routeProtector';
 import Post from '../components/post';
 import { Get, Put } from '../services/httpService';
 import InfiniteScroll from 'react-infinite-scroller';
+
 class Feed extends Component {
   socialUrl = process.env.REACT_APP_SOCIAL_URL;
   componentDidMount = () => {

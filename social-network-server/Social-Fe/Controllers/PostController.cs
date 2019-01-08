@@ -20,7 +20,7 @@ namespace Social_Fe.Controllers
             _postManager = new PostManager();
             _tokenManager = new TokenManager();
         }
-        //[JWTAuth]
+        [JWTAuth]
         [HttpPost]
         public IHttpActionResult CreatePost(CreatePostDto post)
         {
@@ -29,9 +29,13 @@ namespace Social_Fe.Controllers
                 return BadRequest("Content is required");
             }
             var token = Request.Headers.GetValues("x-auth-token").First();
-            
+
             Post createdPost = _postManager.CreatePost(post, _tokenManager.GetUserId(token));
-            return Ok();
+            if (createdPost != null)
+            {
+                return Ok();
+            }
+            return InternalServerError();
         }
     }
 }

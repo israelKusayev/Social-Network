@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
+using System.Text;
+
 public abstract class Neo4jBaseRepository
 {
     protected IDriver _driver;
@@ -24,7 +27,7 @@ public abstract class Neo4jBaseRepository
         using (ISession session = _driver.Session())
         {
             return session.Run(query);
-           
+
         }
 
     }
@@ -32,18 +35,21 @@ public abstract class Neo4jBaseRepository
     protected void Create(object obj)
     {
         string type = obj.GetType().Name;
-        string json = JsonConvert.SerializeObject(obj);
+        string json = ObjectToJson(obj);
+
         string query = $"create(p:{type}{json})";
         Query(query);
     }
 
-    protected static List<T> RecordsToList<T> (IEnumerable<IRecord> records) where T : new()
+    protected static List<T> RecordsToList<T>(IEnumerable<IRecord> records) where T : new()
     {
         var list = new List<T>();
-        foreach(IRecord record in records)
+        foreach (IRecord record in records)
         {
-            list.Add(RecordToObject<T>(record));
+            var nodeProps = JsonConvert.SerializeObject(record[0].As<INode>().Properties);
+            list.Add(JsonConvert.DeserializeObject<T>(nodeProps));
         }
+            //list.Add(RecordToObject<T>(record));
         return list;
     }
 
@@ -52,7 +58,7 @@ public abstract class Neo4jBaseRepository
         var values = record.Values;
         Type type = typeof(T);
         T obj = new T();
-        foreach(var value in values)
+        foreach (var value in values)
         {
             var prop = type.GetProperty(value.Key);
             if (prop != null)
@@ -83,6 +89,18 @@ public abstract class Neo4jBaseRepository
                 destProp.SetValue(obj, castedValue);
             }
         }
+    }
+
+    protected static string ObjectToJson(object obj)
+    {
+        var serializer = new JsonSerializer();
+        var stringWriter = new StringWriter();
+        using (var writer = new JsonTextWriter(stringWriter))
+        {
+            writer.QuoteName = false;
+            serializer.Serialize(writer, obj);
+        }
+        return stringWriter.ToString();
     }
 }
 
