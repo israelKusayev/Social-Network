@@ -49,10 +49,10 @@ namespace Authorization_Fe
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
             UnityInjectorBl.RegisterTypes(container);
-            container.RegisterType<IAuthManager, AuthManager>();
-            container.RegisterType<IFaceBookTokenValidator, FaceBookTokenValidator>();
-            container.RegisterType<IToken, Token>();
-            container.RegisterType<ITokenValidator, TokenValidator>();
+            container.RegisterSingleton<IAuthManager, AuthManager>();
+            container.RegisterSingleton<IFaceBookTokenValidator, FaceBookTokenValidator>();
+            container.RegisterSingleton<IToken, TokenBulider>();
+            container.RegisterSingleton<ITokenValidator, TokenValidator>();
         }
     }
 }

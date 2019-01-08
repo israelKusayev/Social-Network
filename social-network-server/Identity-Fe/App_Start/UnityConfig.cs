@@ -48,8 +48,8 @@ namespace Identity_Fe
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
             UnityInjectorBl.RegisterTypes(container);            
-            container.RegisterType<IIdentiryManager, IdentiryManager>();
-            container.RegisterType<IRquestsValidator, RequestsValidator>();
+            container.RegisterSingleton<IIdentiryManager, IdentiryManager>();
+            container.RegisterSingleton<IRquestsValidator, RequestsValidator>();
             
         }
     }

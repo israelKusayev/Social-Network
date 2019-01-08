@@ -17,7 +17,7 @@ namespace Identity_Bl
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
-            container.RegisterType<IDynamoDbRepository<User>, DynamoDbRepository<User>>();
+            container.RegisterSingleton<IDynamoDbRepository<User>, DynamoDbRepository<User>>();
         }
     }
 }
