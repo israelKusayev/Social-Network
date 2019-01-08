@@ -23,9 +23,13 @@ export default class UserProfile extends Component {
 
     return (
       <>
-        <div className="mt-4">
-          <ProfileTemplate title={'User details'} isReadOnly={true} user={user} />
+        <div className="my-3">
+          <div className="row">
+            <button className="offset-5 btn btn-dark text-pink">follow</button>
+            <button className="offset-1 btn btn-dark text-pink">block</button>
+          </div>
         </div>
+        <ProfileTemplate title={'User details'} isReadOnly={true} user={user} />
       </>
     );
   }

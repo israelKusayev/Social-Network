@@ -1,4 +1,4 @@
-import React, { Component, ReactDOM } from 'react';
+import React, { Component } from 'react';
 import { Switch, Redirect, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Navbar from './components/navbar/navbar';
