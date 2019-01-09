@@ -14,27 +14,63 @@ namespace SocialBl.Managers
 
         public LikesManager()
         {
-            Neo4jLikesRepository _likesRepository = new Neo4jLikesRepository();
+            _likesRepository = new Neo4jLikesRepository();
         }
 
-        public void LikeComment(LikeDto dto)
+        public bool LikeComment(LikeDto dto)
         {
-            _likesRepository.LikeComment(dto.UserId, dto.ItemId);
+            try
+            {
+                _likesRepository.LikeComment(dto.UserId, dto.ItemId);
+                return true;
+            }
+            catch(Exception e)
+            {
+                //TODO add log here
+                return false;
+            }
         }
 
-        public void UnLikeComment(LikeDto dto)
+        public bool UnLikeComment(LikeDto dto)
         {
-            _likesRepository.UnLikeComment(dto.UserId, dto.ItemId);
+            try
+            {
+                _likesRepository.UnLikeComment(dto.UserId, dto.ItemId);
+                return true;
+            }
+            catch (Exception e)
+            {
+                //TODO add log here
+                return false;
+            }
         }
 
-        public void LikePost(LikeDto dto)
+        public bool LikePost(LikeDto dto)
         {
-            _likesRepository.LikePost(dto.UserId, dto.ItemId);
+            try
+            {
+                _likesRepository.LikePost(dto.UserId, dto.ItemId);
+                return true;
+            }
+            catch (Exception e)
+            {
+                //TODO add log here
+                return false;
+            }
         }
 
-        public void UnLikePost(LikeDto dto)
+        public bool UnLikePost(LikeDto dto)
         {
-            _likesRepository.UnLikePost(dto.UserId, dto.ItemId);
+            try
+            {
+                _likesRepository.UnLikePost(dto.UserId, dto.ItemId);
+                return false;
+            }
+            catch (Exception e)
+            {
+                //TODO add log here
+                return false;
+            }
         }
     }
 }
