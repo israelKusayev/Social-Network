@@ -14,8 +14,8 @@ namespace Authorization_Bl.Helppers
             dynamic data = ValidateSignature(token);
             int refrshTime = int.Parse(ConfigurationManager.AppSettings["RefreshTime"]) * 60;
             long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            if (data.iat > now || data.exp < now + refrshTime ||
-                data.aud != "social network")
+            if (data.iat > now || now > data.exp + refrshTime ||
+               (string)data.aud != "social network")
             {
                 return null;
             }
@@ -37,7 +37,7 @@ namespace Authorization_Bl.Helppers
 
         private dynamic ValidateSignature(string token)
         {
-            string key = ConfigurationManager.AppSettings["tokenSignKey"];           
+            string key = ConfigurationManager.AppSettings["tokenSignKey"];
             string paylod = JWT.Decode(token, Encoding.ASCII.GetBytes(key));
             dynamic data = JObject.Parse(paylod);
             return data;

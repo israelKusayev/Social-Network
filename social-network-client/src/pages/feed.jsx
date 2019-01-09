@@ -3,6 +3,7 @@ import RouteProtector from '../HOC/routeProtector';
 import Post from '../components/post';
 import { Get, Put } from '../services/httpService';
 import InfiniteScroll from 'react-infinite-scroller';
+
 class Feed extends Component {
   socialUrl = process.env.REACT_APP_SOCIAL_URL;
   componentDidMount = () => {
@@ -368,20 +369,22 @@ class Feed extends Component {
   render() {
     return (
       <div className="mt-3">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={this.getPosts}
-          hasMore={this.state.reloadMorePosts}
-          loader={
-            <div className="spinner-border mx-auto text-dark" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-          }
-        >
-          {this.state.posts.map((p, i) => {
-            return <Post onLiked={this.onLiked} key={i} post={p} />;
-          })}
-        </InfiniteScroll>
+        <div className="row">
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={this.getPosts}
+            hasMore={this.state.reloadMorePosts}
+            loader={
+              <div className="spinner-border mx-auto text-dark" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            }
+          >
+            {this.state.posts.map((p, i) => {
+              return <Post onLiked={this.onLiked} key={i} post={p} />;
+            })}
+          </InfiniteScroll>
+        </div>
       </div>
     );
   }

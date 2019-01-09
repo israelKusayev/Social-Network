@@ -18,7 +18,7 @@ namespace Identity_Fe.Controllers
         private IRquestsValidator _rquestsValidator;
         private LoggerManager _logger;
 
-        public UsersIdentityController(IIdentiryManager identiryManager, 
+        public UsersIdentityController(IIdentiryManager identiryManager,
             IRquestsValidator rquestsValidator)
         {
             _identityManager = identiryManager;
@@ -34,15 +34,14 @@ namespace Identity_Fe.Controllers
             try
             {
                 string tokenId = new TokenManager().GetUserId(Request.Headers.GetValues("x-auth-token").First());
-                if (user.UserId == null)
-                    user.UserId = tokenId;
+                if (user.UserId == null) user.UserId = tokenId;
                 string errors = _rquestsValidator.ValidateUser(user, tokenId);
-                if(errors!=null)
+                if (errors != null)
                 {
                     return BadRequest(errors);
                 }
-                var seccess = _identityManager.CreateUser(user);
-                if (seccess)
+                var success = _identityManager.CreateUser(user);
+                if (success)
                 {
                     return Ok("user data was created seccusfuly");
                 }
@@ -66,9 +65,8 @@ namespace Identity_Fe.Controllers
         {
             try
             {
-                //throw new Exception("test");
                 var user = _identityManager.FindUser(id);
-                if (user!=null)
+                if (user != null)
                 {
                     return Ok(JsonConvert.SerializeObject(user));
                 }
@@ -102,11 +100,11 @@ namespace Identity_Fe.Controllers
                 var seccess = _identityManager.UpdateUser(user);
                 if (seccess)
                 {
-                    return Ok("user data was updated seccusfuly");
+                    return Ok("user data was updated succesfuly");
                 }
                 else
                 {
-                    return BadRequest("could not update user date: user data does not exsists");
+                    return BadRequest("could not update user date: user data does not exists");
                 }
             }
             catch (Exception e)
@@ -116,6 +114,5 @@ namespace Identity_Fe.Controllers
                 return InternalServerError();
             }
         }
-
     }
 }

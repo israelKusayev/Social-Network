@@ -15,11 +15,11 @@ namespace Authorization_Fe.Controllers
 {
     public class AuthController : ApiController
     {
-        IToken _token;
+        ITokenBuilder _token;
         IAuthManager _authManager;
         IFaceBookTokenValidator _facebookValidator;
 
-        public AuthController(IToken token, IAuthManager authManager,
+        public AuthController(ITokenBuilder token, IAuthManager authManager,
             IFaceBookTokenValidator facebookValidator)
         {
             _authManager = authManager;
@@ -42,10 +42,11 @@ namespace Authorization_Fe.Controllers
                 auth = _authManager.Register(model);
                 if (auth == null)
                 {
-                    return BadRequest("Username already exists in the db");
+                    return BadRequest("Username already exists");
                 }
                 token = _token.GenerateKey(auth.UserId, model.Username);
-                _authManager.AddUserToDb(auth.UserId, model.Email, token);
+                _authManager.AddUserToIdentity(auth.UserId, model.Username, model.Email, token);
+                _authManager.AddUserToSocial(auth.UserId, model.Username, token);
             }
             catch (Exception)
             {
@@ -74,7 +75,7 @@ namespace Authorization_Fe.Controllers
                     return BadRequest("incorrect details");
                 }
 
-                var token = _token.GenerateKey(auth.UserId, model.Username,auth.IsAdmin);
+                var token = _token.GenerateKey(auth.UserId, model.Username, auth.IsAdmin);
 
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Headers.Add("x-auth-token", token);
@@ -107,8 +108,8 @@ namespace Authorization_Fe.Controllers
                 }
                 UserFacebook facebookUser = _authManager.LoginFacebook(model);
 
-                var token = _token.GenerateKey(facebookUser.UserId, model.Username,facebookUser.IsAdmin);
-                _authManager.AddUserToDb(facebookUser.UserId, model.Email, token);
+                var token = _token.GenerateKey(facebookUser.UserId, model.Username, facebookUser.IsAdmin, facebookToken);
+                _authManager.AddUserToIdentity(facebookUser.UserId, model.Username, model.Email, token);
 
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Headers.Add("x-auth-token", token);
@@ -158,7 +159,7 @@ namespace Authorization_Fe.Controllers
             {
                 string token = Request.Headers.GetValues("x-auth-token").First();
                 token = _authManager.RefreshToken(token);
-                if(token!=null)
+                if (token != null)
                 {
                     HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                     response.Headers.Add("x-auth-token", token);

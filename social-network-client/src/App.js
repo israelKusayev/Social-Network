@@ -22,10 +22,11 @@ class App extends Component {
   state = { pageUp: false };
   componentDidMount = () => {
     window.onscroll = () => {
-      if (window.pageYOffset > 0) {
+      if (window.pageYOffset <= 0) {
+        this.setState({ pageUp: false });
+      } else if (!this.state.pageUp) {
         this.setState({ pageUp: true });
-        console.log(window.pageYOffset);
-      } else this.setState({ pageUp: false });
+      }
     };
   };
   onPageUp = () => {
@@ -55,7 +56,7 @@ class App extends Component {
           </Switch>
           {this.state.pageUp && (
             <div onClick={this.onPageUp} className="pageUp">
-              <i class="fa fa-chevron-circle-up" />
+              <i className="fa fa-chevron-circle-up" />
             </div>
           )}
         </div>

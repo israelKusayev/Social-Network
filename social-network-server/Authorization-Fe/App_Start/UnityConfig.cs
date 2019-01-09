@@ -51,7 +51,7 @@ namespace Authorization_Fe
             UnityInjectorBl.RegisterTypes(container);
             container.RegisterSingleton<IAuthManager, AuthManager>();
             container.RegisterSingleton<IFaceBookTokenValidator, FaceBookTokenValidator>();
-            container.RegisterSingleton<IToken, TokenBulider>();
+            container.RegisterSingleton<ITokenBuilder, TokenBuilder>();
             container.RegisterSingleton<ITokenValidator, TokenValidator>();
         }
     }

@@ -19,7 +19,9 @@ export default class CommentButton extends Component {
           <i className="fa fa-comments" />
           <span className="text-pink"> Comment</span>
         </span>
-        <Comments postId={this.props.postId} isVisible={this.state.commentsVisible} onClose={this.closeComments} />
+        {this.state.commentsVisible && (
+          <Comments postId={this.props.postId} isVisible={this.state.commentsVisible} onClose={this.closeComments} />
+        )}
       </>
     );
   }

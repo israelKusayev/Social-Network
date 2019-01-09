@@ -11,16 +11,19 @@ namespace SocialDal.Repositories.Neo4j
     {
         public void Create(User user)
         {
-            Create(user);
+          base.Create(user);
         }
 
         public List<User> Find(string name,string userId)
         {
             string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' " +
-                "WHERE NOT EXSISTS((u)-[:Blocked]-(:User{UserId:"+ userId + "}))" +
                 "return u;";
+            //string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' " +
+            //   "WHERE NOT EXISTS((u)-[:Blocked]-(:User{UserId:" + userId + "}))" +
+            //   "return u;";
             var res = Query(query);
-            return RecordsToList<User>(res);
+            //var r = res.ToList();
+            return RecordsToList<User>(res.ToList());
         }
 
         public User Get(string userId,string myId)

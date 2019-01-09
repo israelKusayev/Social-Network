@@ -24,7 +24,7 @@ namespace SocialBl.Managers
                 //remove metadata from image string64
                 string result = Regex.Replace(image, @"^data:image\/[a-zA-Z]+;base64,", String.Empty);
                 byte[] bytes = Convert.FromBase64String(result);
-                string key = bucketUrl + guid + "." + format;
+                string key = guid + "." + format;
 
                 using (s3Client)
                 {

@@ -64,3 +64,11 @@ body {
   cursor: pointer;
   opacity: 0.8;
 }
+.search {
+  top: 130%;
+  width: 12%;
+  z-index: 100;
+}
+.cursor-p {
+  cursor: pointer;
+}
