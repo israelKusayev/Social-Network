@@ -17,19 +17,19 @@ namespace Authorization_Bl.Managers
         IDynamoDbRepository<UserFacebook> _oAuthRepository;
         IDynamoDbRepository<BlockedUser> _blockedRepository;
         ITokenValidator _tokenValidator;
-        IToken _token;
+        ITokenBuilder _tokenBuilder;
 
         public AuthManager(IDynamoDbRepository<UserAuth> authRepository,
             IDynamoDbRepository<UserFacebook> oAuthRepository,
             IDynamoDbRepository<BlockedUser> blockedRepository,
             ITokenValidator tokenValidator,
-            IToken token)
+            ITokenBuilder tokenBuilder)
         {
             _authRepository = authRepository;
             _oAuthRepository = oAuthRepository;
             _blockedRepository = blockedRepository;
             _tokenValidator = tokenValidator;
-            _token = token;
+            _tokenBuilder = tokenBuilder;
         }
 
         public UserAuth Register(RegisterDTO model)
@@ -52,13 +52,6 @@ namespace Authorization_Bl.Managers
             return user;
         }
 
-        private bool IsBlocked(string userId)
-        {
-            if (_blockedRepository.Get(userId) == null)
-                return false;
-            return true;
-        }
-
         public UserFacebook LoginFacebook(FacebookLoginDTO model)
         {
             var existingUser = _oAuthRepository.Get(model.FacebookId);
@@ -77,22 +70,6 @@ namespace Authorization_Bl.Managers
             }
         }
 
-        /// <summary>
-        /// create new user in user table on dynamoDB
-        /// </summary>
-        public string AddUserToIdentity(string userId, string email, string token)
-        {
-            string url = ConfigurationManager.AppSettings["IdentityServiceUrl"];
-            url += "/UsersIdentity";
-            User user = new User() { UserId = userId, Email = email };
-            using (var http = new HttpClient())
-            {
-                http.DefaultRequestHeaders.Add("x-auth-token", token);
-                var response = http.PostAsJsonAsync(url, user).Result;
-                return response.Content.ReadAsStringAsync().Result;
-            }
-        }
-
         public bool ResetPassword(ResetPasswordDTO model)
         {
             var user = _authRepository.Get(model.Username);
@@ -102,25 +79,51 @@ namespace Authorization_Bl.Managers
             return true;
         }
 
-        public string RefreshToken(string token)
+        /// <summary>
+        /// create new user in user table on dynamoDB
+        /// </summary>
+        public string AddUserToIdentity(string userId, string username, string email, string token)
         {
-            var data = _tokenValidator.ValidaleRefreshToken(token);
-            if (data == null)
-                return data;
-            return _token.GenerateKey((string)data.sub, (string)data.username, (bool)data.IsAdmin);
+            string url = ConfigurationManager.AppSettings["IdentityServiceUrl"];
+            url += "/UsersIdentity";
+            User user = new User() { UserId = userId, Email = email, Username = username };
+            using (var http = new HttpClient())
+            {
+                http.DefaultRequestHeaders.Add("x-auth-token", token);
+                var response = http.PostAsJsonAsync(url, user).Result;
+                return response.Content.ReadAsStringAsync().Result;
+            }
         }
 
+        /// <summary>
+        /// create new node in neo4j
+        /// </summary>
         public bool AddUserToSocial(string userId, string username, string token)
         {
             string url = ConfigurationManager.AppSettings["SocialServiceUrl"];
             url += "/users";
-            User user = new User() { UserId = userId, UserName = username };
+            User user = new User() { UserId = userId, Username = username };
             using (var http = new HttpClient())
             {
                 http.DefaultRequestHeaders.Add("x-auth-token", token);
                 var response = http.PostAsJsonAsync(url, user).Result;
                 return response.IsSuccessStatusCode;
             }
+        }
+
+        public string RefreshToken(string token)
+        {
+            var data = _tokenValidator.ValidaleRefreshToken(token);
+            if (data == null)
+                return data;
+            return _tokenBuilder.GenerateKey((string)data.sub, (string)data.username, (bool)data.IsAdmin);
+        }
+
+        private bool IsBlocked(string userId)
+        {
+            if (_blockedRepository.Get(userId) == null)
+                return false;
+            return true;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Authorization_Common.Interfaces.Managers
 {
     public interface IAuthManager
     {
-        string AddUserToIdentity(string userId, string email, string token);
+        string AddUserToIdentity(string userId,string username, string email, string token);
         UserAuth Login(LoginDTO model);
         UserFacebook LoginFacebook(FacebookLoginDTO model);
         UserAuth Register(RegisterDTO model);

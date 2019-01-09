@@ -8,6 +8,7 @@ const SearchBox = ({ value, onChange }) => {
       className="form-control  mr-sm-2"
       placeholder="Search..."
       value={value}
+      autoComplete="off"
       onChange={(e) => onChange(e.currentTarget.value)}
     />
   );

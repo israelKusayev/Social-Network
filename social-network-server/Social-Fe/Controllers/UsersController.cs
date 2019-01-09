@@ -12,9 +12,12 @@ namespace Social_Fe.Controllers
     public class UsersController : ApiController
     {
         UsersManager _usersManager;
+        TokenManager _tokenManager;
+
         public UsersController()
         {
             _usersManager = new UsersManager();
+            _tokenManager = new TokenManager();
         }
 
         [HttpPost]
@@ -33,7 +36,9 @@ namespace Social_Fe.Controllers
         {
             try
             {
-                return Ok(_usersManager.GetUsers(searchQuery));
+                var token = Request.Headers.GetValues("x-auth-token").First();
+                string userId = _tokenManager.GetUserId(token);
+                return Ok(_usersManager.GetUsers(searchQuery, userId));
             }
             catch (Exception ex)
             {

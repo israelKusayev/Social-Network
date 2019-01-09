@@ -28,10 +28,10 @@ namespace SocialBl.Managers
                 return false;
             }
         }
-        
-        public object GetUsers(string searchQuery)
+
+        public object GetUsers(string searchQuery, string userId)
         {
-            return _usersRepository.Find(searchQuery);
+            return _usersRepository.Find(searchQuery, userId);
         }
     }
 }

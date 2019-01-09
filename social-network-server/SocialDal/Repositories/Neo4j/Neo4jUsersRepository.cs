@@ -17,8 +17,10 @@ namespace SocialDal.Repositories.Neo4j
         public List<User> Find(string name,string userId)
         {
             string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' " +
-                "WHERE NOT EXSISTS((u)-[:Blocked]-(:User{UserId:"+ userId + "}))" +
                 "return u;";
+            //string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' " +
+            //   "WHERE NOT EXISTS((u)-[:Blocked]-(:User{UserId:" + userId + "}))" +
+            //   "return u;";
             var res = Query(query);
             //var r = res.ToList();
             return RecordsToList<User>(res.ToList());
