@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Net.Http;
+using Authorization_Bl.Helppers;
 using Authorization_Common.Exceptions;
 using Authorization_Common.Interfaces;
 using Authorization_Common.Interfaces.Helppers;
@@ -35,13 +36,14 @@ namespace Authorization_Bl.Managers
         public UserAuth Register(RegisterDTO model)
         {
             var guid = Guid.NewGuid().ToString();
-            return _authRepository.Add(new UserAuth() { Username = model.Username, Password = model.Password, UserId = guid });
+            string passHash = PasswordHasher.Hash(model.Password);
+            return _authRepository.Add(new UserAuth() { Username = model.Username, Password = passHash, UserId = guid });
         }
 
         public UserAuth Login(LoginDTO model)
         {
             var user = _authRepository.Get(model.Username);
-            if (user == null || user.Password != model.Password)
+            if (user == null || !PasswordHasher.Verify(model.Password,user.Password))
             {
                 return null;
             }

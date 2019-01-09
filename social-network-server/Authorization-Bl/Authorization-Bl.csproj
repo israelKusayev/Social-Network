@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helppers\FaceBookTokenValidator.cs" />
+    <Compile Include="Helppers\PasswordHasher.cs" />
     <Compile Include="Helppers\TokenValidator.cs" />
     <Compile Include="Managers\AuthManager.cs" />
     <Compile Include="Managers\BlockedUsersManager.cs" />
