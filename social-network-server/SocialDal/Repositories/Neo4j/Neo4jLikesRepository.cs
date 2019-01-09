@@ -29,9 +29,19 @@ namespace SocialDal.Repositories.Neo4j
             Like(userId, PostId, "Post");
         }
 
+        public void UnLikePost(string userId, string PostId)
+        {
+            UnLike(userId, PostId, "Post");
+        }
+
         public void LikeComment(string userId, string CommentId)
         {
             Like(userId, CommentId, "Comment");
+        }
+
+        public void UnLikeComment(string userId, string CommentId)
+        {
+            UnLike(userId, CommentId, "Comment");
         }
     }
 }
