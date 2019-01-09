@@ -15,7 +15,7 @@ namespace Authorization_Bl.Helppers
             int refrshTime = int.Parse(ConfigurationManager.AppSettings["RefreshTime"]) * 60;
             long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             if (data.iat > now || now > data.exp + refrshTime ||
-                data.aud != "social network")
+               (string)data.aud != "social network")
             {
                 return null;
             }

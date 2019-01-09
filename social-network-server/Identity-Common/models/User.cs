@@ -15,6 +15,9 @@ namespace Identity_Common.models
         [JsonProperty(PropertyName = "userId")]
         public string UserId { get; set; }
 
+        [JsonProperty(PropertyName = "username")]
+        public string Username { get; set; }
+
         [JsonProperty(PropertyName = "firstName")]
         public string FirstName { get; set; }
 

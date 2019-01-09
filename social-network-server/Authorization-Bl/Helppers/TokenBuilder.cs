@@ -10,17 +10,17 @@ using System.Text;
 
 namespace Authorization_Bl
 {
-    public class TokenBulider : IToken
+    public class TokenBuilder : ITokenBuilder
     {
         private IDynamoDbRepository<TokenHistory> _tokenReposirory;
-        public TokenBulider(IDynamoDbRepository<TokenHistory> tokenReposirory)
+        public TokenBuilder(IDynamoDbRepository<TokenHistory> tokenReposirory)
         {
             _tokenReposirory = tokenReposirory;
         }
-        public string GenerateKey(string userId, string username,bool isAdmin = false)
+        public string GenerateKey(string userId, string username, bool isAdmin = false, string facebookToken = null)
         {
             int ttl = int.Parse(ConfigurationManager.AppSettings["TokenTTL"]);
-            long exp = (long)(DateTime.UtcNow.AddMinutes(15) - new DateTime(1970, 1, 1)).TotalSeconds;
+            long exp = (long)(DateTime.UtcNow.AddMinutes(ttl) - new DateTime(1970, 1, 1)).TotalSeconds;
             long iat = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
             var payload = new Dictionary<string, object>()
@@ -37,11 +37,11 @@ namespace Authorization_Bl
             byte[] secretKey = Encoding.ASCII.GetBytes(key);
             string token = Jose.JWT.Encode(payload, secretKey, JwsAlgorithm.HS256);
 
-            TokenHistory history = new TokenHistory() { Token = token, UserId = userId, TimeStamp = iat };
+            TokenHistory history = new TokenHistory() { Token = token, FacebookToken = facebookToken, UserId = userId, TimeStamp = iat };
             _tokenReposirory.Add(history);
 
             return token;
         }
-        
+
     }
 }

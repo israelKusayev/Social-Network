@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
 import ProfileTemplate from './profileTemplate';
+import { convertJsonToUser } from '../converters/userConvertor';
+import User from '../models/user';
+import { getUser } from '../services/usersService';
 
 export default class UserProfile extends Component {
   state = {
-    user: {}
+    user: new User()
   };
+
   componentDidMount = () => {
-    this.setState({
-      user: {
-        username: 'israel',
-        firstName: 'alla',
-        lastName: 'odposd',
-        age: 18,
-        workPlace: 'sela'
-      }
-    });
+    this.getUser();
+  };
+
+  getUser = async () => {
+    const res = await getUser(this.props.match.params.id);
+    var data = await res.json();
+    let user = convertJsonToUser(data);
+    this.setState({ user });
   };
 
   render() {
     const { user } = this.state;
-    console.log(user);
 
     return (
       <>

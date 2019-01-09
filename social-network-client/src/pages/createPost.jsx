@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import ImagePicker from '../components/imagePicker';
 import RouteProtector from '../HOC/routeProtector';
-import { Post } from '../services/httpService';
+import { createPost } from '../services/postsService';
 
 class CreatePost extends Component {
-  socialUrl = process.env.REACT_APP_SOCIAL_URL;
   state = {
     data: {
       whoIsWatching: 'all',
@@ -32,12 +31,8 @@ class CreatePost extends Component {
       this.setState({ error: 'content is required!' });
       return;
     }
-    console.log(this.state);
-
-    const res = await Post(`${this.socialUrl}post`, JSON.stringify(this.state.data), true);
+    const res = await createPost(this.state.data);
     if (res.status === 200) {
-      console.log('ok');
-
       this.props.history.push('/');
     } else {
       this.setState({ error: 'somthing went worng please try again' });

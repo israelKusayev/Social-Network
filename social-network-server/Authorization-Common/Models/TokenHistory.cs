@@ -17,5 +17,7 @@ namespace Authorization_Common.Models
         public long TimeStamp { get; set; }
 
         public string Token { get; set; }
+
+        public string FacebookToken { get; set; }
     }
 }

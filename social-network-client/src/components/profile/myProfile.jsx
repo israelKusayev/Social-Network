@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import User from '../../models/user';
 import ProfileTemplate from '../profileTemplate';
-import { getJwt, getUsername, getUserId } from '../../services/jwtService';
-import { Put, Get } from '../../services/httpService';
+import { getUsername, getUserId } from '../../services/jwtService';
 import { convertJsonToUser } from '../../converters/userConvertor';
+import { getUser, updateUser } from '../../services/usersService';
 
 export default class MyProfile extends Component {
   state = {
     user: new User()
   };
-  identityUrl = process.env.REACT_APP_IDENTITY_URL;
 
   componentDidMount = () => {
     this.getUser();
   };
 
   getUser = async () => {
-    const res = await Get(`${this.identityUrl}UsersIdentity/${getUserId()}`, getJwt());
+    const res = await getUser(getUserId());
+    console.log(res);
 
     var data = await res.json();
     let user = convertJsonToUser(data);
@@ -34,7 +34,7 @@ export default class MyProfile extends Component {
     e.preventDefault();
 
     const user = JSON.stringify(this.state.user);
-    const res = await Put(`${this.identityUrl}UsersIdentity`, user, getJwt());
+    const res = await updateUser(user);
 
     if (res.status !== 200) {
       this.getUser();
