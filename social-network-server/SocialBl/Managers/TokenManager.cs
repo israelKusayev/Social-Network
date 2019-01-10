@@ -1,15 +1,13 @@
 ﻿using Jose;
 using Newtonsoft.Json.Linq;
+using Social_Common.Interfaces.Managers;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialBl.Managers
 {
-    public class TokenManager //: ITokenManager
+    public class TokenManager : ITokenManager
     {
         public bool IsValid(string token)
         {

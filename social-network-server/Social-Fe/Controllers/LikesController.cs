@@ -14,9 +14,9 @@ namespace Social_Fe.Controllers
     {
         private LikesManager _likesManager;
 
-        public LikesController()
+        public LikesController(LikesManager likesManager)
         {
-            _likesManager = new LikesManager();
+            _likesManager = likesManager;
         }
 
         [HttpPost]

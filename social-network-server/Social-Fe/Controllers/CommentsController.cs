@@ -11,10 +11,11 @@ namespace Social_Fe.Controllers
         private CommentsManager _commentsManager;
         private TokenManager _tokenManager;
 
-        public CommentsController()
+        public CommentsController(CommentsManager commentsManager,
+            TokenManager tokenManager)
         {
-            _commentsManager = new CommentsManager();
-            _tokenManager = new TokenManager();
+            _commentsManager = commentsManager;
+            _tokenManager = tokenManager;
         }
 
         [HttpPost]

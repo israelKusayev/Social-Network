@@ -1,17 +1,13 @@
-﻿using Newtonsoft.Json;
-using Social_Common.Enum;
+﻿using Social_Common.Enum;
+using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialDal.Repositories.Neo4j
 {
-    public class Neo4jPostsRepository : Neo4jBaseRepository
+    public class Neo4jPostsRepository : Neo4jBaseRepository, IPostsRepository
     {
         private static int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
 

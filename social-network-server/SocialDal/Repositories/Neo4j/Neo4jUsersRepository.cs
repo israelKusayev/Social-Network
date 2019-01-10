@@ -1,13 +1,11 @@
-﻿using Social_Common.Models;
-using System;
+﻿using Social_Common.Interfaces.Repositories;
+using Social_Common.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialDal.Repositories.Neo4j
 {
-    public class Neo4jUsersRepository : Neo4jBaseRepository
+    public class Neo4jUsersRepository : Neo4jBaseRepository, IUsersRepository
     {
         public void Create(User user)
         {
@@ -71,7 +69,7 @@ namespace SocialDal.Repositories.Neo4j
 
             string query = " return exists((: User{ UserId:'" + userId + "'})-[:Following]->(:User{ UserId:'" + followedUserId + "'})) as isFollow";
             var res = Query(query);
-            var r =res.Single()[0];
+            var r = res.Single()[0];
             return (bool)r;/* RecordToObj<bool>(res.Single());*/
         }
 
