@@ -55,8 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Managers\AmazonS3Uploader.cs" />
+    <Compile Include="Managers\CommentsManager.cs" />
     <Compile Include="Managers\PostManager.cs" />
     <Compile Include="Managers\TokenManager.cs" />
     <Compile Include="Managers\UsersManager.cs" />
