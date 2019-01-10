@@ -53,6 +53,18 @@ namespace SocialDal.Repositories.Neo4j
             return list;
         }
 
+
+        protected static List<T> UnestedRecordToList<T>(IEnumerable<IRecord> records) where T : new()
+        {
+            var list = new List<T>();
+            foreach (IRecord record in records)
+            {
+                var nodeProps = JsonConvert.SerializeObject(record.Values);
+                list.Add(JsonConvert.DeserializeObject<T>(nodeProps));
+            }
+            return list;
+        }
+
         protected static T RecordToObj<T>(IRecord record) where T : new()
         {
             var nodeProps = JsonConvert.SerializeObject(record[0].As<INode>().Properties);

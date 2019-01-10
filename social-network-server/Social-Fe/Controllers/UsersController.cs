@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace Social_Fe.Controllers
 {
+    [RoutePrefix("api/users/")]
     public class UsersController : ApiController
     {
         UsersManager _usersManager;
@@ -34,7 +35,7 @@ namespace Social_Fe.Controllers
 
         [JWTAuth]
         [HttpGet]
-        [Route("api/users/getUsers/{searchQuery}")]
+        [Route("getUsers/{searchQuery}")]
         public IHttpActionResult GetUsers(string searchQuery)
         {
             try
@@ -51,8 +52,36 @@ namespace Social_Fe.Controllers
 
         [JWTAuth]
         [HttpGet]
-        [Route("api/users/isFollow/{followedUserId}")]
-        public IHttpActionResult GetFollowing(string followedUserId)
+        [Route("follow/{followedUserId}")]
+        public IHttpActionResult Follow(string followedUserId)
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_usersManager.Follow(userId, followedUserId))
+            {
+                return Ok("You followed successfully");
+            }
+            return InternalServerError();
+        }
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("unfollow/{followedUserId}")]
+        public IHttpActionResult Unfollow(string followedUserId)
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_usersManager.unfollow(userId, followedUserId))
+            {
+                return Ok("You unfollowed successfully");
+            }
+            return InternalServerError();
+        }
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("isFollow/{followedUserId}")]
+        public IHttpActionResult IsFollow(string followedUserId)
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
             string userId = _tokenManager.GetUserId(token);
@@ -68,35 +97,7 @@ namespace Social_Fe.Controllers
 
         [JWTAuth]
         [HttpGet]
-        [Route("api/users/follow/{followedUserId}")]
-        public IHttpActionResult Follow(string followedUserId)
-        {
-            var token = Request.Headers.GetValues("x-auth-token").First();
-            string userId = _tokenManager.GetUserId(token);
-            if (_usersManager.Follow(userId, followedUserId))
-            {
-                return Ok("You followed successfully");
-            }
-            return InternalServerError();
-        }
-
-        [JWTAuth]
-        [HttpGet]
-        [Route("api/users/unfollow/{followedUserId}")]
-        public IHttpActionResult Unfollow(string followedUserId)
-        {
-            var token = Request.Headers.GetValues("x-auth-token").First();
-            string userId = _tokenManager.GetUserId(token);
-            if (_usersManager.unfollow(userId, followedUserId))
-            {
-                return Ok("You unfollowed successfully");
-            }
-            return InternalServerError();
-        }
-
-        [JWTAuth]
-        [HttpGet]
-        [Route("api/users/following")]
+        [Route("following")]
         public IHttpActionResult GetFollowing()
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
@@ -104,6 +105,70 @@ namespace Social_Fe.Controllers
             try
             {
                 return Ok(_usersManager.GetFollowing(userId));
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("followers")]
+        public IHttpActionResult GetFollowers()
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            try
+            {
+                return Ok(_usersManager.GetFollowers(userId));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("blockUser/{blockedUserId}")]
+        public IHttpActionResult BlockUser(string blockedUserId)
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_usersManager.BlockUser(userId, blockedUserId))
+            {
+                return Ok("You blocked this user successfully");
+            }
+            return InternalServerError();
+        }
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("UnblockUser/{blockedUserId}")]
+        public IHttpActionResult UnblockUser(string blockedUserId)
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_usersManager.UnblockUser(userId, blockedUserId))
+            {
+                return Ok("You unblocked this user successfully");
+            }
+            return InternalServerError();
+        }
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("blockedUsers")]
+        public IHttpActionResult GetBlockedUsers()
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            try
+            {
+                return Ok(_usersManager.GetBlockedUsers(userId));
             }
             catch (Exception)
             {

@@ -114,7 +114,6 @@ export default class Comments extends React.Component {
 
   render() {
     const { error, data, comments } = this.state;
-    console.log('comments renderd');
 
     return (
       <Modal dialogClassName="modal-lg " visible={this.props.isVisible} onClickBackdrop={this.modalBackdropClicked}>

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +58,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Dtos\CreateCommentDto.cs" />
     <Compile Include="Models\Dtos\CreatePostDto.cs" />
+    <Compile Include="Models\Dtos\FollowersDTO.cs" />
     <Compile Include="Models\Dtos\LikeDto.cs" />
     <Compile Include="Models\Dtos\PostListDto.cs" />
     <Compile Include="Models\Dtos\ReturnedCommentDto.cs" />
@@ -63,6 +67,8 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
