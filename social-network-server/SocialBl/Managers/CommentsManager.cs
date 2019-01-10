@@ -1,30 +1,29 @@
-﻿using Social_Common.Models;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using SocialDal.Repositories.Neo4j;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialBl.Managers
 {
-    public class CommentsManager
+    public class CommentsManager : ICommentsManager
     {
         private Neo4jCommentsRepository _commentsRepository;
         private AmazonS3Uploader _s3Uploader;
 
-        public CommentsManager()
+        public CommentsManager(Neo4jCommentsRepository commentsRepository,
+            AmazonS3Uploader s3Uploader)
         {
-            _commentsRepository = new Neo4jCommentsRepository();
-            _s3Uploader = new AmazonS3Uploader();
+            _commentsRepository = commentsRepository;
+            _s3Uploader = s3Uploader;
         }
 
-        public bool Create(CreateCommentDto commentDto,string userId)
+        public bool Create(CreateCommentDto commentDto, string userId)
         {
             string guid = Guid.NewGuid().ToString();
             string url = _s3Uploader.UploadFile(commentDto.Image, guid);
-            if(url == null)
+            if (url == null)
             {
                 return false;
             }
@@ -37,7 +36,7 @@ namespace SocialBl.Managers
             };
             try
             {
-                _commentsRepository.Create(comment,userId, commentDto.postId);
+                _commentsRepository.Create(comment, userId, commentDto.postId);
                 return true;
             }
             catch (Exception e)
@@ -47,7 +46,7 @@ namespace SocialBl.Managers
             }
         }
 
-        public List<ReturnedCommentDto> GetByPost(string postId,string userId)
+        public List<ReturnedCommentDto> GetByPost(string postId, string userId)
         {
             try
             {

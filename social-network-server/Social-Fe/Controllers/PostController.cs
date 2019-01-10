@@ -15,10 +15,10 @@ namespace Social_Fe.Controllers
     {
         PostManager _postManager;
         TokenManager _tokenManager;
-        public PostController()
+        public PostController(PostManager postManager, TokenManager tokenManager)
         {
-            _postManager = new PostManager();
-            _tokenManager = new TokenManager();
+            _postManager = postManager;
+            _tokenManager = tokenManager;
         }
         [JWTAuth]
         [HttpPost]

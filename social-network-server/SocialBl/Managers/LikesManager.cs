@@ -1,20 +1,17 @@
-﻿using Social_Common.Models.Dtos;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models.Dtos;
 using SocialDal.Repositories.Neo4j;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialBl.Managers
 {
-    public class LikesManager
+    public class LikesManager : ILikesManager
     {
         private Neo4jLikesRepository _likesRepository;
 
-        public LikesManager()
+        public LikesManager(Neo4jLikesRepository likesRepository)
         {
-            _likesRepository = new Neo4jLikesRepository();
+            _likesRepository = likesRepository;
         }
 
         public bool LikeComment(LikeDto dto)
@@ -24,7 +21,7 @@ namespace SocialBl.Managers
                 _likesRepository.LikeComment(dto.UserId, dto.ItemId);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 //TODO add log here
                 return false;
