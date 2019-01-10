@@ -21,7 +21,7 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("/api/Likes/LikePost")]
+        [Route("api/Likes/LikePost")]
         public IHttpActionResult LikePost(LikeDto dto)
         {
             if(_likesManager.LikePost(dto))
@@ -33,7 +33,7 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("/api/Likes/UnLikePost")]
+        [Route("api/Likes/UnLikePost")]
         public IHttpActionResult UnLikePost(LikeDto dto)
         {
             if (_likesManager.UnLikePost(dto))
@@ -45,7 +45,7 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("/api/Likes/LikeComment")]
+        [Route("api/Likes/LikeComment")]
         public IHttpActionResult LikeComment(LikeDto dto)
         {
             if (_likesManager.LikeComment(dto))
@@ -57,7 +57,7 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("/api/Likes/UnLikeComment")]
+        [Route("api/Likes/UnLikeComment")]
         public IHttpActionResult UnLikeComment(LikeDto dto)
         {
             if (_likesManager.UnLikeComment(dto))

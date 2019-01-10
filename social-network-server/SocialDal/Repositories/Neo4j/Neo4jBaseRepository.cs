@@ -50,47 +50,53 @@ namespace SocialDal.Repositories.Neo4j
                 var nodeProps = JsonConvert.SerializeObject(record[0].As<INode>().Properties);
                 list.Add(JsonConvert.DeserializeObject<T>(nodeProps));
             }
-            //list.Add(RecordToObject<T>(record));
             return list;
         }
 
-        protected static T RecordToObject<T>(IRecord record) where T : new()
+        protected static T RecordToObj<T>(IRecord record) where T : new()
         {
-            var values = record.Values;
-            Type type = typeof(T);
-            T obj = new T();
-            foreach (var value in values)
-            {
-                var prop = type.GetProperty(value.Key);
-                if (prop != null)
-                {
-                    var castedValue = Convert.ChangeType(value.Value, prop.PropertyType);
-                    if (prop.CanWrite)
-                    {
-                        prop.SetValue(obj, castedValue);
-                    }
-                }
-                else
-                {
-                    FlatenObject(type, obj, value, prop);
-                }
-            }
-            return obj;
+            var nodeProps = JsonConvert.SerializeObject(record[0].As<INode>().Properties);
+            return JsonConvert.DeserializeObject<T>(nodeProps);
+
         }
 
-        protected static void FlatenObject<T>(Type type, T obj, KeyValuePair<string, object> value, System.Reflection.PropertyInfo prop) where T : new()
-        {
-            var srcObj = value.Value;
-            foreach (var srcProp in srcObj.GetType().GetProperties())
-            {
-                var destProp = type.GetProperty(srcProp.Name);
-                var castedValue = Convert.ChangeType(srcProp.GetValue(srcObj), destProp.PropertyType);
-                if (destProp != null && prop.CanWrite)
-                {
-                    destProp.SetValue(obj, castedValue);
-                }
-            }
-        }
+        //protected static T RecordToObject<T>(IRecord record) where T : new()
+        //{
+        //    var values = record.Values;
+        //    Type type = typeof(T);
+        //    T obj = new T();
+        //    foreach (var value in values)
+        //    {
+        //        var prop = type.GetProperty(value.Key);
+        //        if (prop != null)
+        //        {
+        //            var castedValue = Convert.ChangeType(value.Value, prop.PropertyType);
+        //            if (prop.CanWrite)
+        //            {
+        //                prop.SetValue(obj, castedValue);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            FlatenObject(type, obj, value, prop);
+        //        }
+        //    }
+        //    return obj;
+        //}
+
+        //protected static void FlatenObject<T>(Type type, T obj, KeyValuePair<string, object> value, System.Reflection.PropertyInfo prop) where T : new()
+        //{
+        //    var srcObj = value.Value;
+        //    foreach (var srcProp in srcObj.GetType().GetProperties())
+        //    {
+        //        var destProp = type.GetProperty(srcProp.Name);
+        //        var castedValue = Convert.ChangeType(srcProp.GetValue(srcObj), destProp.PropertyType);
+        //        if (destProp != null && prop.CanWrite)
+        //        {
+        //            destProp.SetValue(obj, castedValue);
+        //        }
+        //    }
+        //}
 
         protected static string ObjectToJson(object obj)
         {

@@ -6,12 +6,16 @@ export async function Get(url, jwt = false) {
     'Content-Type': 'application/json'
   });
   if (jwt) myHeaders.append('x-auth-token', getJwt());
-  const res = await fetch(url, { headers: myHeaders });
-  if (res.status === 401) {
-    await refreshToken();
-    return Get(url, jwt);
+  try {
+    const res = await fetch(url, { headers: myHeaders });
+    if (res.status === 401) {
+      await refreshToken();
+      return Get(url, jwt);
+    }
+    return res;
+  } catch (err) {
+    return err;
   }
-  return res;
 }
 
 export async function Post(url, data, jwt = false) {
@@ -19,21 +23,22 @@ export async function Post(url, data, jwt = false) {
     'Content-Type': 'application/json'
   });
   if (jwt) myHeaders.append('x-auth-token', getJwt());
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: data,
+      headers: myHeaders
+    });
+    if (res.status === 401) {
+      await refreshToken();
+      console.log('401');
 
-  const res = await fetch(url, {
-    method: 'POST',
-    body: data,
-    headers: myHeaders
-  });
-  if (res.status === 401) {
-    await refreshToken();
-    console.log('401');
-
-    return Post(url, data, jwt);
+      return Post(url, data, jwt);
+    }
+    return res;
+  } catch (err) {
+    return err;
   }
-  console.log(res);
-
-  return res;
 }
 
 export async function Put(url, data, jwt = false) {
@@ -47,15 +52,13 @@ export async function Put(url, data, jwt = false) {
       body: data,
       headers: myHeaders
     });
-    console.log('res', res);
-
     if (res.status === 401) {
       await refreshToken();
       return Put(url, data, jwt);
     }
     return res;
-  } catch (error) {
-    return error;
+  } catch (err) {
+    return err;
   }
 }
 
