@@ -43,8 +43,8 @@ class SearchUsers extends Component {
         <ul className="list-group cursor-p list-group-border text-pink bg-dark position-absolute search">
           {this.state.users.map((u) => {
             return (
-              <li key={u.UserId} className="list-group-item bg-dark" onClick={() => this.showUser(u.UserId)}>
-                {u.UserName}
+              <li key={u.userId} className="list-group-item bg-dark" onClick={() => this.showUser(u.userId)}>
+                {u.username}
               </li>
             );
           })}

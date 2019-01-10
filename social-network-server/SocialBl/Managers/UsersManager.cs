@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Social_Common.Models;
+using Social_Common.Models.Dtos;
 using SocialDal.Repositories.Neo4j;
 
 namespace SocialBl.Managers
@@ -56,7 +57,6 @@ namespace SocialBl.Managers
         public bool IsFollow(string userId, string followedUserId)
         {
             return _usersRepository.IsFollow(userId, followedUserId);
-
         }
 
         public bool unfollow(string userId, string followedUserId)
@@ -71,6 +71,44 @@ namespace SocialBl.Managers
                 // todo logger
                 return false;
             }
+        }
+
+        public bool BlockUser(string userId, string blockedUserId)
+        {
+            try
+            {
+                _usersRepository.Block(userId, blockedUserId);
+                return true;
+            }
+            catch (Exception e)
+            {
+                // todo logger
+                return false;
+            }
+        }
+
+        public List<User> GetBlockedUsers(string userId)
+        {
+            return _usersRepository.GetBlockedUsers(userId);
+        }
+
+        public bool UnblockUser(string userId, string blockedUserId)
+        {
+            try
+            {
+                _usersRepository.UnBlock(userId, blockedUserId);
+                return true;
+            }
+            catch (Exception e)
+            {
+                // todo logger
+                return false;
+            }
+        }
+
+        public List<FollowersDTO> GetFollowers(string userId)
+        {
+            return _usersRepository.GetFollowers(userId);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Social_Common.Models;
+using Social_Common.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,8 +38,10 @@ namespace SocialDal.Repositories.Neo4j
         {
             string query = "MATCH (blocking:User{UserId:'" + blockingUserId + "'})," +
                 "(blocked:User{UserId:'" + blockedUserId + "'})" +
-                "CREATE (blocking)-[r:Blocked]->(blocked)" +
-                "RETURN type(r)";
+                "MERGE (blocking)-[r:Blocked]->(blocked)";
+            Query(query);
+
+            UnFollow(blockingUserId, blockedUserId);
         }
 
         public void UnBlock(string blockingUserId, string blockedUserId)
@@ -46,15 +49,16 @@ namespace SocialDal.Repositories.Neo4j
             string query = "MATCH (:User{UserId:'" + blockingUserId + "'})-[r:Blocked]->" +
                 "(:User{UserId:'" + blockedUserId + "'})" +
                 "DELETE r";
+            Query(query);
         }
 
         public void Follow(string followingUserId, string followedUserId)
         {
             string query = "MATCH (following:User{UserId:'" + followingUserId + "'})," +
                 "(followed:User{UserId:'" + followedUserId + "'})" +
-                "CREATE (following)-[r:Following]->(followed)" +
+                "MERGE (following)-[r:Following]->(followed)" +
                 "RETURN type(r)";
-            var res = Query(query);
+            Query(query);
         }
 
         public void UnFollow(string followingUserId, string followedUserId)
@@ -71,8 +75,7 @@ namespace SocialDal.Repositories.Neo4j
 
             string query = " return exists((: User{ UserId:'" + userId + "'})-[:Following]->(:User{ UserId:'" + followedUserId + "'})) as isFollow";
             var res = Query(query);
-            var r =res.Single()[0];
-            return (bool)r;/* RecordToObj<bool>(res.Single());*/
+            return (bool)res.Single()[0];
         }
 
 
@@ -83,9 +86,16 @@ namespace SocialDal.Repositories.Neo4j
             return RecordsToList<User>(res.ToList());
         }
 
-        public List<User> GetFollowers(string userId)
+        public List<FollowersDTO> GetFollowers(string userId)
         {
-            string query = "match(:User{ UserId:'" + userId + "'})<-[:Following]-(u: User) return u";
+            string query = "match (me:User{UserId:'" + userId + "'})<-[:Following]-(u:User) return u.UserName as UserName, u.UserId as UserId, exists((me)-[:Following]->(u)) as IsFollowing";
+            var res = Query(query);
+            return UnestedRecordToList<FollowersDTO>(res.ToList());
+        }
+
+        public List<User> GetBlockedUsers(string userId)
+        {
+            string query = "match(:User{ UserId:'" + userId + "'})-[:Blocked]->(u: User) return u";
             var res = Query(query);
             return RecordsToList<User>(res.ToList());
         }

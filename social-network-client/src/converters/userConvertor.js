@@ -1,8 +1,6 @@
 import User from '../models/user';
 
 export function convertJsonToUser(jsonUser) {
-  console.log(jsonUser);
-
   const obj = JSON.parse(jsonUser);
   const user = new User();
 

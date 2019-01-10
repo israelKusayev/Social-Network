@@ -26,6 +26,21 @@ export async function unfollow(userId) {
   return await Get(socialUrl + 'unfollow/' + userId, true);
 }
 
+export async function blockUser(blockedUserId) {
+  return await Get(socialUrl + 'blockUser/' + blockedUserId, true);
+}
+export async function unblockUser(blockedUserId) {
+  return await Get(socialUrl + 'UnblockUser/' + blockedUserId, true);
+}
+
 export async function getFollowings() {
   return await Get(socialUrl + 'following/', true);
+}
+
+export async function getFollowers() {
+  return await Get(socialUrl + 'followers/', true);
+}
+
+export async function getBlockedUsers() {
+  return await Get(socialUrl + 'blockedUsers/', true);
 }
