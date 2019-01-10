@@ -4,6 +4,7 @@ import ProfileTemplate from '../profileTemplate';
 import { getUsername, getUserId } from '../../services/jwtService';
 import { convertJsonToUser } from '../../converters/userConvertor';
 import { getUser, updateUser } from '../../services/usersService';
+import { toast } from 'react-toastify';
 
 export default class MyProfile extends Component {
   state = {
@@ -16,12 +17,14 @@ export default class MyProfile extends Component {
 
   getUser = async () => {
     const res = await getUser(getUserId());
-    console.log(res);
-
-    var data = await res.json();
-    let user = convertJsonToUser(data);
-    user.username = getUsername();
-    this.setState({ user });
+    if (res.status !== 200) {
+      toast.error('something went wrong...');
+    } else {
+      const data = await res.json();
+      let user = convertJsonToUser(data);
+      user.username = getUsername();
+      this.setState({ user });
+    }
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -36,7 +39,7 @@ export default class MyProfile extends Component {
     const user = JSON.stringify(this.state.user);
     const res = await updateUser(user);
 
-    if (res.status !== 200) {
+    if (!res || res.status !== 200) {
       this.getUser();
     }
   };

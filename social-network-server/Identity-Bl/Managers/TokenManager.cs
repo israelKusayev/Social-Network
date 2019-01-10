@@ -20,7 +20,7 @@ namespace Identity_Bl.Managers
 
                 long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                 if (data.iat > now || data.exp < now ||
-                    data.aud != "social network")
+                   data.aud != "social network")
                 {
                     //invalid token
                     return false;

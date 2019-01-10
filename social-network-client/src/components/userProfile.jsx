@@ -2,32 +2,71 @@ import React, { Component } from 'react';
 import ProfileTemplate from './profileTemplate';
 import { convertJsonToUser } from '../converters/userConvertor';
 import User from '../models/user';
-import { getUser } from '../services/usersService';
+import { getUser, follow, Isfollow, unfollow } from '../services/usersService';
+import { toast } from 'react-toastify';
 
 export default class UserProfile extends Component {
   state = {
-    user: new User()
+    user: new User(),
+    isFollow: false
   };
 
-  componentDidMount = () => {
-    this.getUser();
+  componentDidMount = async () => {
+    const res = await Isfollow(this.props.match.params.id);
+    if (res.status === 200) {
+      const isFollow = await res.json();
+      this.setState({ isFollow });
+      this.getUser();
+    } else {
+      this.props.history.goBack();
+      toast.error('something went wrong...');
+    }
   };
 
   getUser = async () => {
     const res = await getUser(this.props.match.params.id);
-    var data = await res.json();
-    let user = convertJsonToUser(data);
-    this.setState({ user });
+
+    if (res.status !== 200) {
+      this.props.history.goBack();
+      toast.error('something went wrong...');
+    } else {
+      var data = await res.json();
+      let user = convertJsonToUser(data);
+      this.setState({ user });
+    }
+  };
+
+  ChangeFollowingState = async () => {
+    if (this.state.isFollow) {
+      console.log('unfollowing...');
+
+      const res = await unfollow(this.state.user.userId);
+      if (res.status !== 200) {
+        toast.error('faild to unfollow, try again.');
+      } else {
+        this.setState({ isFollow: false });
+      }
+    } else {
+      const res = await follow(this.state.user.userId);
+      if (res.status !== 200) {
+        toast.error('faild to follow, try again.');
+      } else {
+        this.setState({ isFollow: true });
+      }
+    }
   };
 
   render() {
     const { user } = this.state;
+    console.log(this.state.isFollow);
 
     return (
       <>
         <div className="my-3">
           <div className="row">
-            <button className="offset-5 btn btn-dark text-pink">follow</button>
+            <button onClick={this.ChangeFollowingState} className="offset-5 btn btn-dark text-pink">
+              {this.state.isFollow ? 'unfollow' : 'follow'}
+            </button>
             <button className="offset-1 btn btn-dark text-pink">block</button>
           </div>
         </div>

@@ -45,6 +45,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Dtos\CreateCommentDto.cs" />
     <Compile Include="Models\Dtos\CreatePostDto.cs" />
+    <Compile Include="Models\Dtos\LikeDto.cs" />
     <Compile Include="Models\Dtos\PostListDto.cs" />
     <Compile Include="Models\Dtos\ReturnedCommentDto.cs" />
     <Compile Include="Models\Dtos\ReturnedPostDto.cs" />

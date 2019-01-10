@@ -27,7 +27,7 @@ namespace SocialDal.Repositories.Neo4j
                 "COUNT(l) AS Likes, COLLECT(ref) AS Referencing";
             var res = Query(query);
             var post = res.Single();
-            return post != null ? RecordToObject<ReturnedPostDto>(post) : null;
+            return post != null ? RecordToObj<ReturnedPostDto>(post) : null;
         }
 
         public void Create(Post post, string postedByUserId)
