@@ -49,8 +49,8 @@ namespace SocialDal.Repositories.Neo4j
                 "(p)<-[l:Like]-(:User), (p)-[:Referencing]->(ref:User)," +
                 " (me:User{UserId:'" + userId + "'})" +
                 "WHERE NOT EXSISTS((posting)-[:Blocked]-(me)) AND" +
-                $" (p.Visability=={PostVisabilityOptions.All.ToString()} OR " +
-                $"(p.Visability=={PostVisabilityOptions.Followers.ToString()} AND EXISTS( (me)-[:Following]->(posting) )) )" +
+                $" (p.Visability=={(int)PostVisabilityOptions.All} OR " +
+                $"(p.Visability=={(int)PostVisabilityOptions.Followers} AND EXISTS( (me)-[:Following]->(posting) )) )" +
                 "AND (EXISTS((p)-[:Recomended]->(me)) OR EXSITS((p)-[:Referencing]->(me)) " +
                 "OR EXSISTS ((p)<-[:CommentedOn]-(:Comment)-[:Referencing]->(me)) )" +
                 "return p, posting AS User ," +

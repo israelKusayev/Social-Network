@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Repositories\Neo4j\Neo4jBaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Neo4j\Neo4jCommentsRepository.cs" />
     <Compile Include="Repositories\Neo4j\Neo4jLikesRepository.cs" />
     <Compile Include="Repositories\Neo4j\Neo4jPostsRepository.cs" />
     <Compile Include="Repositories\Neo4j\Neo4jUsersRepository.cs" />
