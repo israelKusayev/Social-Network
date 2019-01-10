@@ -5,10 +5,11 @@ using System.Text.RegularExpressions;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Social_Common.Interfaces.Managers;
 
 namespace SocialBl.Managers
 {
-    public class AmazonS3Uploader
+    public class AmazonS3Uploader : IAmazonS3Uploader
     {
         static readonly string bucketUrl = ConfigurationManager.AppSettings["s3Key"];
         static readonly string bucketName = "social-network-posts-images";

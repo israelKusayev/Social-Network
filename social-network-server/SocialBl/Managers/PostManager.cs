@@ -1,22 +1,20 @@
-﻿using Social_Common.Models;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using SocialDal.Repositories.Neo4j;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialBl.Managers
 {
-    public class PostManager
+    public class PostManager : IPostManager
     {
-        AmazonS3Uploader s3;
+        AmazonS3Uploader _s3Uploader;
         Neo4jPostsRepository _postsRepository;
-        public PostManager()
+        public PostManager(AmazonS3Uploader s3Uploader, 
+            Neo4jPostsRepository postsRepository)
         {
-            s3 = new AmazonS3Uploader();
-            _postsRepository = new Neo4jPostsRepository();
+            _s3Uploader = s3Uploader;
+            _postsRepository = postsRepository;
         }
 
         public Post CreatePost(CreatePostDto postDto, string userId)
@@ -26,7 +24,7 @@ namespace SocialBl.Managers
             string imgUrl = null;
             try
             {
-                imgUrl = imgUrl == null ? null : s3.UploadFile(postDto.Image, postId);
+                imgUrl = imgUrl == null ? null : _s3Uploader.UploadFile(postDto.Image, postId);
 
                 Post post = new Post()
                 {

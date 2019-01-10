@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Social_Common.Interfaces.Managers;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using SocialDal.Repositories.Neo4j;
 
 namespace SocialBl.Managers
 {
-    public class UsersManager
+    public class UsersManager : IUsersManager
     {
         Neo4jUsersRepository _usersRepository;
         public UsersManager()

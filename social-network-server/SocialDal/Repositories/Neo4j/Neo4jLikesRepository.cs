@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Social_Common.Interfaces.Repositories;
 
 namespace SocialDal.Repositories.Neo4j
 {
-    public class Neo4jLikesRepository : Neo4jBaseRepository
+    public class Neo4jLikesRepository : Neo4jBaseRepository, ILikesRepository
     {
 
         protected void Like(string userId, string objectId, string objectType)
         {
             string query = "MATCH (u:User{UserId:" + userId + "})," +
-                "(o:"+objectType+"{"+objectType+"Id:" + objectId + "})" +
+                "(o:" + objectType + "{" + objectType + "Id:" + objectId + "})" +
                 "CREATE (u)-[r:Like]->(o)" +
                 "RETURN type(r)";
         }
@@ -20,7 +16,7 @@ namespace SocialDal.Repositories.Neo4j
         protected void UnLike(string userId, string objectId, string objectType)
         {
             string query = "MATCH (:User{UserId:" + userId + "})-[r:Like]->" +
-                "(:"+objectType+"{"+objectType+"Id:" + objectId + "})" +
+                "(:" + objectType + "{" + objectType + "Id:" + objectId + "})" +
                 "DELETE r";
         }
 

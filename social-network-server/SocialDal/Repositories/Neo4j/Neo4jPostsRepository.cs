@@ -1,17 +1,13 @@
-﻿using Newtonsoft.Json;
-using Social_Common.Enum;
+﻿using Social_Common.Enum;
+using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialDal.Repositories.Neo4j
 {
-    public class Neo4jPostsRepository : Neo4jBaseRepository
+    public class Neo4jPostsRepository : Neo4jBaseRepository, IPostsRepository
     {
         private static int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
 
@@ -49,8 +45,8 @@ namespace SocialDal.Repositories.Neo4j
                 "(p)<-[l:Like]-(:User), (p)-[:Referencing]->(ref:User)," +
                 " (me:User{UserId:'" + userId + "'})" +
                 "WHERE NOT EXSISTS((posting)-[:Blocked]-(me)) AND" +
-                $" (p.Visability=={PostVisabilityOptions.All.ToString()} OR " +
-                $"(p.Visability=={PostVisabilityOptions.Followers.ToString()} AND EXISTS( (me)-[:Following]->(posting) )) )" +
+                $" (p.Visability=={(int)PostVisabilityOptions.All} OR " +
+                $"(p.Visability=={(int)PostVisabilityOptions.Followers} AND EXISTS( (me)-[:Following]->(posting) )) )" +
                 "AND (EXISTS((p)-[:Recomended]->(me)) OR EXSITS((p)-[:Referencing]->(me)) " +
                 "OR EXSISTS ((p)<-[:CommentedOn]-(:Comment)-[:Referencing]->(me)) )" +
                 "return p, posting AS User ," +

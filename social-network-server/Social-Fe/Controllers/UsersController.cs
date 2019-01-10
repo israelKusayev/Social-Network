@@ -16,10 +16,10 @@ namespace Social_Fe.Controllers
         UsersManager _usersManager;
         TokenManager _tokenManager;
 
-        public UsersController()
+        public UsersController(UsersManager usersManager, TokenManager tokenManager)
         {
-            _usersManager = new UsersManager();
-            _tokenManager = new TokenManager();
+            _usersManager = usersManager;
+            _tokenManager = tokenManager;
         }
 
         [JWTAuth]

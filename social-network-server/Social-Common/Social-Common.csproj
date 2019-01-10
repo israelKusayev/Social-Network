@@ -45,10 +45,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum\PostVisabilityOptions.cs" />
+    <Compile Include="Interfaces\Managers\IAmazonS3Uploader.cs" />
+    <Compile Include="Interfaces\Managers\ICommentsManager.cs" />
+    <Compile Include="Interfaces\Managers\ILikesManager.cs" />
+    <Compile Include="Interfaces\Managers\IPostManager.cs" />
+    <Compile Include="Interfaces\Managers\ITokenManager.cs" />
+    <Compile Include="Interfaces\Managers\IUsersManager.cs" />
+    <Compile Include="Interfaces\Repositories\ICommentsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ILikesRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IPostsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IUsersRepository.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Dtos\CreateCommentDto.cs" />
     <Compile Include="Models\Dtos\CreatePostDto.cs" />
     <Compile Include="Models\Dtos\FollowersDTO.cs" />
     <Compile Include="Models\Dtos\LikeDto.cs" />
     <Compile Include="Models\Dtos\PostListDto.cs" />
+    <Compile Include="Models\Dtos\ReturnedCommentDto.cs" />
     <Compile Include="Models\Dtos\ReturnedPostDto.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\User.cs" />
