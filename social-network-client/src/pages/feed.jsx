@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RouteProtector from '../HOC/routeProtector';
 import Post from '../components/post';
-import { Get, Put } from '../services/httpService';
+import { Put } from '../services/httpService';
 import InfiniteScroll from 'react-infinite-scroller';
 
 class Feed extends Component {
