@@ -1,15 +1,15 @@
 ﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Interfaces.Repositories;
 using Social_Common.Models.Dtos;
-using SocialDal.Repositories.Neo4j;
 using System;
 
 namespace SocialBl.Managers
 {
     public class LikesManager : ILikesManager
     {
-        private Neo4jLikesRepository _likesRepository;
+        private ILikesRepository _likesRepository;
 
-        public LikesManager(Neo4jLikesRepository likesRepository)
+        public LikesManager(ILikesRepository likesRepository)
         {
             _likesRepository = likesRepository;
         }

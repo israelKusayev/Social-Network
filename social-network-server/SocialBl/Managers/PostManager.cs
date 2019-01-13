@@ -1,17 +1,17 @@
 ﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
-using SocialDal.Repositories.Neo4j;
 using System;
 
 namespace SocialBl.Managers
 {
     public class PostManager : IPostManager
     {
-        AmazonS3Uploader _s3Uploader;
-        Neo4jPostsRepository _postsRepository;
-        public PostManager(AmazonS3Uploader s3Uploader, 
-            Neo4jPostsRepository postsRepository)
+        IAmazonS3Uploader _s3Uploader;
+        IPostsRepository _postsRepository;
+        public PostManager(IAmazonS3Uploader s3Uploader, 
+            IPostsRepository postsRepository)
         {
             _s3Uploader = s3Uploader;
             _postsRepository = postsRepository;

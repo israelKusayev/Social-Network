@@ -1,4 +1,5 @@
-﻿using Social_Common.Models.Dtos;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
 using SocialBl.Managers;
 using System;
@@ -12,9 +13,9 @@ namespace Social_Fe.Controllers
 {
     public class LikesController : ApiController
     {
-        private LikesManager _likesManager;
+        private ILikesManager _likesManager;
 
-        public LikesController(LikesManager likesManager)
+        public LikesController(ILikesManager likesManager)
         {
             _likesManager = likesManager;
         }
