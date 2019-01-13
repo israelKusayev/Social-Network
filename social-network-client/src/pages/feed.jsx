@@ -31,11 +31,10 @@ class Feed extends Component {
   getPosts = async () => {
     const res = await getPosts(this.state.index, this.pageSize);
     if (res.status === 200) {
-      const data = res.json();
-
+      const data = await res.json();
       let { posts, index } = this.state;
       index += this.pageSize;
-      posts.push(...data);
+      posts.push(...data.Posts);
       this.setState({ posts, index });
     }
   };

@@ -31,9 +31,9 @@ export default class Post extends Component {
                     />
                   </div>
                   <div className="ml-2">
-                    <Link className="card-link" to={'/profile/' + post.User.UserId}>
+                    { <Link className="card-link" to={'/profile/' + post.User.UserId}>
                       <div className="h5 m-0 text-pink">@{post.User.UserName}</div>
-                    </Link>
+                    </Link> }
                     {/* <div className="h7 text-muted">{post.authorFullname}</div> */}
                   </div>
                 </div>

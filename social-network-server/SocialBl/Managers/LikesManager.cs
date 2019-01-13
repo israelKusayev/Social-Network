@@ -61,7 +61,7 @@ namespace SocialBl.Managers
             try
             {
                 _likesRepository.UnLikePost(userId, postId);
-                return false;
+                return true;
             }
             catch (Exception e)
             {

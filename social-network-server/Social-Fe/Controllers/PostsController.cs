@@ -38,7 +38,7 @@ namespace Social_Fe.Controllers
 
         [JWTAuth]
         [HttpGet]
-        [Route("api/post/{start}/{count}")]
+        [Route("api/posts/{start}/{count}")]
         public IHttpActionResult GetPosts(int start, int count)
         {
             try
@@ -48,7 +48,7 @@ namespace Social_Fe.Controllers
                 PostListDto posts = _postManager.GetPosts(start, count, userId);
                 return Ok(posts);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }

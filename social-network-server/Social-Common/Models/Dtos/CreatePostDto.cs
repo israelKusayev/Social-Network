@@ -11,6 +11,6 @@ namespace Social_Common.Models.Dtos
     {
         public string Image { get; set; }
         public string Content { get; set; }
-        public PostVisabilityOptions WhoCanWatching { get; set; }
+        public PostVisabilityOptions WhoIsWatching { get; set; }
     }
 }
