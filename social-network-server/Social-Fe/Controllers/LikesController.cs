@@ -1,4 +1,5 @@
-﻿using Social_Common.Models.Dtos;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
 using SocialBl.Managers;
 using System;
@@ -12,13 +13,13 @@ namespace Social_Fe.Controllers
 {
     public class LikesController : ApiController
     {
-        private LikesManager _likesManager;
-        private TokenManager _tokenManager;
+        private ILikesManager _likesManager;
+        private ITokenManager _tokenManager;
 
-        public LikesController(LikesManager likesManager)
+        public LikesController(ILikesManager likesManager, ITokenManager tokenManager)
         {
             _likesManager = likesManager;
-            _tokenManager = new TokenManager();
+            _tokenManager = tokenManager;
         }
 
         [HttpPost]

@@ -1,21 +1,18 @@
-﻿using Social_Common.Models;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
-using SocialBl.Managers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace Social_Fe.Controllers
 {
     public class PostsController : ApiController
     {
-        PostManager _postManager;
-        TokenManager _tokenManager;
-        public PostsController(PostManager postManager, TokenManager tokenManager)
+        IPostManager _postManager;
+        ITokenManager _tokenManager;
+        public PostsController(IPostManager postManager, ITokenManager tokenManager)
         {
             _postManager = postManager;
             _tokenManager = tokenManager;
