@@ -2,16 +2,17 @@
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
+using System;
 using System.Linq;
 using System.Web.Http;
 
 namespace Social_Fe.Controllers
 {
-    public class PostController : ApiController
+    public class PostsController : ApiController
     {
         IPostManager _postManager;
         ITokenManager _tokenManager;
-        public PostController(IPostManager postManager, ITokenManager tokenManager)
+        public PostsController(IPostManager postManager, ITokenManager tokenManager)
         {
             _postManager = postManager;
             _tokenManager = tokenManager;
@@ -32,6 +33,25 @@ namespace Social_Fe.Controllers
                 return Ok();
             }
             return InternalServerError();
+        }
+
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("api/post/{start}/{count}")]
+        public IHttpActionResult GetPosts(int start, int count)
+        {
+            try
+            {
+                var token = Request.Headers.GetValues("x-auth-token").First();
+                var userId = _tokenManager.GetUserId(token);
+                PostListDto posts = _postManager.GetPosts(start, count, userId);
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
     }
 }

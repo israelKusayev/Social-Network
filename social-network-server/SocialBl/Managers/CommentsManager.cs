@@ -21,22 +21,18 @@ namespace SocialBl.Managers
 
         public bool Create(CreateCommentDto commentDto, string userId)
         {
-            string guid = Guid.NewGuid().ToString();
-            string url = _s3Uploader.UploadFile(commentDto.Image, guid);
-            if (url == null)
-            {
-                return false;
-            }
-            Comment comment = new Comment()
-            {
-                CommentId = guid,
-                Content = commentDto.Content,
-                CreatedOn = DateTime.UtcNow,
-                ImgUrl = url
-            };
             try
             {
-                _commentsRepository.Create(comment, userId, commentDto.postId);
+                string guid = Guid.NewGuid().ToString();
+                string url = _s3Uploader.UploadFile(commentDto.Image, guid);
+                Comment comment = new Comment()
+                {
+                    CommentId = guid,
+                    Content = commentDto.Content,
+                    CreatedOn = DateTime.UtcNow,
+                    ImgUrl = url
+                };
+                _commentsRepository.Create(comment, userId, commentDto.PostId);
                 return true;
             }
             catch (Exception e)

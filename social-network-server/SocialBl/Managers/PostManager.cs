@@ -3,6 +3,7 @@ using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using System;
+using System.Collections.Generic;
 
 namespace SocialBl.Managers
 {
@@ -24,7 +25,7 @@ namespace SocialBl.Managers
             string imgUrl = null;
             try
             {
-                imgUrl = imgUrl == null ? null : _s3Uploader.UploadFile(postDto.Image, postId);
+                imgUrl = postDto.Image == null ? null : _s3Uploader.UploadFile(postDto.Image, postId);
 
                 Post post = new Post()
                 {
@@ -43,6 +44,11 @@ namespace SocialBl.Managers
                 //todo logger
                 return null;
             }
+        }
+
+        public PostListDto GetPosts(int start, int count, string userId)
+        {
+            return _postsRepository.GetFeed(start, count, userId);
         }
     }
 }
