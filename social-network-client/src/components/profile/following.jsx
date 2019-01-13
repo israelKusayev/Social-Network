@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import FollowerTab from '../followerTab';
-import { getFollowings } from '../../services/usersService';
+import { getFollowings, blockUser, unfollow } from '../../services/usersService';
+import { toast } from 'react-toastify';
+import { removeItemFromArray } from '../../utils/removeFromArray';
 
 class Following extends Component {
   state = {
@@ -11,17 +13,33 @@ class Following extends Component {
     if (res.status === 200) {
       const followings = await res.json();
       this.setState({ followings });
-      console.log(followings);
     } else {
-      console.log('get following faild.');
+      toast.error('something went wrong...');
     }
   };
 
-  unfollow = (userId) => {
-    console.log(userId);
+  unfollow = async (user) => {
+    const res = await unfollow(user.UserId);
+    if (res.status !== 200) {
+      toast.error('faild to unfollow, try again.');
+    } else {
+      const followings = removeItemFromArray([...this.state.followings], user);
+      this.setState({ followings });
+    }
   };
 
-  blockUser = () => {};
+  blockUser = async (user) => {
+    const res = await blockUser(user.UserId);
+
+    if (res.status !== 200) {
+      toast.error('something went wrong...');
+    } else {
+      const followings = removeItemFromArray([...this.state.followings], user);
+      this.setState({ followings });
+      toast.success('User has been blocked successfully');
+    }
+  };
+
   render() {
     const { followings } = this.state;
     return (
@@ -32,10 +50,11 @@ class Following extends Component {
           followings.map((user) => {
             return (
               <FollowerTab
+                key={user.UserId}
                 rightBtnName={'Block'}
-                onRightBtnClicked={this.blockUser}
+                onRightBtnClicked={() => this.blockUser(user)}
                 leftBtnName={'unfollow'}
-                onLeftBtnClicked={() => this.unfollow(user.UserId)}
+                onLeftBtnClicked={() => this.unfollow(user)}
                 name={user.UserName}
               />
             );

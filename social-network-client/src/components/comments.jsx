@@ -2,18 +2,24 @@ import React from 'react';
 import Modal from 'react-bootstrap4-modal';
 import Comment from './comment';
 import ImagePicker from './imagePicker';
-import { Put } from '../services/httpService';
+import { addComment, getComments } from '../services/commentsService';
+import { toast } from 'react-toastify';
+import { unlikeComment, likeComment } from '../services/likesService';
 
 export default class Comments extends React.Component {
   socialUrl = process.env.REACT_APP_SOCIAL_URL;
 
-  // componentDidMount =async () => {
-  //  const res = await get(`${socialUrl}getComments/${this.props.postId}`);
-  //  if(res.status===200){
-  //    const data = await res.json();
-  //    this.setState({comments:data})
-  //  }
-  // };
+  componentDidMount = async () => {
+    console.log(this.props.postId);
+
+    const res = await getComments(this.props.postId);
+    if (res.status !== 200) {
+      console.log('getCommentsFaild.  response-', res);
+    } else {
+      const data = await res.json();
+      this.setState({ comments: data });
+    }
+  };
 
   state = {
     error: '',
@@ -23,55 +29,11 @@ export default class Comments extends React.Component {
     },
     comments: [
       {
-        commentId: '12345678',
+        commentId: '123f45678',
         imgUrl: `data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7`,
         numberOfLikes: 23,
         isLiked: true,
-        user: { username: 'israel', userId: '23048394839403' },
-        content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.`,
-        time: '20 minute ago'
-      },
-      {
-        commentId: '12345dfdf678',
-
-        numberOfLikes: 23,
-        isLiked: true,
-        user: { username: 'mosh', userId: 'dfdfddfdfdfd' },
-        content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit.1`,
-        time: '20 minute ago'
-      },
-      {
-        commentId: 'fdfdsfdfdfd',
-
-        numberOfLikes: 13,
-        isLiked: false,
-        user: { username: 'avi', userId: '2304839d4839403' },
-        content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.`,
-        time: '20 minute ago'
-      },
-      {
-        commentId: '123s45678',
-        numberOfLikes: 3,
-        isLiked: true,
-        user: { username: 'israel', userId: '23048394839403' },
-        content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.`,
-        time: '23 minute ago'
-      },
-      {
-        commentId: '1234d5678',
-        imgUrl: `data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7`,
-        numberOfLikes: 11,
-        isLiked: false,
-        user: { username: 'ruth', userId: '23048394839403' },
-        content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, `,
-        time: '10 minute ago'
-      },
-      {
-        commentId: '12345678',
-        imgUrl: `data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7`,
-        numberOfLikes: 23,
-        isLiked: true,
-        user: { username: 'israel', userId: '23048394839403' },
+        User: { UserName: 'israel', UserId: '23048394839403' },
         content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.`,
         time: '20 minute ago'
       }
@@ -87,11 +49,23 @@ export default class Comments extends React.Component {
     comment.numberOfLikes = comment.isLiked ? ++comment.numberOfLikes : --comment.numberOfLikes;
     this.setState({ comments });
 
-    const res = await Put(`${this.socialUrl}/likeComment/${comment.commentId}/${comment.user.userId}`);
-
-    if (!res || res.status !== 200) {
-      this.setState({ ...prevState });
+    if (comment.isLiked) {
+      //like comment
+      const res = await likeComment(comment.commentId);
+      if (res.status !== 200) {
+        console.log('like comment faild, response - ', res);
+      }
+    } else {
+      //unlike comment
+      const res = await unlikeComment(comment.commentId);
+      if (res.status !== 200) {
+        console.log('unlike comment faild, response - ', res);
+      }
     }
+
+    // if (!res || res.status !== 200) {
+    //   this.setState({ ...prevState });
+    // }
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -100,10 +74,18 @@ export default class Comments extends React.Component {
     this.setState({ data });
   };
 
-  addComment = (e) => {
+  addComment = async (e) => {
     e.preventDefault();
     if (!this.state.data.content.trim()) {
       this.setState({ error: 'content is required!' });
+    } else {
+      const res = await addComment(this.state.data, this.props.postId);
+      if (res.status !== 200) {
+        this.setState({ error: 'add comment faild please try again!' });
+      } else {
+        this.setState({ error: '' });
+        toast.success('comment added successfully');
+      }
     }
   };
   handleImageSelect = (image) => {
@@ -114,7 +96,6 @@ export default class Comments extends React.Component {
 
   render() {
     const { error, data, comments } = this.state;
-    console.log('comments renderd');
 
     return (
       <Modal dialogClassName="modal-lg " visible={this.props.isVisible} onClickBackdrop={this.modalBackdropClicked}>

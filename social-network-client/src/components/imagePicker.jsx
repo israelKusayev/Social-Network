@@ -22,7 +22,6 @@ export default class ImagePicker extends Component {
     reader.readAsDataURL(file);
     reader.onloadend = (e) => {
       this.props.onUpload(reader.result);
-      console.log(reader.result);
 
       this.setState({
         imgSrc: [reader.result],
