@@ -13,18 +13,22 @@ namespace Social_Fe.Controllers
     public class LikesController : ApiController
     {
         private LikesManager _likesManager;
+        private TokenManager _tokenManager;
 
         public LikesController(LikesManager likesManager)
         {
             _likesManager = likesManager;
+            _tokenManager = new TokenManager();
         }
 
         [HttpPost]
         [JWTAuth]
-        [Route("api/Likes/LikePost")]
-        public IHttpActionResult LikePost(LikeDto dto)
+        [Route("api/Likes/LikePost/{postId}")]
+        public IHttpActionResult LikePost(string postId)
         {
-            if(_likesManager.LikePost(dto))
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_likesManager.LikePost(userId, postId))
             {
                 return Ok();
             }
@@ -33,10 +37,12 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("api/Likes/UnLikePost")]
-        public IHttpActionResult UnLikePost(LikeDto dto)
+        [Route("api/Likes/UnLikePost/{postId}")]
+        public IHttpActionResult UnLikePost(string postId)
         {
-            if (_likesManager.UnLikePost(dto))
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_likesManager.UnLikePost(userId, postId))
             {
                 return Ok();
             }
@@ -45,10 +51,12 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("api/Likes/LikeComment")]
-        public IHttpActionResult LikeComment(LikeDto dto)
+        [Route("api/Likes/LikeComment/{commentId}")]
+        public IHttpActionResult LikeComment(string commentId)
         {
-            if (_likesManager.LikeComment(dto))
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_likesManager.LikeComment(userId, commentId))
             {
                 return Ok();
             }
@@ -57,10 +65,12 @@ namespace Social_Fe.Controllers
 
         [HttpPost]
         [JWTAuth]
-        [Route("api/Likes/UnLikeComment")]
-        public IHttpActionResult UnLikeComment(LikeDto dto)
+        [Route("api/Likes/UnLikeComment/{commentId}")]
+        public IHttpActionResult UnLikeComment(string commentId)
         {
-            if (_likesManager.UnLikeComment(dto))
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            if (_likesManager.UnLikeComment(userId, commentId))
             {
                 return Ok();
             }

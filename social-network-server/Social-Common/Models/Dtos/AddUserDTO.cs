@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Social_Common.Models.Dtos
 {
-    public class CreateCommentDto
+    public class AddUserDto
     {
-        public string Content { get; set; }
-        public string Image { get; set; }
-        public string PostId { get; set; }
+        public string UserName { get; set; }
+
+        public string UserId { get; set; }
     }
 }

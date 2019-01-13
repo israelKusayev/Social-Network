@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace Social_Fe.Controllers
 {
-    [RoutePrefix("api/users/")]
+    [RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
         UsersManager _usersManager;

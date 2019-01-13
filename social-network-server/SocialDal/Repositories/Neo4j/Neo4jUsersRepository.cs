@@ -1,6 +1,5 @@
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
-using System;
 using Social_Common.Interfaces.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +40,7 @@ namespace SocialDal.Repositories.Neo4j
             Query(query);
 
             UnFollow(blockingUserId, blockedUserId);
+            UnFollow(blockedUserId, blockingUserId);
         }
 
         public void UnBlock(string blockingUserId, string blockedUserId)
