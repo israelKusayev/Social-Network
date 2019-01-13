@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function FollowerTab(props) {
+  console.log(props);
+
   return (
     <>
       <div className="follow row">

@@ -16,6 +16,7 @@ export async function register(data) {
 
 export async function login(data) {
   const res = await Post(authUrl + 'login', data);
+  console.log(res);
 
   if (res.status !== 200) {
     return await res.json();

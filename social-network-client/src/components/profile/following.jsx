@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import FollowerTab from '../followerTab';
-import { getFollowings, blockUser, unfollow } from '../../services/usersService';
-import { toast } from 'react-toastify';
-import { removeItemFromArray } from '../../utils/removeFromArray';
+import { getFollowings } from '../../services/usersService';
 
 class Following extends Component {
   state = {
@@ -13,33 +11,17 @@ class Following extends Component {
     if (res.status === 200) {
       const followings = await res.json();
       this.setState({ followings });
+      console.log(followings);
     } else {
-      toast.error('something went wrong...');
+      console.log('get following faild.');
     }
   };
 
-  unfollow = async (user) => {
-    const res = await unfollow(user.UserId);
-    if (res.status !== 200) {
-      toast.error('faild to unfollow, try again.');
-    } else {
-      const followings = removeItemFromArray([...this.state.followings], user);
-      this.setState({ followings });
-    }
+  unfollow = (userId) => {
+    console.log(userId);
   };
 
-  blockUser = async (user) => {
-    const res = await blockUser(user.UserId);
-
-    if (res.status !== 200) {
-      toast.error('something went wrong...');
-    } else {
-      const followings = removeItemFromArray([...this.state.followings], user);
-      this.setState({ followings });
-      toast.success('User has been blocked successfully');
-    }
-  };
-
+  blockUser = () => {};
   render() {
     const { followings } = this.state;
     return (
@@ -50,11 +32,10 @@ class Following extends Component {
           followings.map((user) => {
             return (
               <FollowerTab
-                key={user.UserId}
                 rightBtnName={'Block'}
-                onRightBtnClicked={() => this.blockUser(user)}
+                onRightBtnClicked={this.blockUser}
                 leftBtnName={'unfollow'}
-                onLeftBtnClicked={() => this.unfollow(user)}
+                onLeftBtnClicked={() => this.unfollow(user.UserId)}
                 name={user.UserName}
               />
             );

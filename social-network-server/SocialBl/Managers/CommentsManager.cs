@@ -1,7 +1,7 @@
 ﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
-using SocialDal.Repositories.Neo4j;
 using System;
 using System.Collections.Generic;
 
@@ -9,11 +9,11 @@ namespace SocialBl.Managers
 {
     public class CommentsManager : ICommentsManager
     {
-        private Neo4jCommentsRepository _commentsRepository;
-        private AmazonS3Uploader _s3Uploader;
+        private ICommentsRepository _commentsRepository;
+        private IAmazonS3Uploader _s3Uploader;
 
-        public CommentsManager(Neo4jCommentsRepository commentsRepository,
-            AmazonS3Uploader s3Uploader)
+        public CommentsManager(ICommentsRepository commentsRepository,
+            IAmazonS3Uploader s3Uploader)
         {
             _commentsRepository = commentsRepository;
             _s3Uploader = s3Uploader;

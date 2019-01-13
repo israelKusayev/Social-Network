@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ProfileTemplate from './profileTemplate';
 import { convertJsonToUser } from '../converters/userConvertor';
 import User from '../models/user';
-import { getUser, follow, Isfollow, unfollow, blockUser } from '../services/usersService';
+import { getUser, follow, Isfollow, unfollow } from '../services/usersService';
 import { toast } from 'react-toastify';
 
 export default class UserProfile extends Component {
@@ -38,6 +38,8 @@ export default class UserProfile extends Component {
 
   ChangeFollowingState = async () => {
     if (this.state.isFollow) {
+      console.log('unfollowing...');
+
       const res = await unfollow(this.state.user.userId);
       if (res.status !== 200) {
         toast.error('faild to unfollow, try again.');
@@ -54,19 +56,9 @@ export default class UserProfile extends Component {
     }
   };
 
-  blockUser = async () => {
-    const res = await blockUser(this.props.match.params.id);
-
-    if (res.status !== 200) {
-      toast.error('something went wrong...');
-    } else {
-      this.props.history.replace('/');
-      toast.success('User has been blocked successfully');
-    }
-  };
-
   render() {
     const { user } = this.state;
+    console.log(this.state.isFollow);
 
     return (
       <>
@@ -75,9 +67,7 @@ export default class UserProfile extends Component {
             <button onClick={this.ChangeFollowingState} className="offset-5 btn btn-dark text-pink">
               {this.state.isFollow ? 'unfollow' : 'follow'}
             </button>
-            <button onClick={this.blockUser} className="offset-1 btn btn-dark text-pink">
-              block
-            </button>
+            <button className="offset-1 btn btn-dark text-pink">block</button>
           </div>
         </div>
         <ProfileTemplate title={'User details'} isReadOnly={true} user={user} />

@@ -1,75 +1,38 @@
 import React, { Component } from 'react';
 import FollowerTab from '../followerTab';
-import { getFollowers, unfollow, follow, blockUser } from '../../services/usersService';
-import { toast } from 'react-toastify';
-import { removeItemFromArray } from '../../utils/removeFromArray';
 
 class Followers extends Component {
   state = {
-    followers: []
+    data: [
+      { username: 'israel kusayev', following: true },
+      { username: 'mosh', following: false },
+      { username: 'avi aviov', following: true },
+      { username: 'israel kusayev', following: true },
+      { username: 'mosh', following: false },
+      { username: 'avi aviov', following: true },
+      { username: 'israel kusayev', following: true },
+      { username: 'mosh', following: false },
+      { username: 'avi aviov', following: true }
+    ]
   };
 
-  componentDidMount = async () => {
-    const res = await getFollowers();
-    if (res.status !== 200) {
-      toast.error('something went wrong...');
-    } else {
-      const followers = await res.json();
-      this.setState({ followers });
-    }
-  };
+  followBack = () => {};
 
-  followBack = async (user) => {
-    const res = await follow(user.userId);
-    if (res.status !== 200) {
-      toast.error('faild to follow, try again.');
-    } else {
-      this.changeFollowState(user);
-    }
-  };
+  unfollow = () => {};
 
-  unfollow = async (user) => {
-    const res = await unfollow(user.userId);
-    if (res.status !== 200) {
-      toast.error('faild to unfollow, try again.');
-    } else {
-      this.changeFollowState(user);
-    }
-  };
-
-  changeFollowState = (user) => {
-    const followers = [...this.state.followers];
-    const index = followers.indexOf(user);
-    followers[index].isFollowing = !followers[index].isFollowing;
-    this.setState({ followers });
-  };
-
-  blockUser = async (user) => {
-    const res = await blockUser(user.UserId);
-
-    if (res.status !== 200) {
-      toast.error('something went wrong...');
-    } else {
-      const followers = removeItemFromArray([...this.state.followers], user);
-      this.setState({ followers });
-      toast.success('User has been blocked successfully');
-    }
-  };
+  blockUser = () => {};
   render() {
-    const { followers } = this.state;
-    console.log(followers);
-
+    const { data } = this.state;
     return (
       <div>
         <h1>Followers</h1>
-        {followers.map((user) => {
+        {data.map((user) => {
           return (
             <FollowerTab
-              key={user.userId}
               rightBtnName={'Block'}
-              onRightBtnClicked={() => this.blockUser(user)}
-              leftBtnName={user.isFollowing ? 'unfollow' : 'Follow back'}
-              onLeftBtnClicked={user.isFollowing ? () => this.unfollow(user) : () => this.followBack(user)}
+              onRightBtnClicked={this.blockUser}
+              leftBtnName={user.following ? 'unfollow' : 'Follow back'}
+              onLeftBtnClicked={user.following ? this.unfollow : this.followBack}
               name={user.username}
             />
           );

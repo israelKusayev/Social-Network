@@ -15,7 +15,7 @@ export default class Comment extends Component {
       <>
         <div className="card bg-dark text-light">
           <div className="card-header">
-            {comment.User.UserName}
+            {comment.user.username}
             <span className="text-muted h7 ml-3 mb-2">
               <i className="fa fa-clock-o" />
               {comment.time}

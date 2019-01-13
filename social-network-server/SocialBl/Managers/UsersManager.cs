@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Social_Common.Interfaces.Managers;
+using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
-using SocialDal.Repositories.Neo4j;
 
 namespace SocialBl.Managers
 {
     public class UsersManager : IUsersManager
     {
-        Neo4jUsersRepository _usersRepository;
-        public UsersManager()
+        IUsersRepository _usersRepository;
+        public UsersManager(IUsersRepository usersRepository)
         {
-            _usersRepository = new Neo4jUsersRepository();
+            _usersRepository = usersRepository;
         }
         public bool AddUser(User user)
         {

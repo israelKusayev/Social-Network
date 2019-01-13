@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import RouteProtector from '../HOC/routeProtector';
 
 class Notifications extends Component {
   render() {
@@ -11,4 +10,4 @@ class Notifications extends Component {
   }
 }
 
-export default RouteProtector(Notifications);
+export default Notifications;

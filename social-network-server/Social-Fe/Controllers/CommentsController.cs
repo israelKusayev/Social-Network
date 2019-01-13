@@ -1,4 +1,5 @@
-﻿using Social_Common.Models.Dtos;
+﻿using Social_Common.Interfaces.Managers;
+using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
 using SocialBl.Managers;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace Social_Fe.Controllers
 {
     public class CommentsController : ApiController
     {
-        private CommentsManager _commentsManager;
-        private TokenManager _tokenManager;
+        private ICommentsManager _commentsManager;
+        private ITokenManager _tokenManager;
 
-        public CommentsController(CommentsManager commentsManager,
+        public CommentsController(ICommentsManager commentsManager,
             TokenManager tokenManager)
         {
             _commentsManager = commentsManager;

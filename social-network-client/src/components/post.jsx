@@ -31,8 +31,8 @@ export default class Post extends Component {
                     />
                   </div>
                   <div className="ml-2">
-                    <Link className="card-link" to={'/profile/' + post.User.UserId}>
-                      <div className="h5 m-0 text-pink">@{post.User.UserName}</div>
+                    <Link className="card-link" to={'/profile/' + post.user.userId}>
+                      <div className="h5 m-0 text-pink">@{post.user.username}</div>
                     </Link>
                     {/* <div className="h7 text-muted">{post.authorFullname}</div> */}
                   </div>
@@ -52,7 +52,7 @@ export default class Post extends Component {
               <LikeButton liked={post.isLiked} onClick={() => this.props.onLiked(post.postId)} />
               <span>{post.numberOfLikes}</span>
               <span className="mx-2" />
-              <CommentButton postId={post.postId} />
+              <CommentButton postId={post.postId}/>
             </div>
           </div>
         </div>
