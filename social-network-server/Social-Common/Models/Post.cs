@@ -1,4 +1,5 @@
-﻿using Social_Common.Enum;
+﻿using Newtonsoft.Json;
+using Social_Common.Enum;
 using System;
 
 namespace Social_Common.Models

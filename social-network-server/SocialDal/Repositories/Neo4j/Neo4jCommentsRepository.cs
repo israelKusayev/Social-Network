@@ -18,7 +18,7 @@ namespace SocialDal.Repositories.Neo4j
             Query(CommentedByQuery);
             string CommentedOnQuery = $@"MATCH (c:Comment),(p:Post)
                 WHERE c.CommentId = '{comment.CommentId}' AND p.PostId = '{postId}'
-                CREATE(c) -[r:CommentedOn]->(u)";
+                CREATE(c) -[r:CommentedOn]->(p)";
             Query(CommentedOnQuery);
         }
 

@@ -32,7 +32,7 @@ namespace SocialBl.Managers
                     Content = postDto.Content,
                     CreatedOn = DateTime.UtcNow,
                     PostId = postId,
-                    Visability = postDto.WhoCanWatching,
+                    Visability = postDto.WhoIsWatching,
                     ImgUrl = imgUrl
                 };
 
