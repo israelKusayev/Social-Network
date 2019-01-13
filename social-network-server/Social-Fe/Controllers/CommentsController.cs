@@ -13,7 +13,7 @@ namespace Social_Fe.Controllers
         private ITokenManager _tokenManager;
 
         public CommentsController(ICommentsManager commentsManager,
-            TokenManager tokenManager)
+            ITokenManager tokenManager)
         {
             _commentsManager = commentsManager;
             _tokenManager = tokenManager;
