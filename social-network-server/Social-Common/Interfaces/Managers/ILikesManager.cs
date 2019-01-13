@@ -4,9 +4,9 @@ namespace Social_Common.Interfaces.Managers
 {
     public interface ILikesManager
     {
-        bool LikeComment(LikeDto dto);
-        bool LikePost(LikeDto dto);
-        bool UnLikeComment(LikeDto dto);
-        bool UnLikePost(LikeDto dto);
+        bool LikeComment(string userId, string commentId);
+        bool LikePost(string userId, string postId);
+        bool UnLikeComment(string userId, string commentId);
+        bool UnLikePost(string userId, string postId);
     }
 }

@@ -19,7 +19,7 @@ class BlockedUsers extends Component {
   };
 
   unblock = async (user) => {
-    const res = await unblockUser(user.userId);
+    const res = await unblockUser(user.UserId);
     if (res.status === 200) {
       toast.success(user.username + ' unblocked successfully !');
 
@@ -41,10 +41,10 @@ class BlockedUsers extends Component {
           blockedUsers.map((user) => {
             return (
               <FollowerTab
-                key={user.userId}
+                key={user.UserId}
                 rightBtnName={'Unblock'}
                 onRightBtnClicked={() => this.unblock(user)}
-                name={user.username}
+                name={user.UserName}
               />
             );
           })

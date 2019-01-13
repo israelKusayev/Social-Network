@@ -19,7 +19,7 @@ class Following extends Component {
   };
 
   unfollow = async (user) => {
-    const res = await unfollow(user.userId);
+    const res = await unfollow(user.UserId);
     if (res.status !== 200) {
       toast.error('faild to unfollow, try again.');
     } else {
@@ -29,7 +29,7 @@ class Following extends Component {
   };
 
   blockUser = async (user) => {
-    const res = await blockUser(user.userId);
+    const res = await blockUser(user.UserId);
 
     if (res.status !== 200) {
       toast.error('something went wrong...');
@@ -50,12 +50,12 @@ class Following extends Component {
           followings.map((user) => {
             return (
               <FollowerTab
-                key={user.userId}
+                key={user.UserId}
                 rightBtnName={'Block'}
                 onRightBtnClicked={() => this.blockUser(user)}
                 leftBtnName={'unfollow'}
                 onLeftBtnClicked={() => this.unfollow(user)}
-                name={user.username}
+                name={user.UserName}
               />
             );
           })

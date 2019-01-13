@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Social_Common.Models;
+using Social_Common.Models.Dtos;
 
 namespace Social_Common.Interfaces.Repositories
 {
@@ -10,7 +11,7 @@ namespace Social_Common.Interfaces.Repositories
         List<User> Find(string name, string userId);
         void Follow(string followingUserId, string followedUserId);
         User Get(string userId, string myId);
-        List<User> GetFollowers(string userId);
+        List<FollowersDTO> GetFollowers(string userId);
         List<User> GetFollowing(string userId);
         bool IsFollow(string userId, string followedUserId);
         void UnBlock(string blockingUserId, string blockedUserId);

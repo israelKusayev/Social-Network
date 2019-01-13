@@ -14,11 +14,11 @@ namespace SocialBl.Managers
             _likesRepository = likesRepository;
         }
 
-        public bool LikeComment(LikeDto dto)
+        public bool LikeComment(string userId, string commentId)
         {
             try
             {
-                _likesRepository.LikeComment(dto.UserId, dto.ItemId);
+                _likesRepository.LikeComment(userId, commentId);
                 return true;
             }
             catch (Exception e)
@@ -28,11 +28,11 @@ namespace SocialBl.Managers
             }
         }
 
-        public bool UnLikeComment(LikeDto dto)
+        public bool UnLikeComment(string userId, string commentId)
         {
             try
             {
-                _likesRepository.UnLikeComment(dto.UserId, dto.ItemId);
+                _likesRepository.UnLikeComment(userId, commentId);
                 return true;
             }
             catch (Exception e)
@@ -42,11 +42,11 @@ namespace SocialBl.Managers
             }
         }
 
-        public bool LikePost(LikeDto dto)
+        public bool LikePost(string userId, string postId)
         {
             try
             {
-                _likesRepository.LikePost(dto.UserId, dto.ItemId);
+                _likesRepository.LikePost(userId, postId);
                 return true;
             }
             catch (Exception e)
@@ -56,11 +56,11 @@ namespace SocialBl.Managers
             }
         }
 
-        public bool UnLikePost(LikeDto dto)
+        public bool UnLikePost(string userId, string postId)
         {
             try
             {
-                _likesRepository.UnLikePost(dto.UserId, dto.ItemId);
+                _likesRepository.UnLikePost(userId, postId);
                 return false;
             }
             catch (Exception e)

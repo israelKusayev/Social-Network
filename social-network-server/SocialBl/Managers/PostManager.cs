@@ -3,6 +3,7 @@ using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using SocialDal.Repositories.Neo4j;
 using System;
+using System.Collections.Generic;
 
 namespace SocialBl.Managers
 {
@@ -10,7 +11,7 @@ namespace SocialBl.Managers
     {
         AmazonS3Uploader _s3Uploader;
         Neo4jPostsRepository _postsRepository;
-        public PostManager(AmazonS3Uploader s3Uploader, 
+        public PostManager(AmazonS3Uploader s3Uploader,
             Neo4jPostsRepository postsRepository)
         {
             _s3Uploader = s3Uploader;
@@ -24,7 +25,7 @@ namespace SocialBl.Managers
             string imgUrl = null;
             try
             {
-                imgUrl = imgUrl == null ? null : _s3Uploader.UploadFile(postDto.Image, postId);
+                imgUrl = postDto.Image == null ? null : _s3Uploader.UploadFile(postDto.Image, postId);
 
                 Post post = new Post()
                 {
@@ -43,6 +44,11 @@ namespace SocialBl.Managers
                 //todo logger
                 return null;
             }
+        }
+
+        public PostListDto GetPosts(int start, int count, string userId)
+        {
+            return _postsRepository.GetFeed(start, count, userId);
         }
     }
 }

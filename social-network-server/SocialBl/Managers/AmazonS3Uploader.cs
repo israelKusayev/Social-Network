@@ -16,6 +16,8 @@ namespace SocialBl.Managers
 
         public string UploadFile(string image, string guid)
         {
+            if (string.IsNullOrWhiteSpace(image)) return null;
+
             var s3Client = new AmazonS3Client(RegionEndpoint.EUCentral1);
             try
             {

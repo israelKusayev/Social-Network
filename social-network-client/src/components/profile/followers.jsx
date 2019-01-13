@@ -45,7 +45,7 @@ class Followers extends Component {
   };
 
   blockUser = async (user) => {
-    const res = await blockUser(user.userId);
+    const res = await blockUser(user.UserId);
 
     if (res.status !== 200) {
       toast.error('something went wrong...');
@@ -57,6 +57,8 @@ class Followers extends Component {
   };
   render() {
     const { followers } = this.state;
+    console.log(followers);
+
     return (
       <div>
         <h1>Followers</h1>

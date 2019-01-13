@@ -56,6 +56,7 @@
     <Compile Include="Interfaces\Repositories\IPostsRepository.cs" />
     <Compile Include="Interfaces\Repositories\IUsersRepository.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Dtos\AddUserDto.cs" />
     <Compile Include="Models\Dtos\CreateCommentDto.cs" />
     <Compile Include="Models\Dtos\CreatePostDto.cs" />
     <Compile Include="Models\Dtos\FollowersDTO.cs" />
