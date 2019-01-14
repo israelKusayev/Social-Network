@@ -11,7 +11,8 @@ namespace Identity_Bl.Managers
     {
         public bool IsValid(string token)
         {
-
+            if (token == null)
+                return false;
             string secretKey = ConfigurationManager.AppSettings["tokenSignKey"];
             try
             {
