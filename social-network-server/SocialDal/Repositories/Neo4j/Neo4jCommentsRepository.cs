@@ -27,8 +27,8 @@ namespace SocialDal.Repositories.Neo4j
 
         public void CreateReference(string commentId, string userId, int startIdx, int endIdx)
         {
-            string query = "MATCH (c:Comment{CommentId:'" + commentId + "'}), (u:{UserId:'" + userId + "'}) " +
-                "CREATE (c)-[:Referencing{StartIdx:" + startIdx + ",EndIdx:" + endIdx + "}]->(u)";
+            string query = "MATCH (c:Comment{CommentId:'" + commentId + "'}), (u:User{UserId:'" + userId + "'}) " +
+                "CREATE (c)-[:Referencing{StartIndex:" + startIdx + ",EndIndex:" + endIdx + "}]->(u)";
             Query(query);
         }
 
@@ -62,7 +62,7 @@ namespace SocialDal.Repositories.Neo4j
                 dto.IsLiked = (bool)record["IsLiked"];
                 dto.Likes = (int)(long)record["Likes"];
                 dto.PostId = (string)record["PostId"];
-                dto.Referencing = new List<ReferencingDto>(((List<object>)record["Referencing"]).OfType<ReferencingDto>());
+                dto.Referencing = ExtractRefences(record);
                 list.Add(dto);
             }
             return list;
@@ -88,5 +88,26 @@ namespace SocialDal.Repositories.Neo4j
             dto.CommentId = (string)commentProps[nameof(dto.CommentId)];   
         }
 
+        private static List<ReferencingDto> ExtractRefences(IRecord record)
+        {
+            var list = new List<ReferencingDto>();
+            List<object> references = (List<object>)record["Referencing"];
+            foreach (var reference in references)
+            {
+                var props = (Dictionary<string, object>)reference;
+                ReferencingDto dto = new ReferencingDto();
+                if (props["user"] != null && props["rel"] != null)
+                {
+                    var userProps = (Dictionary<string, object>)props["user"].GetType().GetProperty("Properties").GetValue(props["user"]);
+                    var relProps = (Dictionary<string, object>)props["rel"].GetType().GetProperty("Properties").GetValue(props["rel"]);
+                    dto.StartIndex = (int)(long)relProps[nameof(dto.StartIndex)];
+                    dto.EndIndex = (int)(long)relProps[nameof(dto.EndIndex)];
+                    dto.UserId = (string)userProps[nameof(dto.UserId)];
+                    dto.UserName = (string)userProps[nameof(dto.UserName)];
+                    list.Add(dto);
+                }
+            }
+            return list;
+        }
     }
 }
