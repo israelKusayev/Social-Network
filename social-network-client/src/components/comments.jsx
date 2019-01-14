@@ -12,8 +12,12 @@ export default class Comments extends React.Component {
   socialUrl = process.env.REACT_APP_SOCIAL_URL;
 
   componentDidMount = async () => {
+    await this.getComments();
+  };
+  getComments = async () => {
     const res = await getComments(this.props.postId);
     if (res.status !== 200) {
+      toast.error('something went wrong');
     } else {
       const data = await res.json();
       this.setState({ comments: data });
@@ -100,8 +104,8 @@ export default class Comments extends React.Component {
       if (res.status !== 200) {
         this.setState({ error: 'add comment faild please try again!' });
       } else {
-        this.setState({ error: '' });
-        toast.success('comment added successfully');
+        this.resetAddComment();
+        await this.getComments();
       }
     }
   };
@@ -109,6 +113,14 @@ export default class Comments extends React.Component {
     const data = { ...this.state.data };
     data.image = image;
     this.setState({ data });
+  };
+
+  resetAddComment = () => {
+    let data = this.state.data;
+    data.content = '';
+    data.image = '';
+    data.referencing = [];
+    this.setState({ data, error: '' });
   };
 
   render() {

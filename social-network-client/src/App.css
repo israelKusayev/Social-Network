@@ -2,6 +2,10 @@ body {
   scroll-behavior: smooth;
 }
 
+.multipleLine {
+  white-space: pre-wrap;
+}
+
 .profile {
   background-color: #ff0087;
   color: white;

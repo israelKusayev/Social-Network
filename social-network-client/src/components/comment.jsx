@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import LikeButton from './likeButton';
 import moment from 'moment';
 
@@ -9,7 +10,9 @@ export default class Comment extends Component {
       <>
         <div className="card bg-dark text-light">
           <div className="card-header">
-            {comment.User.UserName}
+            <Link className="card-link" to={'/profile/' + comment.User.UserId}>
+              <span className="h5 m-0 text-pink">@{comment.User.UserName}</span>
+            </Link>
             <span className="text-muted h7 ml-3 mb-2">
               <i className="fa fa-clock-o" />
               {moment(comment.time).fromNow()}
@@ -17,6 +20,7 @@ export default class Comment extends Component {
           </div>
           <div className="card-body">
             <p>{comment.content}</p>
+            <img src={comment.imgUrl} className="img-fluid" alt="" />
           </div>
           <div className="card-footer text-pink">
             <LikeButton onClick={() => this.props.onLiked(comment.commentId)} liked={comment.isLiked} />
