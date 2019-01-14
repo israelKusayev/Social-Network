@@ -62,6 +62,7 @@
     <Compile Include="Models\Dtos\FollowersDTO.cs" />
     <Compile Include="Models\Dtos\LikeDto.cs" />
     <Compile Include="Models\Dtos\PostListDto.cs" />
+    <Compile Include="Models\Dtos\ReferencingDto.cs" />
     <Compile Include="Models\Dtos\ReturnedCommentDto.cs" />
     <Compile Include="Models\Dtos\ReturnedPostDto.cs" />
     <Compile Include="Models\Post.cs" />
