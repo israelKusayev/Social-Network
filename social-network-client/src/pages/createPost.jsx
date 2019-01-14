@@ -4,6 +4,7 @@ import RouteProtector from '../HOC/routeProtector';
 import { createPost } from '../services/postsService';
 import { getUsers } from '../services/usersService';
 import { toast } from 'react-toastify';
+import { onReferenceSelect } from '../utils/referencing';
 
 class CreatePost extends Component {
   state = {
@@ -34,6 +35,7 @@ class CreatePost extends Component {
     const data = { ...this.state.data };
     data[input.id] = input.value;
     this.setState({ data });
+
     if (input.value.endsWith('@')) {
       this.setState({ getAutoComplete: true });
     }
@@ -65,13 +67,13 @@ class CreatePost extends Component {
   };
 
   onReferencingSelect = (user) => {
-    let data = { ...this.state.data };
-    const index = data.content.lastIndexOf('@');
-    data.content = data.content.slice(0, index + 1);
-    data.content += user.UserName;
-    data.referencing.push({ ...user, startIndex: index, endIndex: index + user.UserName.length });
+    const data = this.state.data;
+    const res = onReferenceSelect(user, data.content);
+    data.referencing.push(res.reference);
+    data.content = res.content;
     this.setState({ data, users: [], getAutoComplete: false });
   };
+
   render() {
     const { data } = this.state;
     return (
