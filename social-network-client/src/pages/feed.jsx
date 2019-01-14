@@ -15,8 +15,6 @@ class Feed extends Component {
   };
 
   componentDidMount = async () => {
-    console.log('feed');
-
     await this.getPosts();
   };
 
@@ -25,7 +23,6 @@ class Feed extends Component {
 
     if (res.status === 200) {
       const data = await res.json();
-      console.log(data);
 
       if (data && data.Posts && data.Posts.length !== 0) {
         let { posts, index } = this.state;
@@ -73,7 +70,7 @@ class Feed extends Component {
               loadMore={this.getPosts}
               hasMore={this.state.reloadMorePosts}
               loader={
-                <div className="spinner-border mx-auto text-dark" role="status">
+                <div key={0} className="spinner-border mx-auto text-dark" role="status">
                   <span className="sr-only">Loading...</span>
                 </div>
               }

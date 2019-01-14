@@ -56,7 +56,6 @@ class Followers extends Component {
   };
   render() {
     const { followers } = this.state;
-    console.log(followers);
 
     return (
       <div>

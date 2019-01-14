@@ -4,7 +4,6 @@ const socialUrl = process.env.REACT_APP_SOCIAL_URL + 'posts';
 
 export async function createPost(post) {
   const json = JSON.stringify(post);
-  console.log(json);
 
   return await Post(socialUrl, json, true);
 }

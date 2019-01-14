@@ -31,7 +31,6 @@ export async function Post(url, data, jwt = false) {
     });
     if (res.status === 401) {
       await refreshToken();
-      console.log('401');
 
       return Post(url, data, jwt);
     }
@@ -66,8 +65,7 @@ export async function refreshToken() {
   const res = await Get(authUrl + 'refreshToken', getJwt());
   if (res.status === 200) {
     const jwt = res.headers.get('x-auth-token');
-    console.log('token refreshed');
-    
+
     setJwt(jwt);
   } else {
     deleteJwt();
