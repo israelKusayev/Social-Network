@@ -45,16 +45,17 @@ namespace SocialDal.Repositories.Neo4j
             if (count > _maxPostsPerPage)
                 count = _maxPostsPerPage;
             string query = "MATCH(p: Post) -[:PostedBy]->(posting: User), " +
-                    "(me: User{ UserId: '"+userId+"'}) " +
-                "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
-                "OPTIONAL MATCH(p)-[:Referencing]->(ref:User)" +
+                    "(me: User{ UserId: '"+userId+"'}) " +               
                 "WHERE NOT EXISTS((posting) -[:Blocked] - (me)) " +
                     "AND(p.Visability = 0 OR (p.Visability = 1 " +
                     "AND EXISTS((me) -[:Following]->(posting)))) " +
                     "AND(EXISTS((p) -[:Recomended]->(me)) " +
                         "OR EXISTS((p) -[:Referencing]->(me)) " +
                         "OR EXISTS((p) < -[:CommentedOn] - (: Comment) -[:Referencing]->(me)) " +
-                        "OR EXISTS((me) - [:Following]->(posting))) " +
+                        "OR EXISTS((me) - [:Following]->(posting)) " +
+                        "OR me.UserId = posting.UserId ) " +
+                "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
+                "OPTIONAL MATCH(p)-[:Referencing]->(ref:User)" +
                 "RETURN " +
                     "p AS Post, posting AS CreatedBy, " +
                     "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
