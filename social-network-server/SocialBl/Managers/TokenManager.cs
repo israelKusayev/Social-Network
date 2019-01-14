@@ -11,7 +11,7 @@ namespace SocialBl.Managers
     {
         public bool IsValid(string token)
         {
-            if (token == null)
+            if (token == null||token=="null")
                 return false;
             string secretKey = ConfigurationManager.AppSettings["tokenSignKey"];
             try

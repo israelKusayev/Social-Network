@@ -29,7 +29,6 @@ export default class Post extends Component {
                         <div className="h5 m-0 text-pink">@{post.User.UserName}</div>
                       </Link>
                     }
-                    {/* <div className="h7 text-muted">{post.authorFullname}</div> */}
                   </div>
                 </div>
               </div>

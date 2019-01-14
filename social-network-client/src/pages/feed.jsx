@@ -23,6 +23,7 @@ class Feed extends Component {
 
     if (res.status === 200) {
       const data = await res.json();
+      console.log(data);
 
       if (data && data.Posts && data.Posts.length !== 0) {
         let { posts, index } = this.state;
@@ -61,9 +62,10 @@ class Feed extends Component {
 
   render() {
     const { posts } = this.state;
+
     return (
       <div className="mt-3">
-        <div className="row">
+        <div className="row multipleLine">
           <div className="col-md-12">
             <InfiniteScroll
               pageStart={0}
