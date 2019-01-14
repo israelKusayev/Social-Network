@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ImagePicker from '../components/imagePicker';
 import RouteProtector from '../HOC/routeProtector';
 import { createPost } from '../services/postsService';
+import { getUsers } from '../services/usersService';
+import { toast } from 'react-toastify';
 
 class CreatePost extends Component {
   state = {
@@ -9,13 +11,37 @@ class CreatePost extends Component {
       whoIsWatching: 'all',
       content: '',
       image: ''
+    },
+    users: [],
+    getAutoComplete: false
+  };
+
+  getUsers = async (value) => {
+    if (value.trim()) {
+      const res = await getUsers(value);
+      if (res.status !== 200) {
+        toast.error('something went wrong...');
+      } else {
+        const users = await res.json();
+        this.setState({ users });
+      }
     }
   };
 
-  handleChange = ({ currentTarget: input }) => {
+  handleChange = async ({ currentTarget: input }) => {
     const data = { ...this.state.data };
     data[input.id] = input.value;
     this.setState({ data });
+    if (input.value.endsWith('@')) {
+      this.setState({ getAutoComplete: true });
+    }
+    if (this.state.getAutoComplete) {
+      const contentArr = input.value.split('@');
+      await this.getUsers(contentArr[contentArr.length - 1]);
+    }
+    if (input.value.endsWith(' ')) {
+      this.setState({ getAutoComplete: false });
+    }
   };
 
   handleImageSelect = (image) => {
@@ -71,21 +97,26 @@ class CreatePost extends Component {
                           </select>
                         </div>
                       </div>
-                      <div className="form-group row">
+                      <div className="form-group  row">
                         <label htmlFor="content" className="col-4 col-form-label">
                           Content
                         </label>
-                        <div className="col-8">
+                        <div className="col-8 autocomplete">
                           <textarea
                             id="content"
                             placeholder="Content"
                             cols="60"
                             rows="7"
-                            className="form-control"
+                            className="form-control "
                             required={true}
                             value={data.content}
                             onChange={this.handleChange}
                           />
+                          <div className="autocomplete-items" id="autocomplete-list">
+                            {this.state.users.map((p) => {
+                              return <div className="alert alert-dark">{p.UserName}</div>;
+                            })}
+                          </div>
                         </div>
                       </div>
                       <div className="form-group row">

@@ -98,7 +98,7 @@ namespace SocialDal.Repositories.Neo4j
             var dynamicPost = record["Post"];
             var postProps = (Dictionary<string, object>)dynamicPost.GetType().GetProperty("Properties").GetValue(dynamicPost);
             dto.Content = (string)postProps[nameof(dto.Content)];
-            dto.CreatedOn = DateTime.Parse((string)postProps[nameof(dto.CreatedOn)]);
+            dto.CreatedOn = DateTime.Parse((string)postProps[nameof(dto.CreatedOn)]).ToUniversalTime();
             dto.ImgUrl = postProps.ContainsKey(nameof(dto.ImgUrl)) ? (string)postProps[nameof(dto.ImgUrl)] : null;
             dto.PostId = (string)postProps[nameof(dto.PostId)];
             dto.Visability = (PostVisabilityOptions)((long)postProps[nameof(dto.Visability)]);

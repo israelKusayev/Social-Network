@@ -2,19 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import LikeButton from './likeButton';
 import CommentButton from './commentButton';
+import moment from 'moment';
 
 export default class Post extends Component {
-  // {
-  //   postId: '12345678',
-  //   imgUrl: `data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7`,
-  //   numberOfLikes: 23,
-  //   isLiked: true,
-  //   user: { username: 'israel', userId: '23048394839403' },
-  //   content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.`,
-  //   time: '20 minute ago'
-  // },
   render() {
     const { post } = this.props;
+
     return (
       <div className="row mb-4">
         <div className="col-md-8 offset-2">
@@ -31,9 +24,11 @@ export default class Post extends Component {
                     />
                   </div>
                   <div className="ml-2">
-                    { <Link className="card-link" to={'/profile/' + post.User.UserId}>
-                      <div className="h5 m-0 text-pink">@{post.User.UserName}</div>
-                    </Link> }
+                    {
+                      <Link className="card-link" to={'/profile/' + post.User.UserId}>
+                        <div className="h5 m-0 text-pink">@{post.User.UserName}</div>
+                      </Link>
+                    }
                     {/* <div className="h7 text-muted">{post.authorFullname}</div> */}
                   </div>
                 </div>
@@ -42,7 +37,7 @@ export default class Post extends Component {
             <div className="card-body">
               <div className="text-muted h7 mb-2">
                 <i className="fa fa-clock-o" />
-                {post.time}
+                {moment(post.time).fromNow()}
               </div>
 
               <p className="card-text">{post.content}</p>

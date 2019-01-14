@@ -15,6 +15,7 @@ import CreatePost from './pages/createPost';
 
 import './App.css';
 import './styles/customButtons.css';
+import './styles/autoComplete.css';
 import 'react-toastify/dist/ReactToastify.css';
 import UserProfile from './components/userProfile';
 

@@ -8,6 +8,7 @@
     "font-awesome": "^4.7.0",
     "joi": "^14.3.1",
     "jwt-decode": "^2.2.0",
+    "moment": "^2.23.0",
     "react": "^16.7.0",
     "react-bootstrap4-modal": "^1.7.0",
     "react-dom": "^16.7.0",

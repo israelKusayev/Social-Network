@@ -53,19 +53,15 @@ export default class Comments extends React.Component {
       //like comment
       const res = await likeComment(comment.commentId);
       if (res.status !== 200) {
-        console.log('like comment faild, response - ', res);
+        this.setState({ ...prevState });
       }
     } else {
       //unlike comment
       const res = await unlikeComment(comment.commentId);
       if (res.status !== 200) {
-        console.log('unlike comment faild, response - ', res);
+        this.setState({ ...prevState });
       }
     }
-
-    // if (!res || res.status !== 200) {
-    //   this.setState({ ...prevState });
-    // }
   };
 
   handleChange = ({ currentTarget: input }) => {
