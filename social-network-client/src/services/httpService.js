@@ -66,6 +66,8 @@ export async function refreshToken() {
   const res = await Get(authUrl + 'refreshToken', getJwt());
   if (res.status === 200) {
     const jwt = res.headers.get('x-auth-token');
+    console.log('token refreshed');
+    
     setJwt(jwt);
   } else {
     deleteJwt();

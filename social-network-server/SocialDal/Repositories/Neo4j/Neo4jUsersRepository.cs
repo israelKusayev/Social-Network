@@ -15,7 +15,8 @@ namespace SocialDal.Repositories.Neo4j
 
         public List<User> Find(string name, string userId)
         {
-            string query = $"MATCH (u:User) where u.UserName =~ '.*{name}.*' " +
+            string query = $"MATCH (u:User) where( u.UserName =~ '.*{name}.*'" +
+               " AND NOT u.UserId = '" + userId + "')"+
                "AND NOT EXISTS((u)-[:Blocked]-(:User{UserId:'" + userId + "'}))" +
                "return u;";
             var res = Query(query);

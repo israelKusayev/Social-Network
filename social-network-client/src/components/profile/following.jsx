@@ -36,7 +36,6 @@ class Following extends Component {
     } else {
       const followings = removeItemFromArray([...this.state.followings], user);
       this.setState({ followings });
-      toast.success('User has been blocked successfully');
     }
   };
 

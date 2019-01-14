@@ -16,6 +16,6 @@ namespace Social_Common.Models.Dtos
         public string UserId { get; set; }
 
         [JsonProperty(PropertyName = "isFollowing")]
-        public string IsFollowing { get; set; }
+        public bool IsFollowing { get; set; }
     }
 }

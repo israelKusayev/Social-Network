@@ -45,14 +45,13 @@ class Followers extends Component {
   };
 
   blockUser = async (user) => {
-    const res = await blockUser(user.UserId);
+    const res = await blockUser(user.userId);
 
     if (res.status !== 200) {
       toast.error('something went wrong...');
     } else {
       const followers = removeItemFromArray([...this.state.followers], user);
       this.setState({ followers });
-      toast.success('User has been blocked successfully');
     }
   };
   render() {
@@ -62,18 +61,22 @@ class Followers extends Component {
     return (
       <div>
         <h1>Followers</h1>
-        {followers.map((user) => {
-          return (
-            <FollowerTab
-              key={user.userId}
-              rightBtnName={'Block'}
-              onRightBtnClicked={() => this.blockUser(user)}
-              leftBtnName={user.isFollowing ? 'unfollow' : 'Follow back'}
-              onLeftBtnClicked={user.isFollowing ? () => this.unfollow(user) : () => this.followBack(user)}
-              name={user.username}
-            />
-          );
-        })}
+        {followers.length !== 0 ? (
+          followers.map((user) => {
+            return (
+              <FollowerTab
+                key={user.userId}
+                rightBtnName={'Block'}
+                onRightBtnClicked={() => this.blockUser(user)}
+                leftBtnName={user.isFollowing ? 'unfollow' : 'Follow back'}
+                onLeftBtnClicked={user.isFollowing ? () => this.unfollow(user) : () => this.followBack(user)}
+                name={user.username}
+              />
+            );
+          })
+        ) : (
+          <h2 className="text-danger">No one is following you</h2>
+        )}
       </div>
     );
   }

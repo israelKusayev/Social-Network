@@ -41,45 +41,47 @@ export default class ResetPassword extends Component {
     return (
       <>
         <h1 className="text-center">Reset password</h1>
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              className="form-control"
-              id="username"
-              placeholder="Username"
-              value={data.username}
-              onChange={this.handleChange}
-            />
+        <form className="row" onSubmit={this.handleSubmit}>
+          <div className="col-md-6 offset-3">
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                className="form-control"
+                id="username"
+                placeholder="Username"
+                value={data.username}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">New password</label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                placeholder="Password"
+                value={data.password}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password2">Confirm new password</label>
+              <input
+                type="password"
+                className="form-control"
+                id="password2"
+                placeholder="Confirm password"
+                value={data.password2}
+                onChange={this.handleChange}
+              />
+            </div>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
+            <button type="submit" className="btn btn-dark">
+              Reset
+            </button>
           </div>
-          <div className="form-group">
-            <label htmlFor="password">New password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              placeholder="Password"
-              value={data.password}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password2">Confirm new password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password2"
-              placeholder="Confirm password"
-              value={data.password2}
-              onChange={this.handleChange}
-            />
-          </div>
-          {error && <div className="alert alert-danger">{error}</div>}
-          {success && <div className="alert alert-success">{success}</div>}
-          <button type="submit" className="btn btn-dark">
-            Reset
-          </button>
         </form>
       </>
     );

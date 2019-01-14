@@ -4,6 +4,7 @@ import { convertJsonToUser } from '../converters/userConvertor';
 import User from '../models/user';
 import { getUser, follow, Isfollow, unfollow, blockUser } from '../services/usersService';
 import { toast } from 'react-toastify';
+import { getUserId } from '../services/jwtService';
 
 export default class UserProfile extends Component {
   state = {
@@ -12,6 +13,9 @@ export default class UserProfile extends Component {
   };
 
   componentDidMount = async () => {
+    if (this.props.match.params.id === getUserId()) {
+      this.props.history.push('/profile');
+    }
     const res = await Isfollow(this.props.match.params.id);
     if (res.status === 200) {
       const isFollow = await res.json();
