@@ -10,7 +10,8 @@ class CreatePost extends Component {
     data: {
       whoIsWatching: 'all',
       content: '',
-      image: ''
+      image: '',
+      referencing: []
     },
     users: [],
     getAutoComplete: false
@@ -23,7 +24,8 @@ class CreatePost extends Component {
         toast.error('something went wrong...');
       } else {
         const users = await res.json();
-        this.setState({ users });
+        if (users.length === 0) this.setState({ users, getAutoComplete: false });
+        else this.setState({ users });
       }
     }
   };
@@ -38,9 +40,6 @@ class CreatePost extends Component {
     if (this.state.getAutoComplete) {
       const contentArr = input.value.split('@');
       await this.getUsers(contentArr[contentArr.length - 1]);
-    }
-    if (input.value.endsWith(' ')) {
-      this.setState({ getAutoComplete: false });
     }
   };
 
@@ -63,6 +62,15 @@ class CreatePost extends Component {
     } else {
       this.setState({ error: 'somthing went worng please try again' });
     }
+  };
+
+  onReferencingSelect = (user) => {
+    let data = { ...this.state.data };
+    const index = data.content.lastIndexOf('@');
+    data.content = data.content.slice(0, index + 1);
+    data.content += user.UserName;
+    data.referencing.push({ ...user, startIndex: index, endIndex: index + user.UserName.length });
+    this.setState({ data, users: [], getAutoComplete: false });
   };
   render() {
     const { data } = this.state;
@@ -114,7 +122,11 @@ class CreatePost extends Component {
                           />
                           <div className="autocomplete-items" id="autocomplete-list">
                             {this.state.users.map((p) => {
-                              return <div className="alert alert-dark">{p.UserName}</div>;
+                              return (
+                                <div onClick={() => this.onReferencingSelect(p)} className="alert alert-dark">
+                                  {p.UserName}
+                                </div>
+                              );
                             })}
                           </div>
                         </div>
