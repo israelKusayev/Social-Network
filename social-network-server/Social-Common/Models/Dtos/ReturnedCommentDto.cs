@@ -17,7 +17,7 @@ namespace Social_Common.Models.Dtos
         [JsonProperty(PropertyName = "User")]
         public User CreatedBy { get; set; }
         [JsonProperty(PropertyName = "referencing")]
-        public List<User> Referencing { get; set; }
+        public List<ReferencingDto> Referencing { get; set; }
         [JsonProperty(PropertyName = "postId")]
         public string PostId { get; set; }
         [JsonProperty(PropertyName = "isLiked")]

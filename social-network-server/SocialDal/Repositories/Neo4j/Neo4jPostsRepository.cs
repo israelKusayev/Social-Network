@@ -14,21 +14,6 @@ namespace SocialDal.Repositories.Neo4j
     {
         private static int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
 
-        public ReturnedPostDto Get(string postId, string userId)
-        {
-            string query = "match(p:Post{PostId:'" + postId + "'})-[:PostedBy]->(posting:User)," +
-                "(p)<-[l:Like]-(:User), (p)-[:Referencing]->(ref:User), (me:User{UserId:'" + userId + "'})" +
-                $"WHERE NOT (posting)-[:Blocked]-(me) AND" +
-                $" (p.Visability=={PostVisabilityOptions.All.ToString()} OR " +
-                $"(p.Visability=={PostVisabilityOptions.Followers.ToString()} AND EXISTS( (me)-[:Following]->(posting) )) )" +
-                "return p, posting AS User ," +
-                "EXISTS( (p)<-[:Like]-(me) ) AS IsLiked," +
-                "COUNT(l) AS Likes, COLLECT(ref) AS Referencing";
-            var res = Query(query);
-            var post = res.Single();
-            return post != null ? RecordToObj<ReturnedPostDto>(post) : null;
-        }
-
         public void Create(Post post, string postedByUserId)
         {
             Create(post);
@@ -38,6 +23,13 @@ namespace SocialDal.Repositories.Neo4j
                 CREATE(p) -[r:PostedBy]->(u)
                 RETURN type(r)";
             Query(postedByQuery);
+        }
+
+        public void CreateReference(string postId,string userId,int startIdx,int endIdx)
+        {
+            string query = "MATCH (p:Post{PostId:'" + postId + "'}), (u:{UserId:'" + userId + "'}) " +
+                "CREATE (p)-[:Referencing{StartIdx:"+startIdx+",EndIdx:"+endIdx+"}]->(u)";
+            Query(query);
         }
 
         public PostListDto GetFeed(int startIdx, int count, string userId)
@@ -55,11 +47,11 @@ namespace SocialDal.Repositories.Neo4j
                         "OR EXISTS((me) - [:Following]->(posting)) " +
                         "OR me.UserId = posting.UserId ) " +
                 "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
-                "OPTIONAL MATCH(p)-[:Referencing]->(ref:User)" +
+                "OPTIONAL MATCH(p)-[rel:Referencing]->(ref:User)" +
                 "RETURN " +
                     "p AS Post, posting AS CreatedBy, " +
                     "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
-                    "COUNT(l) AS Likes, COLLECT(ref) AS Referencing " +
+                    "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
                 $"ORDER BY p.CreatedOn DESC SKIP {startIdx} LIMIT {count}";
             var res = Query(query);
             PostListDto postListDto = new PostListDto()
@@ -79,6 +71,7 @@ namespace SocialDal.Repositories.Neo4j
                 dto.CreatedBy = ExtractUser(record);
                 dto.IsLiked = (bool)record["IsLiked"];
                 dto.Likes = (int)(long)record["Likes"];
+                dto.Referencing = new List<ReferencingDto>(((List<object>)record["Referencing"]).OfType<ReferencingDto>());
                 list.Add(dto);
             }
             return list;

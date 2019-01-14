@@ -33,6 +33,11 @@ namespace SocialBl.Managers
                     ImgUrl = url
                 };
                 _commentsRepository.Create(comment, userId, commentDto.PostId);
+                foreach(var reference in commentDto.Referencing)
+                {
+                    _commentsRepository.CreateReference(guid, reference.UserId,
+                        reference.StartIndex, reference.EndIndex);
+                }
                 return true;
             }
             catch (Exception e)

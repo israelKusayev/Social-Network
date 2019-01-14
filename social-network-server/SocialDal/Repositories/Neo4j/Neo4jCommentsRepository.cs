@@ -5,6 +5,7 @@ using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SocialDal.Repositories.Neo4j
 {
@@ -24,6 +25,13 @@ namespace SocialDal.Repositories.Neo4j
             Query(CommentedOnQuery);
         }
 
+        public void CreateReference(string commentId, string userId, int startIdx, int endIdx)
+        {
+            string query = "MATCH (c:Comment{CommentId:'" + commentId + "'}), (u:{UserId:'" + userId + "'}) " +
+                "CREATE (c)-[:Referencing{StartIdx:" + startIdx + ",EndIdx:" + endIdx + "}]->(u)";
+            Query(query);
+        }
+
         public List<ReturnedCommentDto> GetComments(string userId, string postId)
         {
             string query = "MATCH (c:Comment)-[:CommentedOn]->(p:Post{PostId:'" + postId + "'})-[:PostedBy]->(posting:User), " +
@@ -33,11 +41,11 @@ namespace SocialDal.Repositories.Neo4j
                 "NOT EXISTS((u)-[:Blocked]-(me)) AND" +
                 $" (p.Visability={(int)PostVisabilityOptions.All} OR " +
                 $"(p.Visability={(int)PostVisabilityOptions.Followers} AND EXISTS( (me)-[:Following]->(posting) )) )" +
-                "OPTIONAL MATCH(c)-[:Referencing]->(ref:User) " +
+                "OPTIONAL MATCH(c)-[rel:Referencing]->(ref:User) " +
                 "OPTIONAL MATCH(c)<-[l:Like]- (: User) " +
                 "RETURN c AS Comment, u AS CreatedBy, p.PostId AS PostId, " +
                 "EXISTS( (c) <-[:Like]-(me) ) AS IsLiked, " +
-                "COUNT(l) AS Likes, COLLECT(ref) AS Referencing " +
+                "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
                 "ORDER BY c.CreatedOn DESC";         
             var res = Query(query);
             return DeserializeComments(res);
@@ -54,7 +62,7 @@ namespace SocialDal.Repositories.Neo4j
                 dto.IsLiked = (bool)record["IsLiked"];
                 dto.Likes = (int)(long)record["Likes"];
                 dto.PostId = (string)record["PostId"];
-                //dto.Referencing
+                dto.Referencing = new List<ReferencingDto>(((List<object>)record["Referencing"]).OfType<ReferencingDto>());
                 list.Add(dto);
             }
             return list;
