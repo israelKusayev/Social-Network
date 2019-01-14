@@ -19,7 +19,8 @@ namespace Social_Common.Models.Dtos
         public PostVisabilityOptions Visability { get; set; }
         [JsonProperty(PropertyName = "User")]
         public User CreatedBy { get; set; }
-        // List<User> Referencing { get; set; }
+        [JsonProperty(PropertyName = "referencing")]
+        public List<ReferencingDto> Referencing { get; set; }
         [JsonProperty(PropertyName = "isLiked")]
         public bool IsLiked { get; set; }
         [JsonProperty(PropertyName = "numberOfLikes")] 

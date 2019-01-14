@@ -1,8 +1,11 @@
-﻿using Social_Common.Enum;
+﻿using Neo4j.Driver.V1;
+using Social_Common.Enum;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SocialDal.Repositories.Neo4j
 {
@@ -22,16 +25,67 @@ namespace SocialDal.Repositories.Neo4j
             Query(CommentedOnQuery);
         }
 
+        public void CreateReference(string commentId, string userId, int startIdx, int endIdx)
+        {
+            string query = "MATCH (c:Comment{CommentId:'" + commentId + "'}), (u:{UserId:'" + userId + "'}) " +
+                "CREATE (c)-[:Referencing{StartIdx:" + startIdx + ",EndIdx:" + endIdx + "}]->(u)";
+            Query(query);
+        }
+
         public List<ReturnedCommentDto> GetComments(string userId, string postId)
         {
-            string query = "MATCH (c:Comment)-[:CommentedOn]->(p:Post{PostId:'" + postId + "'})-[:PostedBy]->(posting:User)," +
-                "(c)-[:CommentedBy]->(u:User),(c)-[:Referencing]->(ref:User)," +
+            string query = "MATCH (c:Comment)-[:CommentedOn]->(p:Post{PostId:'" + postId + "'})-[:PostedBy]->(posting:User), " +
+                "(c)-[:CommentedBy]->(u:User), " +
                 "(me:User{UserId:'" + userId + "'})" +
-                "WHERE NOT EXSISTS((posting)-[:Blocked]-(me)) AND" +
-                $" (p.Visability=={(int)PostVisabilityOptions.All} OR " +
-                $"(p.Visability=={(int)PostVisabilityOptions.Followers} AND EXISTS( (me)-[:Following]->(posting) )) )";
+                "WHERE NOT EXISTS((posting)-[:Blocked]-(me)) AND " +
+                "NOT EXISTS((u)-[:Blocked]-(me)) AND" +
+                $" (p.Visability={(int)PostVisabilityOptions.All} OR " +
+                $"(p.Visability={(int)PostVisabilityOptions.Followers} AND EXISTS( (me)-[:Following]->(posting) )) )" +
+                "OPTIONAL MATCH(c)-[rel:Referencing]->(ref:User) " +
+                "OPTIONAL MATCH(c)<-[l:Like]- (: User) " +
+                "RETURN c AS Comment, u AS CreatedBy, p.PostId AS PostId, " +
+                "EXISTS( (c) <-[:Like]-(me) ) AS IsLiked, " +
+                "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
+                "ORDER BY c.CreatedOn DESC";         
             var res = Query(query);
-            return RecordsToList<ReturnedCommentDto>(res);
+            return DeserializeComments(res);
+        }
+
+        private static List<ReturnedCommentDto> DeserializeComments(IEnumerable<IRecord> records)
+        {
+            var list = new List<ReturnedCommentDto>();
+            foreach (IRecord record in records)
+            {
+                ReturnedCommentDto dto = new ReturnedCommentDto();
+                FlattenComment(record, dto);
+                dto.CreatedBy = ExtractUser(record);
+                dto.IsLiked = (bool)record["IsLiked"];
+                dto.Likes = (int)(long)record["Likes"];
+                dto.PostId = (string)record["PostId"];
+                dto.Referencing = new List<ReferencingDto>(((List<object>)record["Referencing"]).OfType<ReferencingDto>());
+                list.Add(dto);
+            }
+            return list;
+        }
+
+        private static User ExtractUser(IRecord record)
+        {
+            var dynamicUser = record["CreatedBy"];
+            User user = new User();
+            var userProps = (Dictionary<string, object>)dynamicUser.GetType().GetProperty("Properties").GetValue(dynamicUser);
+            user.UserId = (string)userProps[nameof(user.UserId)];
+            user.UserName = (string)userProps[nameof(user.UserName)];
+            return user;
+        }
+
+        private static void FlattenComment(IRecord record, ReturnedCommentDto dto)
+        {
+            var dynamicComment = record["Comment"];
+            var commentProps = (Dictionary<string, object>)dynamicComment.GetType().GetProperty("Properties").GetValue(dynamicComment);
+            dto.Content = (string)commentProps[nameof(dto.Content)];
+            dto.CreatedOn = DateTime.Parse((string)commentProps[nameof(dto.CreatedOn)]).ToUniversalTime();
+            dto.ImgUrl = commentProps.ContainsKey(nameof(dto.ImgUrl)) ? (string)commentProps[nameof(dto.ImgUrl)] : null;
+            dto.CommentId = (string)commentProps[nameof(dto.CommentId)];   
         }
 
     }

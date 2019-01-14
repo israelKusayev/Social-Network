@@ -37,6 +37,11 @@ namespace SocialBl.Managers
                 };
 
                 _postsRepository.Create(post, userId);
+
+                foreach(var reference in postDto.Referencing)
+                {
+                    _postsRepository.CreateReference(postId, reference.UserId, reference.StartIndex, reference.EndIndex);
+                }
                 return post;
             }
             catch (Exception)
