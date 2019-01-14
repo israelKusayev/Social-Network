@@ -6,7 +6,7 @@ namespace Social_Common.Interfaces.Repositories
     public interface IPostsRepository
     {
         void Create(Post post, string postedByUserId);
-        ReturnedPostDto Get(string postId, string userId);
+        void CreateReference(string postId, string userId, int startIdx, int endIdx);
         PostListDto GetFeed(int startIdx, int count, string userId);
     }
 }

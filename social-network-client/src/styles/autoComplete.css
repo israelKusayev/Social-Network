@@ -24,3 +24,6 @@
 .autocomplete-items div:hover {
   background-color: black;
 }
+#autocomplete-list .alert-dark {
+  margin: 0%;
+}

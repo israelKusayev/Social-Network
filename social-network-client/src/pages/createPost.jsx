@@ -4,13 +4,15 @@ import RouteProtector from '../HOC/routeProtector';
 import { createPost } from '../services/postsService';
 import { getUsers } from '../services/usersService';
 import { toast } from 'react-toastify';
+import { onReferenceSelect } from '../utils/referencing';
 
 class CreatePost extends Component {
   state = {
     data: {
       whoIsWatching: 'all',
       content: '',
-      image: ''
+      image: '',
+      referencing: []
     },
     users: [],
     getAutoComplete: false
@@ -23,7 +25,8 @@ class CreatePost extends Component {
         toast.error('something went wrong...');
       } else {
         const users = await res.json();
-        this.setState({ users });
+        if (users.length === 0) this.setState({ users, getAutoComplete: false });
+        else this.setState({ users });
       }
     }
   };
@@ -32,15 +35,13 @@ class CreatePost extends Component {
     const data = { ...this.state.data };
     data[input.id] = input.value;
     this.setState({ data });
+
     if (input.value.endsWith('@')) {
       this.setState({ getAutoComplete: true });
     }
     if (this.state.getAutoComplete) {
       const contentArr = input.value.split('@');
       await this.getUsers(contentArr[contentArr.length - 1]);
-    }
-    if (input.value.endsWith(' ')) {
-      this.setState({ getAutoComplete: false });
     }
   };
 
@@ -64,6 +65,15 @@ class CreatePost extends Component {
       this.setState({ error: 'somthing went worng please try again' });
     }
   };
+
+  onReferencingSelect = (user) => {
+    const data = this.state.data;
+    const res = onReferenceSelect(user, data.content);
+    data.referencing.push(res.reference);
+    data.content = res.content;
+    this.setState({ data, users: [], getAutoComplete: false });
+  };
+
   render() {
     const { data } = this.state;
     return (
@@ -114,7 +124,11 @@ class CreatePost extends Component {
                           />
                           <div className="autocomplete-items" id="autocomplete-list">
                             {this.state.users.map((p) => {
-                              return <div className="alert alert-dark">{p.UserName}</div>;
+                              return (
+                                <div onClick={() => this.onReferencingSelect(p)} className="alert alert-dark">
+                                  {p.UserName}
+                                </div>
+                              );
                             })}
                           </div>
                         </div>

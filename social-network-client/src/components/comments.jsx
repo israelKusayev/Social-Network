@@ -5,16 +5,15 @@ import ImagePicker from './imagePicker';
 import { addComment, getComments } from '../services/commentsService';
 import { toast } from 'react-toastify';
 import { unlikeComment, likeComment } from '../services/likesService';
+import { getUsers } from '../services/usersService';
+import { onReferenceSelect } from '../utils/referencing';
 
 export default class Comments extends React.Component {
   socialUrl = process.env.REACT_APP_SOCIAL_URL;
 
   componentDidMount = async () => {
-    console.log(this.props.postId);
-
     const res = await getComments(this.props.postId);
     if (res.status !== 200) {
-      console.log('getCommentsFaild.  response-', res);
     } else {
       const data = await res.json();
       this.setState({ comments: data });
@@ -25,19 +24,12 @@ export default class Comments extends React.Component {
     error: '',
     data: {
       content: '',
-      image: ''
+      image: '',
+      referencing: []
     },
-    comments: [
-      {
-        commentId: '123f45678',
-        imgUrl: `data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7`,
-        numberOfLikes: 23,
-        isLiked: true,
-        User: { UserName: 'israel', UserId: '23048394839403' },
-        content: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.`,
-        time: '20 minute ago'
-      }
-    ]
+    comments: [],
+    getAutoComplete: false,
+    users: []
   };
 
   onLiked = async (commentId) => {
@@ -64,10 +56,39 @@ export default class Comments extends React.Component {
     }
   };
 
-  handleChange = ({ currentTarget: input }) => {
+  handleChange = async ({ currentTarget: input }) => {
     const data = { ...this.state.data };
     data[input.id] = input.value;
     this.setState({ data });
+
+    if (input.value.endsWith('@')) {
+      this.setState({ getAutoComplete: true });
+    }
+    if (this.state.getAutoComplete) {
+      const contentArr = input.value.split('@');
+      await this.getUsers(contentArr[contentArr.length - 1]);
+    }
+  };
+
+  getUsers = async (value) => {
+    if (value.trim()) {
+      const res = await getUsers(value);
+      if (res.status !== 200) {
+        toast.error('something went wrong...');
+      } else {
+        const users = await res.json();
+        if (users.length === 0) this.setState({ users, getAutoComplete: false });
+        else this.setState({ users });
+      }
+    }
+  };
+
+  onReferencingSelect = (user) => {
+    const data = this.state.data;
+    const res = onReferenceSelect(user, data.content);
+    data.referencing.push(res.reference);
+    data.content = res.content;
+    this.setState({ data, users: [], getAutoComplete: false });
   };
 
   addComment = async (e) => {
@@ -117,6 +138,15 @@ export default class Comments extends React.Component {
                       id="content"
                       required={true}
                     />
+                    <div className="autocomplete-items" id="autocomplete-list">
+                      {this.state.users.map((p) => {
+                        return (
+                          <div onClick={() => this.onReferencingSelect(p)} className="alert alert-dark">
+                            {p.UserName}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                   {error && <div classNmae="alert alert-danger">{error}</div>}
                   <div className="form-group ">

@@ -14,21 +14,6 @@ namespace SocialDal.Repositories.Neo4j
     {
         private static int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
 
-        public ReturnedPostDto Get(string postId, string userId)
-        {
-            string query = "match(p:Post{PostId:'" + postId + "'})-[:PostedBy]->(posting:User)," +
-                "(p)<-[l:Like]-(:User), (p)-[:Referencing]->(ref:User), (me:User{UserId:'" + userId + "'})" +
-                $"WHERE NOT (posting)-[:Blocked]-(me) AND" +
-                $" (p.Visability=={PostVisabilityOptions.All.ToString()} OR " +
-                $"(p.Visability=={PostVisabilityOptions.Followers.ToString()} AND EXISTS( (me)-[:Following]->(posting) )) )" +
-                "return p, posting AS User ," +
-                "EXISTS( (p)<-[:Like]-(me) ) AS IsLiked," +
-                "COUNT(l) AS Likes, COLLECT(ref) AS Referencing";
-            var res = Query(query);
-            var post = res.Single();
-            return post != null ? RecordToObj<ReturnedPostDto>(post) : null;
-        }
-
         public void Create(Post post, string postedByUserId)
         {
             Create(post);
@@ -40,6 +25,13 @@ namespace SocialDal.Repositories.Neo4j
             Query(postedByQuery);
         }
 
+        public void CreateReference(string postId,string userId,int startIdx,int endIdx)
+        {
+            string query = "MATCH (p:Post{PostId:'" + postId + "'}), (u:User{UserId:'" + userId + "'}) " +
+                "CREATE (p)-[:Referencing{StartIndex:"+startIdx+",EndIndex:"+endIdx+"}]->(u)";
+            Query(query);
+        }
+
         public PostListDto GetFeed(int startIdx, int count, string userId)
         {
             if (count > _maxPostsPerPage)
@@ -47,7 +39,8 @@ namespace SocialDal.Repositories.Neo4j
             string query = "MATCH(p: Post) -[:PostedBy]->(posting: User), " +
                     "(me: User{ UserId: '"+userId+"'}) " +               
                 "WHERE NOT EXISTS((posting) -[:Blocked] - (me)) " +
-                    "AND(p.Visability = 0 OR (p.Visability = 1 " +
+                    "AND(me.UserId = posting.UserId OR " +
+                    "p.Visability = 0 OR (p.Visability = 1 " +
                     "AND EXISTS((me) -[:Following]->(posting)))) " +
                     "AND(EXISTS((p) -[:Recomended]->(me)) " +
                         "OR EXISTS((p) -[:Referencing]->(me)) " +
@@ -55,11 +48,11 @@ namespace SocialDal.Repositories.Neo4j
                         "OR EXISTS((me) - [:Following]->(posting)) " +
                         "OR me.UserId = posting.UserId ) " +
                 "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
-                "OPTIONAL MATCH(p)-[:Referencing]->(ref:User)" +
+                "OPTIONAL MATCH(p)-[rel:Referencing]->(ref:User)" +
                 "RETURN " +
                     "p AS Post, posting AS CreatedBy, " +
                     "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
-                    "COUNT(l) AS Likes, COLLECT(ref) AS Referencing " +
+                    "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
                 $"ORDER BY p.CreatedOn DESC SKIP {startIdx} LIMIT {count}";
             var res = Query(query);
             PostListDto postListDto = new PostListDto()
@@ -79,7 +72,30 @@ namespace SocialDal.Repositories.Neo4j
                 dto.CreatedBy = ExtractUser(record);
                 dto.IsLiked = (bool)record["IsLiked"];
                 dto.Likes = (int)(long)record["Likes"];
+                dto.Referencing = ExtractRefences(record);
                 list.Add(dto);
+            }
+            return list;
+        }
+
+        private static List<ReferencingDto> ExtractRefences(IRecord record)
+        {
+            var list = new List<ReferencingDto>();
+            List<object> references = (List<object>)record["Referencing"];
+            foreach (var reference in references)
+            {
+                var props = (Dictionary<string, object>)reference;
+                ReferencingDto dto = new ReferencingDto();
+                if (props["user"] != null && props["rel"] != null)
+                {
+                    var userProps = (Dictionary<string, object>)props["user"].GetType().GetProperty("Properties").GetValue(props["user"]);
+                    var relProps = (Dictionary<string, object>)props["rel"].GetType().GetProperty("Properties").GetValue(props["rel"]);
+                    dto.StartIndex = (int)(long)relProps[nameof(dto.StartIndex)];
+                    dto.EndIndex = (int)(long)relProps[nameof(dto.EndIndex)];
+                    dto.UserId = (string)userProps[nameof(dto.UserId)];
+                    dto.UserName = (string)userProps[nameof(dto.UserName)];
+                    list.Add(dto);
+                }      
             }
             return list;
         }
