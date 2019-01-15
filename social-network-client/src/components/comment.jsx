@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import LikeButton from './likeButton';
 import moment from 'moment';
+import { convertContent } from '../utils/referencing';
 
 export default class Comment extends Component {
   render() {
     const { comment } = this.props;
+    console.log(comment);
+
+    const content = convertContent(comment.content, comment.referencing);
     return (
       <>
         <div className="card bg-dark text-light">
@@ -19,7 +23,7 @@ export default class Comment extends Component {
             </span>
           </div>
           <div className="card-body">
-            <p>{comment.content}</p>
+            <p>{content}</p>
             <img src={comment.imgUrl} className="img-fluid" alt="" />
           </div>
           <div className="card-footer text-pink">

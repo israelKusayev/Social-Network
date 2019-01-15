@@ -23,7 +23,6 @@ class Feed extends Component {
 
     if (res.status === 200) {
       const data = await res.json();
-      console.log(data);
 
       if (data && data.Posts && data.Posts.length !== 0) {
         let { posts, index } = this.state;
