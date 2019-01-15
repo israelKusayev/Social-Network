@@ -56,18 +56,10 @@ body {
 .text-pink {
   color: #ff0087;
 }
+.text-pink:hover {
+  color: #ff2b9c;
+}
 
-.pageUp {
-  position: fixed;
-  bottom: 1%;
-  color: #ff0087;
-  right: 3%;
-  font-size: 3em;
-}
-.pageUp :hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
 .search {
   top: 130%;
   width: 12%;
@@ -75,4 +67,17 @@ body {
 }
 .cursor-p {
   cursor: pointer;
+}
+.bold {
+  font-weight: bold;
+}
+.app-bg {
+  background-color: #343a40;
+}
+
+.loader {
+  margin: auto;
+  width: 50%;
+  height: 50%;
+  padding: 10px;
 }

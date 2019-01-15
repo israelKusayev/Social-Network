@@ -13,10 +13,8 @@ export default class UserProfile extends Component {
   };
 
   componentDidMount = async () => {
-    console.log('cdm');
-
     if (this.props.match.params.id === getUserId()) {
-      this.props.history.push('/profile');
+      this.props.history.replace('/profile');
     }
     const userId = this.props.match.params.id;
     this.setState({ isFollow: true });
@@ -59,9 +57,6 @@ export default class UserProfile extends Component {
       this.props.history.goBack();
       toast.error('something went wrong...');
     }
-
-    //
-    //
   };
 
   ChangeFollowingState = async () => {

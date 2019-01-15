@@ -51,6 +51,11 @@ namespace SocialBl.Managers
             }
         }
 
+        public ReturnedPostDto GetPost(string userId, string postId)
+        {
+            return _postsRepository.getPost(userId, postId);
+        }
+
         public PostListDto GetPosts(int start, int count, string userId)
         {
             return _postsRepository.GetFeed(start, count, userId);

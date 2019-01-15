@@ -8,7 +8,7 @@ export async function Get(url, jwt = false) {
   if (jwt) myHeaders.append('x-auth-token', getJwt());
   try {
     const res = await fetch(url, { headers: myHeaders });
-    if (res.status === 401) {
+    if (jwt && res.status === 401) {
       await refreshToken();
       return Get(url, jwt);
     }
@@ -29,9 +29,8 @@ export async function Post(url, data, jwt = false) {
       body: data,
       headers: myHeaders
     });
-    if (res.status === 401) {
+    if (jwt && res.status === 401) {
       await refreshToken();
-
       return Post(url, data, jwt);
     }
     return res;
@@ -51,7 +50,7 @@ export async function Put(url, data, jwt = false) {
       body: data,
       headers: myHeaders
     });
-    if (res.status === 401) {
+    if (jwt && res.status === 401) {
       await refreshToken();
       return Put(url, data, jwt);
     }
