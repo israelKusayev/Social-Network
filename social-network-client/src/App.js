@@ -21,6 +21,7 @@ import UserProfile from './components/userProfile';
 
 class App extends Component {
   state = { pageUp: false };
+
   componentDidMount = () => {
     window.onscroll = () => {
       if (window.pageYOffset <= 0) {

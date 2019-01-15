@@ -16,5 +16,6 @@ namespace Social_Common.Interfaces.Managers
         bool IsFollow(string userId, string followedUserId);
         bool UnblockUser(string userId, string blockedUserId);
         bool unfollow(string userId, string followedUserId);
+        bool IsBlocked(string userId, string otherUserId);
     }
 }

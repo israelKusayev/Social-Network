@@ -7,5 +7,6 @@ namespace Identity_Common.Interfaces.Managers
         bool CreateUser(User user);
         User FindUser(string userId);
         bool UpdateUser(User user);
+        bool IsBlocked(string token ,string userId, string id);
     }
 }

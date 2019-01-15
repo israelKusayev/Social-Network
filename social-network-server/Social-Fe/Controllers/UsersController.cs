@@ -156,6 +156,23 @@ namespace Social_Fe.Controllers
             return InternalServerError();
         }
 
+
+        [JWTAuth]
+        [HttpGet]
+        [Route("isBlocked/{otherUserId}")]
+        public IHttpActionResult IsBlocked(string otherUserId)
+        {
+            var token = Request.Headers.GetValues("x-auth-token").First();
+            string userId = _tokenManager.GetUserId(token);
+            try
+            {
+                return Ok(_usersManager.IsBlocked(userId, otherUserId));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
         [JWTAuth]
         [HttpGet]
         [Route("blockedUsers")]

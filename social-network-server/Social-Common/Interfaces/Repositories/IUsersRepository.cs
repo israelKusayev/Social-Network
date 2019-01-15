@@ -17,5 +17,6 @@ namespace Social_Common.Interfaces.Repositories
         void UnFollow(string followingUserId, string followedUserId);
         List<User> GetBlockedUsers(string userId);
         List<FollowersDTO> GetFollowers(string userId);
+        bool IsBlocked(string userId, string otherUserId);
     }
 }

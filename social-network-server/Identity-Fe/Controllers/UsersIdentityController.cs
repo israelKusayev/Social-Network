@@ -65,6 +65,16 @@ namespace Identity_Fe.Controllers
         {
             try
             {
+                string token = Request.Headers.GetValues("x-auth-token").First();
+                string userId = new TokenManager().GetUserId(token);
+                if (userId != id)
+                {
+                    if (_identityManager.IsBlocked(token, userId, id))
+                    {
+                        return BadRequest("User is blocked");
+                    }
+                }
+
                 var user = _identityManager.FindUser(id);
                 if (user != null)
                 {

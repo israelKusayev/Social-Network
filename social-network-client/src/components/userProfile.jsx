@@ -13,31 +13,55 @@ export default class UserProfile extends Component {
   };
 
   componentDidMount = async () => {
+    console.log('cdm');
+
     if (this.props.match.params.id === getUserId()) {
       this.props.history.push('/profile');
     }
-    const res = await Isfollow(this.props.match.params.id);
+    const userId = this.props.match.params.id;
+    this.setState({ isFollow: true });
+    await this.getUser(userId);
+    await this.isFollow(userId);
+  };
+
+  componentWillReceiveProps = async (nextProps) => {
+    const userId = nextProps.match.params.id;
+
+    if (userId !== this.props.match.params.id) {
+      await this.getUser(userId);
+      await this.isFollow(userId);
+    }
+  };
+
+  isFollow = async (userId) => {
+    const res = await Isfollow(userId);
     if (res.status === 200) {
       const isFollow = await res.json();
       this.setState({ isFollow });
-      this.getUser();
     } else {
       this.props.history.goBack();
       toast.error('something went wrong...');
     }
   };
 
-  getUser = async () => {
-    const res = await getUser(this.props.match.params.id);
-
-    if (res.status !== 200) {
-      this.props.history.goBack();
-      toast.error('something went wrong...');
-    } else {
-      var data = await res.json();
+  getUser = async (userId) => {
+    const res = await getUser(userId);
+    if (res.status === 200) {
+      let data = await res.json();
       let user = convertJsonToUser(data);
       this.setState({ user });
+    } else if (res.status === 400) {
+      let data = await res.json();
+      console.log('400', data);
+      this.props.history.goBack();
+      toast.error(data.Message);
+    } else {
+      this.props.history.goBack();
+      toast.error('something went wrong...');
     }
+
+    //
+    //
   };
 
   ChangeFollowingState = async () => {

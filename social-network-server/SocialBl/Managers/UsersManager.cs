@@ -14,6 +14,8 @@ namespace SocialBl.Managers
         {
             _usersRepository = usersRepository;
         }
+
+
         public bool AddUser(User user)
         {
             try
@@ -104,9 +106,15 @@ namespace SocialBl.Managers
             }
         }
 
+        public bool IsBlocked(string userId, string otherUserId)
+        {
+            return _usersRepository.IsBlocked(userId, otherUserId);
+        }
+
         public List<FollowersDTO> GetFollowers(string userId)
         {
             return _usersRepository.GetFollowers(userId);
         }
+
     }
 }
