@@ -4,7 +4,6 @@ const socialUrl = process.env.REACT_APP_SOCIAL_URL + 'comments';
 
 export async function addComment(comment, postId) {
   const json = JSON.stringify({ postId, ...comment });
-  console.log(json);
 
   return await Post(socialUrl, json, true);
 }

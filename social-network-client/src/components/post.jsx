@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import LikeButton from './likeButton';
 import CommentButton from './commentButton';
 import moment from 'moment';
+import { convertContent } from '../utils/referencing';
 
 export default class Post extends Component {
   render() {
     const { post } = this.props;
+    const content = convertContent(post.content, post.referencing);
 
     return (
       <div className="row mb-4">
@@ -38,8 +40,7 @@ export default class Post extends Component {
                 <i className="fa fa-clock-o" />
                 {moment(post.time).fromNow()}
               </div>
-
-              <p className="card-text">{post.content}</p>
+              <div className="card-text">{content}</div>
               <img src={post.imgUrl} className="img-fluid" alt="" />
             </div>
             <div className="card-footer text-pink ">
