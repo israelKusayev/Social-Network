@@ -76,7 +76,8 @@ namespace Authorization_Bl.Managers
         {
             var user = _authRepository.Get(model.Username);
             if (user == null) return false;
-            user.Password = model.NewPassword;
+            string passHash = PasswordHasher.Hash(model.NewPassword);
+            user.Password = passHash;
             _authRepository.Update(user);
             return true;
         }

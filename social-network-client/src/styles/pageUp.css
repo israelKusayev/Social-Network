@@ -1,0 +1,11 @@
+.pageUp {
+  position: fixed;
+  bottom: 1%;
+  color: #ff0087;
+  right: 3%;
+  font-size: 3em;
+}
+.pageUp :hover {
+  cursor: pointer;
+  opacity: 0.8;
+}

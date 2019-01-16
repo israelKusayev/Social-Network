@@ -125,7 +125,11 @@ class CreatePost extends Component {
                           <div className="autocomplete-items" id="autocomplete-list">
                             {this.state.users.map((p) => {
                               return (
-                                <div onClick={() => this.onReferencingSelect(p)} className="alert alert-dark">
+                                <div
+                                  onClick={() => this.onReferencingSelect(p)}
+                                  key={p.UserId}
+                                  className="alert alert-dark"
+                                >
                                   {p.UserName}
                                 </div>
                               );

@@ -7,5 +7,6 @@ namespace Social_Common.Interfaces.Managers
     {
         Post CreatePost(CreatePostDto postDto, string userId);
         PostListDto GetPosts(int start, int count, string userId);
+        ReturnedPostDto GetPost(string userId, string postId);
     }
 }

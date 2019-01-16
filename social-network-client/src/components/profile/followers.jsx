@@ -3,10 +3,11 @@ import FollowerTab from '../followerTab';
 import { getFollowers, unfollow, follow, blockUser } from '../../services/usersService';
 import { toast } from 'react-toastify';
 import { removeItemFromArray } from '../../utils/removeFromArray';
+import Spinner from '../spinner';
 
 class Followers extends Component {
   state = {
-    followers: []
+    followers: null
   };
 
   componentDidMount = async () => {
@@ -56,6 +57,8 @@ class Followers extends Component {
   };
   render() {
     const { followers } = this.state;
+
+    if (!followers) return <Spinner />;
 
     return (
       <div>

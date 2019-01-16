@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import FollowerTab from '../followerTab';
 import { getBlockedUsers, unblockUser } from '../../services/usersService';
 import { toast } from 'react-toastify';
+import Spinner from '../spinner';
 
 class BlockedUsers extends Component {
   state = {
-    blockedUsers: []
+    blockedUsers: null
   };
 
   componentDidMount = async () => {
@@ -34,6 +35,9 @@ class BlockedUsers extends Component {
 
   render() {
     const { blockedUsers } = this.state;
+
+    if (!blockedUsers) return <Spinner />;
+
     return (
       <div>
         <h1>Blocked user</h1>

@@ -43,10 +43,12 @@ export default class Post extends Component {
               <div className="card-text">{content}</div>
               <img src={post.imgUrl} className="img-fluid" alt="" />
             </div>
-            <div className="card-footer text-pink ">
-              <LikeButton liked={post.isLiked} onClick={() => this.props.onLiked(post.postId)} />
-              <span>{post.numberOfLikes}</span>
-              <span className="mx-2" />
+            <div className="card-footer  ">
+              <span className="text-pink">
+                <LikeButton liked={post.isLiked} onClick={() => this.props.onLiked(post.postId)} />
+                <span>{post.numberOfLikes}</span>
+              </span>
+              <span className="mx-2 " />
               <CommentButton postId={post.postId} />
             </div>
           </div>

@@ -35,6 +35,24 @@ namespace Social_Fe.Controllers
             return InternalServerError();
         }
 
+        [JWTAuth]
+        [HttpGet]
+        [Route("api/posts/{postId}")]
+        public IHttpActionResult GetPosts(string postId)
+        {
+            try
+            {
+                var token = Request.Headers.GetValues("x-auth-token").First();
+                var userId = _tokenManager.GetUserId(token);
+                ReturnedPostDto post = _postManager.GetPost(userId,postId);
+                return Ok(post);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError();
+            }
+        }
+
 
         [JWTAuth]
         [HttpGet]

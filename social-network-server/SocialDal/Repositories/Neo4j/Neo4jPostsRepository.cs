@@ -25,10 +25,10 @@ namespace SocialDal.Repositories.Neo4j
             Query(postedByQuery);
         }
 
-        public void CreateReference(string postId,string userId,int startIdx,int endIdx)
+        public void CreateReference(string postId, string userId, int startIdx, int endIdx)
         {
             string query = "MATCH (p:Post{PostId:'" + postId + "'}), (u:User{UserId:'" + userId + "'}) " +
-                "CREATE (p)-[:Referencing{StartIndex:"+startIdx+",EndIndex:"+endIdx+"}]->(u)";
+                "CREATE (p)-[:Referencing{StartIndex:" + startIdx + ",EndIndex:" + endIdx + "}]->(u)";
             Query(query);
         }
 
@@ -37,7 +37,7 @@ namespace SocialDal.Repositories.Neo4j
             if (count > _maxPostsPerPage)
                 count = _maxPostsPerPage;
             string query = "MATCH(p: Post) -[:PostedBy]->(posting: User), " +
-                    "(me: User{ UserId: '"+userId+"'}) " +               
+                    "(me: User{ UserId: '" + userId + "'}) " +
                 "WHERE NOT EXISTS((posting) -[:Blocked] - (me)) " +
                     "AND(me.UserId = posting.UserId OR " +
                     "p.Visability = 0 OR (p.Visability = 1 " +
@@ -67,15 +67,20 @@ namespace SocialDal.Repositories.Neo4j
             var list = new List<ReturnedPostDto>();
             foreach (IRecord record in records)
             {
-                ReturnedPostDto dto = new ReturnedPostDto();
-                FlattenPost(record, dto);
-                dto.CreatedBy = ExtractUser(record);
-                dto.IsLiked = (bool)record["IsLiked"];
-                dto.Likes = (int)(long)record["Likes"];
-                dto.Referencing = ExtractRefences(record);
-                list.Add(dto);
+                list.Add(DeserializePost(record));
             }
             return list;
+        }
+
+        private static ReturnedPostDto DeserializePost(IRecord record)
+        {
+            ReturnedPostDto dto = new ReturnedPostDto();
+            FlattenPost(record, dto);
+            dto.CreatedBy = ExtractUser(record);
+            dto.IsLiked = (bool)record["IsLiked"];
+            dto.Likes = (int)(long)record["Likes"];
+            dto.Referencing = ExtractRefences(record);
+            return dto;
         }
 
         private static List<ReferencingDto> ExtractRefences(IRecord record)
@@ -95,7 +100,7 @@ namespace SocialDal.Repositories.Neo4j
                     dto.UserId = (string)userProps[nameof(dto.UserId)];
                     dto.UserName = (string)userProps[nameof(dto.UserName)];
                     list.Add(dto);
-                }      
+                }
             }
             return list;
         }
@@ -119,6 +124,22 @@ namespace SocialDal.Repositories.Neo4j
             dto.ImgUrl = postProps.ContainsKey(nameof(dto.ImgUrl)) ? (string)postProps[nameof(dto.ImgUrl)] : null;
             dto.PostId = (string)postProps[nameof(dto.PostId)];
             dto.Visability = (PostVisabilityOptions)((long)postProps[nameof(dto.Visability)]);
+        }
+
+        public ReturnedPostDto getPost(string userId, string postId)
+        {
+            string query = "MATCH(p: Post{PostId:'" + postId + "'}) -[:PostedBy]->(posting: User), " +
+                    "(me: User{ UserId: '" + userId + "'}) " +
+                "WHERE NOT EXISTS((posting) -[:Blocked] - (me))   " +
+                "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
+                "OPTIONAL MATCH(p)-[rel:Referencing]->(ref:User) " +
+                "RETURN " +
+                    "p AS Post, posting AS CreatedBy, " +
+                    "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
+                    "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing ";
+            var res = Query(query);
+            var post= DeserializePost(res.Single());
+            return post;
         }
     }
 }

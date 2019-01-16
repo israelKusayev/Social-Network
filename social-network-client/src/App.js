@@ -12,15 +12,19 @@ import NotFound from './components/notFound';
 import Profile from './pages/profile';
 import Notifications from './pages/notifications';
 import CreatePost from './pages/createPost';
+import Post from './pages/post';
 
 import './App.css';
 import './styles/customButtons.css';
 import './styles/autoComplete.css';
+import './styles/pageUp.css';
 import 'react-toastify/dist/ReactToastify.css';
 import UserProfile from './components/userProfile';
+import './services/xmppService';
 
 class App extends Component {
   state = { pageUp: false };
+
   componentDidMount = () => {
     window.onscroll = () => {
       if (window.pageYOffset <= 0) {
@@ -50,6 +54,7 @@ class App extends Component {
             <Route path="/notifications" component={Notifications} />
             <Route path="/profile/:id" component={UserProfile} />
             <Route path="/profile" component={Profile} />
+            <Route path="/post/:postId" component={Post} />
 
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact={true} component={Feed} />

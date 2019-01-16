@@ -52,6 +52,13 @@ namespace SocialDal.Repositories.Neo4j
             Query(query);
         }
 
+        public bool IsBlocked(string userId, string otherUserId)
+        {
+            string query = " return exists((: User{ UserId:'" + userId + "'})-[:Blocked]-(:User{ UserId:'" + otherUserId + "'})) as isBlocked";
+            var res = Query(query);
+            return (bool)res.Single()[0];
+        }
+
         public void Follow(string followingUserId, string followedUserId)
         {
             string query = "MATCH (following:User{UserId:'" + followingUserId + "'})," +
@@ -72,10 +79,8 @@ namespace SocialDal.Repositories.Neo4j
 
         public bool IsFollow(string userId, string followedUserId)
         {
-
             string query = " return exists((: User{ UserId:'" + userId + "'})-[:Following]->(:User{ UserId:'" + followedUserId + "'})) as isFollow";
             var res = Query(query);
-
             return (bool)res.Single()[0];
         }
 

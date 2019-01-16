@@ -7,6 +7,10 @@ export async function createPost(post) {
 
   return await Post(socialUrl, json, true);
 }
+
+export async function getPost(postId) {
+  return await Get(`${socialUrl}/${postId}`, true);
+}
 export async function getPosts(start, count) {
   return await Get(`${socialUrl}/${start}/${count}`, true);
 }

@@ -15,8 +15,9 @@ class Profile extends Component {
     if (name === 'Logout') {
       deleteJwt();
       this.props.history.replace('/login');
+    } else {
+      this.setState({ selected: name });
     }
-    this.setState({ selected: name });
   };
 
   render() {
