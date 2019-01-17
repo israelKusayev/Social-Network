@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import signalR from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
 import RouteProtector from '../HOC/routeProtector';
 
 class Notifications extends Component {
@@ -73,30 +73,13 @@ class Notifications extends Component {
   goToUserProfile = (e) => e.stopPropagation();
 
   componentDidMount = () => {
-    let connection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5000/notifications').build();
+    let connection = new signalR.HubConnectionBuilder().withUrl('https://localhost:44340/NotificationsHub').build();
 
-    connection.on('send', (data) => {
+    connection.on('SendNotification', (data) => {
       console.log(data);
     });
 
-    connection.start().then(() => connection.invoke('send', 'Hello'));
-
-    // const nick = window.prompt('Your name:', 'John');
-
-    // const hubConnection = new HubConnection('http://localhost:5000/chat');
-
-    // this.setState({ hubConnection, nick }, () => {
-    //   this.state.hubConnection
-    //     .start()
-    //     .then(() => console.log('Connection started!'))
-    //     .catch((err) => console.log('Error while establishing connection :('));
-
-    //   this.state.hubConnection.on('sendToAll', (nick, receivedMessage) => {
-    //     const text = `${nick}: ${receivedMessage}`;
-    //     const messages = this.state.messages.concat([text]);
-    //     this.setState({ messages });
-    //   });
-    // });
+    connection.start().then(() => connection.invoke('Send', 'Hello'));
   };
 
   render() {
