@@ -7,7 +7,7 @@ import { convertContent } from '../utils/referencing';
 
 export default class Post extends Component {
   render() {
-    const { post } = this.props;
+    const { post, openComments } = this.props;
     const content = convertContent(post.content, post.referencing);
 
     return (
@@ -49,7 +49,7 @@ export default class Post extends Component {
                 <span>{post.numberOfLikes}</span>
               </span>
               <span className="mx-2 " />
-              <CommentButton postId={post.postId} />
+              <CommentButton openComments={openComments} postId={post.postId} />
             </div>
           </div>
         </div>

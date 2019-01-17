@@ -22,8 +22,6 @@ class BlockedUsers extends Component {
   unblock = async (user) => {
     const res = await unblockUser(user.UserId);
     if (res.status === 200) {
-      toast.success(user.username + ' unblocked successfully !');
-
       const blockedUsers = [...this.state.blockedUsers];
       const index = blockedUsers.indexOf(user);
       blockedUsers.splice(index, 1);

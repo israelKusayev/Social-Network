@@ -5,6 +5,10 @@ export default class CommentButton extends Component {
   state = {
     commentsVisible: false
   };
+  componentDidMount = () => {
+    if (this.props.openComments) this.setState({ commentsVisible: true });
+  };
+
   openComments = () => {
     this.setState({ commentsVisible: true });
   };

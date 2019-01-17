@@ -41,6 +41,9 @@ export default class MyProfile extends Component {
 
     if (!res || res.status !== 200) {
       this.getUser();
+      toast.success('something faild.');
+    } else {
+      toast.success('your profile updated successfully');
     }
   };
 

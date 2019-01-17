@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchBox = ({ value, onChange }) => {
+const SearchBox = ({ value, onChange, onBlur }) => {
   return (
     <input
       type="text"
@@ -10,6 +10,7 @@ const SearchBox = ({ value, onChange }) => {
       value={value}
       autoComplete="off"
       onChange={(e) => onChange(e.currentTarget.value)}
+      onBlur={onBlur}
     />
   );
 };

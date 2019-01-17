@@ -55,6 +55,7 @@ class App extends Component {
             <Route path="/profile/:id" component={UserProfile} />
             <Route path="/profile" component={Profile} />
             <Route path="/post/:postId" component={Post} />
+            <Route path="/comment/:postId" component={Post} />
 
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact={true} component={Feed} />
