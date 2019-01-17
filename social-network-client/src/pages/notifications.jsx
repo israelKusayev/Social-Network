@@ -82,11 +82,14 @@ class Notifications extends Component {
       })
       .build();
 
-    connection.on('SendNotification', (data) => {
+    connection.on('getNotification', (data) => {
       console.log(data);
     });
 
-    connection.start().then(() => connection.invoke('Send', 'Hello'));
+    connection
+      .start()
+      .then(() => console.log('connected to signalR ...'))
+      .catch(() => console.log('connection faild...'));
   };
 
   render() {
