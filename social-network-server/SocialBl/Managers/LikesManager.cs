@@ -1,7 +1,11 @@
-﻿using Social_Common.Interfaces.Managers;
+﻿using Newtonsoft.Json;
+using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
+using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using System;
+using System.Net.Http;
+using System.Text;
 
 namespace SocialBl.Managers
 {
@@ -14,11 +18,11 @@ namespace SocialBl.Managers
             _likesRepository = likesRepository;
         }
 
-        public bool LikeComment(string userId, string commentId)
+        public bool LikeComment(User user, string commentId)
         {
             try
             {
-                _likesRepository.LikeComment(userId, commentId);
+                _likesRepository.LikeComment(user.UserId, commentId);
                 return true;
             }
             catch (Exception e)
@@ -42,11 +46,16 @@ namespace SocialBl.Managers
             }
         }
 
-        public bool LikePost(string userId, string postId)
+        public bool LikePost(User user, string postId)
         {
             try
             {
-                _likesRepository.LikePost(userId, postId);
+                _likesRepository.LikePost(user.UserId, postId);
+                using (var http = new HttpClient())
+                {
+                    object a = new { postId, user, reciver = "123" };
+                    var response = http.PostAsync("https://localhost:44340/api/Notification/UserLikePost", new StringContent(JsonConvert.SerializeObject(a), Encoding.UTF8, "application/json")).Result;
+                }
                 return true;
             }
             catch (Exception e)

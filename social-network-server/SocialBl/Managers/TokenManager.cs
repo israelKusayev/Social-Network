@@ -1,6 +1,7 @@
 ﻿using Jose;
 using Newtonsoft.Json.Linq;
 using Social_Common.Interfaces.Managers;
+using Social_Common.Models;
 using System;
 using System.Configuration;
 using System.Text;
@@ -48,6 +49,14 @@ namespace SocialBl.Managers
             string paylod = JWT.Decode(token, Encoding.ASCII.GetBytes(secretKey));
             dynamic obj = JObject.Parse(paylod);
             return obj.sub;
+        }
+
+        public User GetUser(string token)
+        {
+            string secretKey = ConfigurationManager.AppSettings["tokenSignKey"];
+            string paylod = JWT.Decode(token, Encoding.ASCII.GetBytes(secretKey));
+            dynamic obj = JObject.Parse(paylod);
+            return new User { UserId = obj.sub, UserName = obj.username };
         }
     }
 }
