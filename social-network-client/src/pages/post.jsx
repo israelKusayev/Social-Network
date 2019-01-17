@@ -4,11 +4,18 @@ import { getPost } from '../services/postsService';
 import { toast } from 'react-toastify';
 import Spinner from '../components/spinner';
 import { likePost, unlikePost } from '../services/likesService';
-export default class Post extends Component {
-  state = { post: null };
+import RouteProtector from '../HOC/routeProtector';
 
+class Post extends Component {
+  state = { post: null, openComment: false };
   componentDidMount = async () => {
-    const res = await getPost(this.props.match.params.postId);
+    const postId = this.props.match.params.postId;
+
+    if (this.props.match.url.includes('comment')) {
+      this.setState({ openComment: true });
+    }
+
+    const res = await getPost(postId);
     if (res.status !== 200) {
       toast.error('something faild...');
     } else {
@@ -47,7 +54,7 @@ export default class Post extends Component {
       <>
         {post ? (
           <div className="mt-5">
-            <PostComponent onLiked={this.onLiked} key={post.postId} post={post} />{' '}
+            <PostComponent onLiked={this.onLiked} openComments={this.state.openComment} key={post.postId} post={post} />{' '}
           </div>
         ) : (
           <Spinner />
@@ -56,3 +63,5 @@ export default class Post extends Component {
     );
   }
 }
+
+export default RouteProtector(Post);

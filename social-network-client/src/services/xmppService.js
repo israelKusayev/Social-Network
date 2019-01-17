@@ -1,10 +1,9 @@
 import { client, xml } from '@xmpp/client';
 
 const xmpp = client({
-  service: 'http://localhost:5280/admin/',
-  domain: 'DESKTOP-NG5P9OM',
-  resource: 'example',
-  username: 'admin',
+  service: 'ws://localhost:5280/websocket',
+  domain: 'desktop-ng5p9om',
+  username: 'admin@desktop-ng5p9om',
   password: 'admin'
 });
 

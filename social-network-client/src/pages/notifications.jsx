@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import signalR from '@aspnet/signalr';
 import RouteProtector from '../HOC/routeProtector';
 
 class Notifications extends Component {
@@ -18,7 +19,7 @@ class Notifications extends Component {
         break;
       }
       case 5: {
-        this.props.history.push('/profile/' + notification.postId);
+        this.props.history.push('/profile/' + notification.user.userId);
         break;
       }
       case 6: {
@@ -41,11 +42,11 @@ class Notifications extends Component {
     {
       actionId: 0,
       postId: 'd346fb1c-54d1-4e4f-99fe-6d9504a1a460',
-      user: { userId: '1234', userName: 'israel' }
+      user: { userId: '34b4940f-9dfb-481e-a011-f16cb8ee8dd7', userName: 'israel' }
     },
     {
       actionId: 1,
-      commentId: '12344',
+      postId: 'd346fb1c-54d1-4e4f-99fe-6d9504a1a460',
       user: { userId: '12343', userName: 'omer' }
     },
     {
@@ -65,9 +66,39 @@ class Notifications extends Component {
     },
     {
       actionId: 5,
-      user: { userId: '128345', userName: 'shay' }
+      user: { userId: '34b4940f-9dfb-481e-a011-f16cb8ee8dd7', userName: 'shay' }
     }
   ];
+
+  goToUserProfile = (e) => e.stopPropagation();
+
+  componentDidMount = () => {
+    let connection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5000/notifications').build();
+
+    connection.on('send', (data) => {
+      console.log(data);
+    });
+
+    connection.start().then(() => connection.invoke('send', 'Hello'));
+
+    // const nick = window.prompt('Your name:', 'John');
+
+    // const hubConnection = new HubConnection('http://localhost:5000/chat');
+
+    // this.setState({ hubConnection, nick }, () => {
+    //   this.state.hubConnection
+    //     .start()
+    //     .then(() => console.log('Connection started!'))
+    //     .catch((err) => console.log('Error while establishing connection :('));
+
+    //   this.state.hubConnection.on('sendToAll', (nick, receivedMessage) => {
+    //     const text = `${nick}: ${receivedMessage}`;
+    //     const messages = this.state.messages.concat([text]);
+    //     this.setState({ messages });
+    //   });
+    // });
+  };
+
   render() {
     return (
       <div>
@@ -81,7 +112,7 @@ class Notifications extends Component {
                   key={n.user.userId}
                   onClick={() => this.handleNotificationClick(n)}
                 >
-                  <Link className="text-pink bold" to={'/profile/' + n.user.userId}>
+                  <Link onClick={this.goToUserProfile} className="text-pink bold" to={'/profile/' + n.user.userId}>
                     {n.user.userName}
                   </Link>
                   {' ' + this.action[n.actionId]}

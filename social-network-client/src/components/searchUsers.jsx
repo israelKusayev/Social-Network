@@ -30,6 +30,9 @@ class SearchUsers extends Component {
       }, 500);
     }
   };
+  handleBlur = () => {
+    this.setState({ searchQuery: '' });
+  };
 
   showUser = (userId) => {
     this.setState({ searchQuery: '', users: [] });
@@ -39,7 +42,7 @@ class SearchUsers extends Component {
   render() {
     return (
       <>
-        <SearchBox onChange={this.handleChange} value={this.state.searchQuery} />
+        <SearchBox onChange={this.handleChange} onBlur={this.handleBlur} value={this.state.searchQuery} />
         <ul className="list-group cursor-p list-group-border text-pink bg-dark position-absolute search">
           {this.state.users.map((u) => {
             return (

@@ -4,6 +4,7 @@ import Post from '../components/post';
 import InfiniteScroll from 'react-infinite-scroller';
 import { getPosts } from '../services/postsService';
 import { likePost, unlikePost } from '../services/likesService';
+import Spinner from '../components/spinner';
 
 class Feed extends Component {
   pageSize = 5;
@@ -11,6 +12,7 @@ class Feed extends Component {
   state = {
     index: 0,
     reloadMorePosts: false,
+    loader: true,
     posts: []
   };
 
@@ -30,9 +32,9 @@ class Feed extends Component {
         posts.push(...data.Posts);
         console.log(data);
 
-        this.setState({ posts, index, reloadMorePosts: true });
+        this.setState({ posts, index, reloadMorePosts: true, loader: false });
       } else {
-        this.setState({ reloadMorePosts: false });
+        this.setState({ reloadMorePosts: false, loader: false });
       }
     }
   };
@@ -62,8 +64,8 @@ class Feed extends Component {
   };
 
   render() {
-    const { posts } = this.state;
-
+    const { posts, loader } = this.state;
+    if (loader) return <Spinner />;
     return (
       <div className="mt-3">
         <div className="row multipleLine">
@@ -80,7 +82,7 @@ class Feed extends Component {
             >
               {posts.length !== 0 ? (
                 posts.map((p) => {
-                  return <Post onLiked={this.onLiked} key={p.postId} post={p} />;
+                  return <Post openComments={false} onLiked={this.onLiked} key={p.postId} post={p} />;
                 })
               ) : (
                 <h2>No posts yet</h2>
