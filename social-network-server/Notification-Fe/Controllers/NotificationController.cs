@@ -25,7 +25,17 @@ namespace Notification_Fe.Controllers
         [Route("UserLikePost")]
         public ActionResult UserLikePost(PostActionDto action)
         {
-            _hub.Clients.User(action.ReciverId).SendAsync("getNotification", action);
+
+            try
+            {
+
+  _hub.Clients.User(action.ReciverId).SendAsync("getNotification", action).Wait();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             return Ok();
         }
         [HttpPost]
