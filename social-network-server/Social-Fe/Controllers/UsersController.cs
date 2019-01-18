@@ -53,8 +53,7 @@ namespace Social_Fe.Controllers
         public IHttpActionResult Follow(string followedUserId)
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
-            string userId = _tokenManager.GetUserId(token);
-            if (_usersManager.Follow(userId, followedUserId))
+            if (_usersManager.Follow(_tokenManager.GetUser(token), followedUserId))
             {
                 return Ok("You followed successfully");
             }

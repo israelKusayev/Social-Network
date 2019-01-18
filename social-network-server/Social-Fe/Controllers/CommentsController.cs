@@ -24,8 +24,7 @@ namespace Social_Fe.Controllers
         public IHttpActionResult Create([FromBody] CreateCommentDto commentDto)
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
-            string userId = _tokenManager.GetUserId(token);
-            var res = _commentsManager.Create(commentDto, userId);
+            var res = _commentsManager.Create(commentDto, _tokenManager.GetUser(token));
             if (res)
             {
                 return Ok();

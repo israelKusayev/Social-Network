@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Net.Http;
 using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
@@ -9,6 +11,9 @@ namespace SocialBl.Managers
 {
     public class UsersManager : IUsersManager
     {
+
+        private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
+
         IUsersRepository _usersRepository;
         public UsersManager(IUsersRepository usersRepository)
         {
@@ -35,18 +40,27 @@ namespace SocialBl.Managers
             return _usersRepository.Find(searchQuery, userId);
         }
 
-        public bool Follow(string userId, string followedUserId)
+        public bool Follow(User user, string followedUserId)
         {
             try
             {
-                _usersRepository.Follow(userId, followedUserId);
-                return true;
+                _usersRepository.Follow(user.UserId, followedUserId);
             }
             catch (Exception e)
             {
                 // todo logger
                 return false;
             }
+            using (var http = new HttpClient())
+            {
+                object followNoification = new { user, ReciverId = followedUserId };
+                var response = http.PostAsJsonAsync(_notificationsUrl + "/Follow", followNoification).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    // todo logger
+                }
+            }
+            return true;
         }
 
         public List<User> GetFollowing(string userId)

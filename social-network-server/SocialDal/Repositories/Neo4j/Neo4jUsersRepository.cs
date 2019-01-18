@@ -109,7 +109,15 @@ namespace SocialDal.Repositories.Neo4j
         public User GetPosting(string postId)
         {
             string query = "MATCH (:Post{PostId:'" + postId + "'}) -[:PostedBy]->(u:User) return u";
-            var res =Query(query);
+            var res = Query(query);
+            var user = res.Single();
+            return user != null ? RecordToObj<User>(user) : null;
+        }
+
+        public User GetCommentPublish(string commentId)
+        {
+            string query = "MATCH (:Comment{CommentId:'" + commentId + "'}) -[:CommentedBy]->(u:User) return u";
+            var res = Query(query);
             var user = res.Single();
             return user != null ? RecordToObj<User>(user) : null;
         }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NotificationFe.Providers
@@ -10,7 +11,8 @@ namespace NotificationFe.Providers
     {
         public string GetUserId(HubConnectionContext connection)
         {
-            throw new NotImplementedException();
+            var userId = connection.User.FindFirst("username")?.Value;
+            return userId;
         }
     }
 }

@@ -15,11 +15,13 @@ namespace SocialBl.Managers
         string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
         private ILikesRepository _likesRepository;
         private IUsersRepository _usersRepository;
+        private IPostsRepository _postsRepository;
 
-        public LikesManager(ILikesRepository likesRepository, IUsersRepository usersRepository)
+        public LikesManager(ILikesRepository likesRepository, IUsersRepository usersRepository, IPostsRepository postsRepository)
         {
             _likesRepository = likesRepository;
             _usersRepository = usersRepository;
+            _postsRepository = postsRepository;
         }
 
         public bool LikeComment(User user, string commentId)
@@ -27,18 +29,24 @@ namespace SocialBl.Managers
             try
             {
                 _likesRepository.LikeComment(user.UserId, commentId);
-                using (var http = new HttpClient())
-                {
-                    object obj = new { commentId, user, ReciverId = "123" };
-                    var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikePost", obj).Result;
-                }
-                return true;
             }
             catch (Exception e)
             {
                 //TODO add log here
                 return false;
             }
+
+            using (var http = new HttpClient())
+            {
+                object obj = new { commentId, user, postId = _postsRepository.GetPostIdByCommentId(commentId), ReciverId = _usersRepository.GetCommentPublish(commentId).UserId };
+
+                var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikeComment", obj).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    // todo logger
+                }
+            }
+            return true;
         }
 
         public bool UnLikeComment(string userId, string commentId)
@@ -60,18 +68,22 @@ namespace SocialBl.Managers
             try
             {
                 _likesRepository.LikePost(user.UserId, postId);
-                using (var http = new HttpClient())
-                {
-                    object obj = new { postId, user, ReciverId = _usersRepository.GetPosting(postId).UserId };
-                    var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikePost", obj).Result;
-                }
-                return true;
             }
             catch (Exception e)
             {
                 //TODO add log here
                 return false;
             }
+            using (var http = new HttpClient())
+            {
+                object obj = new { postId, user, ReciverId = _usersRepository.GetPosting(postId).UserId };
+                var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikePost", obj).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    // todo logger
+                }
+            }
+            return true;
         }
 
         public bool UnLikePost(string userId, string postId)
