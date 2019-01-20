@@ -5,4 +5,8 @@
     <RootNamespace>Notification_Common</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.17.1" />
+  </ItemGroup>
+
 </Project>

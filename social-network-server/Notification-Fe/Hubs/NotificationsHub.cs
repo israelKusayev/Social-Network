@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace NotificationFe.Hubs
 {
+    [Authorize]
     public class NotificationsHub : Hub
     {
         public NotificationsHub() : base()
@@ -13,7 +15,6 @@ namespace NotificationFe.Hubs
 
         }
 
-        
         //public void SendNotification(string data, string destination)
         //{
         //    Clients.User(destination).SendAsync("sendNotification", data);

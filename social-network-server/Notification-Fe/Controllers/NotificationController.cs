@@ -1,6 +1,9 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Notification_Bl.Managers;
 using Notification_Common.Models.Dtos;
 using NotificationFe.Hubs;
 
@@ -11,24 +14,29 @@ namespace Notification_Fe.Controllers
     public class NotificationController : ControllerBase
     {
         IHubContext<NotificationsHub> _hub;
-        public NotificationController(IHubContext<NotificationsHub> hub)
+        NotificationsManager _notificationsManager;
+        public NotificationController(IHubContext<NotificationsHub> hub,IConfiguration configuration)
         {
             _hub = hub;
+            _notificationsManager = new NotificationsManager(configuration);
+            var res =configuration.GetValue<string>("key");
         }
 
 
         [HttpPost]
         [Route("UserLikePost")]
-        public ActionResult UserLikePost(PostActionDto action)
+        public IActionResult UserLikePost(PostActionDto action)
         {
             // actionId = 0
             try
             {
-                _hub.Clients.User(action.ReciverId).SendAsync("getNotification", action).Wait();
+                //_hub.Clients.User(action.ReciverId).SendAsync("getNotification", action).Wait();
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return Ok();
         }
@@ -72,5 +80,6 @@ namespace Notification_Fe.Controllers
             // actionId = 5
             return Ok();
         }
+      
     }
 }

@@ -1,28 +1,36 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Notification_Bl.Managers;
+using Notification_Fe.Provider;
 using NotificationFe.Hubs;
-using NotificationFe.Providers;
 
 namespace Notification_Fe
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(/*IConfiguration configuration,*/ IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+            //Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,6 +45,8 @@ namespace Notification_Fe
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            var res = Configuration.GetValue<string>("key");
+
             var key = Encoding.UTF8.GetBytes("t2cVfLnZLjwhyS08X16C80WoDhfHDneILEmgKLvFut3RpBTijI4YYyUsV9mxMr-jpjHodhxbR5bTaSsb4Gxlhk0BwahTPuc9a6hRetdwZjp9opOHNyKJVG2fAws9MxFsoGUu9J7j-_C0VlzeA1bRLjZ34ZMjxslyMQ5VAEVwWs-pWorljHgfDAb-i0I7x7SiKBiKMJwvMYXN8Hb1sQcDcg3kWIiA5_QtLTE10bL3iZ9JyVz5G6AO0v2SVmAy-cmrdCWkqGhLCXH5TixpirgGjggAR4cVL8uFrQoaP3fxnzLJYk131XXlm3P8adwAuim7-UwIWjfazpQbwwY5I9kKDg");
             services.AddAuthentication(options =>
             {
@@ -53,9 +63,9 @@ namespace Notification_Fe
                 {
                     LifetimeValidator = (before, expires, token, param) =>
                     {
-                        return expires > DateTime.UtcNow && before < DateTime.UtcNow;
+                        return expires > DateTime.UtcNow;
                     },
-                    AudienceValidator = (auds,token,param) =>
+                    AudienceValidator = (auds, token, param) =>
                     {
                         return auds.Contains("social network");
                     },
@@ -74,17 +84,36 @@ namespace Notification_Fe
             {
                 OnMessageReceived = context =>
                 {
-                    var accessToken = context.Request.Query["access_token"];
-
-                    // If the request is for our hub...
-                    var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) &&
-                        (path.StartsWithSegments("/hubs/Notifications")))
+                //var accessToken = context.Request.Query["access_token"];
+                string accessToken = context.Request.Headers["Authorization"];
+                    if (accessToken != null)
+                        accessToken = accessToken.Split(' ')[1];
+                    else
                     {
-                        // Read the token out of the query string
-                        context.Token = accessToken;
+                        accessToken = context.Request.Query["access_token"];
+                    }
+                    
+                // If the request is for our hub...
+                var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) &&
+                        (path.StartsWithSegments("/NotificationsHub")))
+                    {
+                    // Read the token out of the query string
+                    context.Token = accessToken;
                     }
                     return Task.CompletedTask;
+                },
+                OnTokenValidated = async context =>
+                {
+                    TokenManager tokenManager = new TokenManager();
+                    JwtSecurityToken token = (JwtSecurityToken)context.SecurityToken;
+                    string userId = token.Subject;
+                    var claims = new List<Claim>
+                        {
+                        new Claim("UserId", userId)
+                        };
+                    var appIdentity = new ClaimsIdentity(claims);
+                    context.Principal.AddIdentity(appIdentity);
                 }
             };
         });
@@ -93,6 +122,8 @@ namespace Notification_Fe
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSignalR();
+
+            //services.AddSingleton<IUserIdProvider, UsersProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,6 +145,7 @@ namespace Notification_Fe
                         .AllowAnyHeader()
                         .AllowCredentials());
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
