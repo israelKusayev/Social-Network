@@ -37,9 +37,5 @@ export async function facebookLogin(facebookToken) {
 }
 
 export async function resetPassword(data) {
-  const res = await Put(authUrl + 'resetPassword', data);
-
-  if (res.status !== 200) {
-    return await res.json();
-  }
+  return await Put(authUrl + 'resetPassword', data);
 }

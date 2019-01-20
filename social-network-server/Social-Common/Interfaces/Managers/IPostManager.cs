@@ -5,7 +5,7 @@ namespace Social_Common.Interfaces.Managers
 {
     public interface IPostManager
     {
-        Post CreatePost(CreatePostDto postDto, string userId);
+        Post CreatePost(CreatePostDto postDto, User user);
         PostListDto GetPosts(int start, int count, string userId);
         ReturnedPostDto GetPost(string userId, string postId);
     }

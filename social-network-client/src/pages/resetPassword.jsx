@@ -33,8 +33,10 @@ export default class ResetPassword extends Component {
 
     //reset password
     const data = JSON.stringify({ username: this.state.data.username, newPassword: this.state.data.password });
-    const err = await resetPassword(data);
-    if (err) this.setState({ error: err.Message });
+    const res = await resetPassword(data);
+    if (res.status === 200) this.setState({ error: '', success: 'Password changed successfully' });
+    else if (res.status === 400) this.setState({ error: 'invalid username',success:"" });
+    else this.setState({ error: 'something faild',success:"" });
   };
   render() {
     const { data, error, success } = this.state;

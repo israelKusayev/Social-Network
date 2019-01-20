@@ -27,7 +27,7 @@ namespace Social_Fe.Controllers
             }
             var token = Request.Headers.GetValues("x-auth-token").First();
 
-            Post createdPost = _postManager.CreatePost(post, _tokenManager.GetUserId(token));
+            Post createdPost = _postManager.CreatePost(post, _tokenManager.GetUser(token));
             if (createdPost != null)
             {
                 return Ok();

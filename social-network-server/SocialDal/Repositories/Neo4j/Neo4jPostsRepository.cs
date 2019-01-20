@@ -138,8 +138,16 @@ namespace SocialDal.Repositories.Neo4j
                     "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
                     "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing ";
             var res = Query(query);
-            var post= DeserializePost(res.Single());
+            var post = DeserializePost(res.Single());
             return post;
+        }
+
+        public string GetPostIdByCommentId(string commentId)
+        {
+            string query = "MATCH(: Comment{CommentId:'" + commentId + "'}) -[:CommentedOn]->(p: Post) return p.PostId";
+            var res = Query(query);
+            return (string)res.Single()[0];
+
         }
     }
 }

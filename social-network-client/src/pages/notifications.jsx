@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as signalR from '@aspnet/signalr';
 import RouteProtector from '../HOC/routeProtector';
-import { getJwt } from '../services/jwtService';
+import { getJwt, getUserClaim } from '../services/jwtService';
 
 class Notifications extends Component {
   handleNotificationClick = (notification) => {
@@ -77,7 +77,7 @@ class Notifications extends Component {
     let connection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:44340/NotificationsHub', {
         accessTokenFactory: () => {
-          getJwt();
+          return getJwt();
         }
       })
       .build();

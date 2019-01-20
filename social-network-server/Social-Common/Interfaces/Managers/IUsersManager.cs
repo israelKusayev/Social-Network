@@ -8,7 +8,7 @@ namespace Social_Common.Interfaces.Managers
     {
         bool AddUser(User user);
         bool BlockUser(string userId, string blockedUserId);
-        bool Follow(string userId, string followedUserId);
+        bool Follow(User user, string followedUserId);
         List<User> GetBlockedUsers(string userId);
         List<FollowersDTO> GetFollowers(string userId);
         List<User> GetFollowing(string userId);
