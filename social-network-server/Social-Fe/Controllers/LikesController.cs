@@ -28,8 +28,8 @@ namespace Social_Fe.Controllers
         public IHttpActionResult LikePost(string postId)
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
-            string userId = _tokenManager.GetUserId(token);
-            if (_likesManager.LikePost(userId, postId))
+            
+            if (_likesManager.LikePost(_tokenManager.GetUser(token), postId))
             {
                 return Ok();
             }
@@ -56,8 +56,7 @@ namespace Social_Fe.Controllers
         public IHttpActionResult LikeComment(string commentId)
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
-            string userId = _tokenManager.GetUserId(token);
-            if (_likesManager.LikeComment(userId, commentId))
+            if (_likesManager.LikeComment(_tokenManager.GetUser(token), commentId))
             {
                 return Ok();
             }

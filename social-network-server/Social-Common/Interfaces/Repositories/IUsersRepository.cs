@@ -18,5 +18,7 @@ namespace Social_Common.Interfaces.Repositories
         List<User> GetBlockedUsers(string userId);
         List<FollowersDTO> GetFollowers(string userId);
         bool IsBlocked(string userId, string otherUserId);
+        User GetPosting(string postId);
+        User GetCommentPublish(string commentId);
     }
 }

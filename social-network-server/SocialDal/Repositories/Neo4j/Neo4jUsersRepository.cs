@@ -16,7 +16,7 @@ namespace SocialDal.Repositories.Neo4j
         public List<User> Find(string name, string userId)
         {
             string query = $"MATCH (u:User) where( u.UserName =~ '.*{name}.*'" +
-               " AND NOT u.UserId = '" + userId + "')"+
+               " AND NOT u.UserId = '" + userId + "')" +
                "AND NOT EXISTS((u)-[:Blocked]-(:User{UserId:'" + userId + "'}))" +
                "return u;";
             var res = Query(query);
@@ -104,6 +104,22 @@ namespace SocialDal.Repositories.Neo4j
             string query = "match(:User{ UserId:'" + userId + "'})-[:Blocked]->(u: User) return u";
             var res = Query(query);
             return RecordsToList<User>(res.ToList());
+        }
+
+        public User GetPosting(string postId)
+        {
+            string query = "MATCH (:Post{PostId:'" + postId + "'}) -[:PostedBy]->(u:User) return u";
+            var res = Query(query);
+            var user = res.Single();
+            return user != null ? RecordToObj<User>(user) : null;
+        }
+
+        public User GetCommentPublish(string commentId)
+        {
+            string query = "MATCH (:Comment{CommentId:'" + commentId + "'}) -[:CommentedBy]->(u:User) return u";
+            var res = Query(query);
+            var user = res.Single();
+            return user != null ? RecordToObj<User>(user) : null;
         }
     }
 }

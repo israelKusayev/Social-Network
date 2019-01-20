@@ -147,8 +147,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception)
             {
-
-                throw;
+                return InternalServerError();
             }
         }
 

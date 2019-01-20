@@ -33,3 +33,15 @@ export function getUsername() {
     window.location.reload();
   }
 }
+
+export function getUserClaim() {
+  try {
+    const payload = jwtDecode(getJwt());
+    console.log(payload.Claims);
+    return payload.Claims;
+  } catch (error) {
+    alert('please connect again...');
+    deleteJwt();
+    window.location.reload();
+  }
+}

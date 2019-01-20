@@ -2,10 +2,12 @@
 using Authorization_Common.Interfaces.Repositories;
 using Authorization_Common.Models;
 using Jose;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Security.Claims;
 using System.Text;
 
 namespace Authorization_Bl
@@ -30,12 +32,15 @@ namespace Authorization_Bl
                     { "iat",iat  },
                     { "aud","social network"},
                     { "username",username},
-                    { "IsAdmin", isAdmin }
+                    { "IsAdmin", isAdmin },
+                    { "Claims", JsonConvert.SerializeObject(new Claim(ClaimTypes.Name,"israel")) }
                 };
+
+
 
             string key = ConfigurationManager.AppSettings["tokenSignKey"];
             byte[] secretKey = Encoding.ASCII.GetBytes(key);
-            string token = Jose.JWT.Encode(payload, secretKey, JwsAlgorithm.HS256);
+            string token = JWT.Encode(payload, secretKey, JwsAlgorithm.HS256);
 
             TokenHistory history = new TokenHistory() { Token = token, FacebookToken = facebookToken, UserId = userId, TimeStamp = iat };
             _tokenReposirory.Add(history);
