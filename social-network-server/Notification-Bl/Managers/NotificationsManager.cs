@@ -12,42 +12,17 @@ namespace Notification_Bl.Managers
 {
     public class NotificationsManager
     {
-        private IDynamoDbRepository<NotificationKey> _notificationKeysReopsitory;
         private IDynamoDbRepository<Notification> _notificationsRepository;
 
         public NotificationsManager(IConfiguration configuration)
         {
-            _notificationKeysReopsitory = new DynamoDbRepository<NotificationKey>(configuration);
-            //_notificationsRepository = new DynamoDbRepository<Notification>();
-        }
-
-        public string GetConectionId(string userId)
-        {
-            var keyRecord = _notificationKeysReopsitory.Get(userId);
-            return keyRecord?.ConnectionId;
-        }
-
-        public bool AddConectionId(string userId, string connectionId)
-        {
-            NotificationKey item = new NotificationKey()
-            {
-                UserId = userId,
-                ConnectionId = connectionId
-            };
-            if (!_notificationKeysReopsitory.Update(item))
-            {
-                if (!_notificationKeysReopsitory.Add(item))
-                    return false;
-            }
-            return true;
+            _notificationsRepository = new DynamoDbRepository<Notification>(configuration);
         }
 
         public void SendNotification<T>(IHubContext<T> hub, string UserId, string methood, object pyload) where T : Hub
         {
-            //string conectionId = GetConectionId(UserId);
-            //hub.Clients.Client(conectionId).SendAsync(methood, pyload);
             hub.Clients.User(UserId).SendAsync(methood, pyload);
-            //AddToHistory(UserId, methood, pyload);
+            AddToHistory(UserId, methood, pyload);
         }
 
         public void AddToHistory(string UserId, string methood, object pyload)
@@ -61,6 +36,11 @@ namespace Notification_Bl.Managers
                 Methood = methood
             };
             _notificationsRepository.Add(item);
+        }
+
+        public List<Notification> GetNotifications(string userId)
+        {
+            return _notificationsRepository.GetAll(userId);
         }
     }
 }

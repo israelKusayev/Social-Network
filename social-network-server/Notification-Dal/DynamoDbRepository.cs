@@ -2,6 +2,7 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 using Notification_Common.Interfaces.Repositories;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace Notification_Dal
         {
             _configuration = configuration;
             var options = _configuration.GetAWSOptions();
-            AmazonDynamoDBClient DynamoClient = options.CreateServiceClient<AmazonDynamoDBClient>();
+
+            IAmazonDynamoDB DynamoClient = options.CreateServiceClient<IAmazonDynamoDB>();
 
             _DbContext = new DynamoDBContext(DynamoClient, new DynamoDBContextConfig
             {
@@ -58,6 +60,41 @@ namespace Notification_Dal
         public T Get<K>(K recordId)
         {
             return _DbContext.LoadAsync<T>(recordId).Result;
+        }
+
+        public List<T> GetAll<K>(K recordId)
+        {
+            //AmazonDynamoDBClient client = new AmazonDynamoDBClient(new AmazonDynamoDBConfig(){user);
+            //var request = new BatchGetItemRequest()
+            //{
+            //    RequestItems = new Dictionary<string, KeysAndAttributes>()
+            //    {{
+            //        "Notifications", new KeysAndAttributes()
+            //        {
+            //            Keys= new List<Dictionary<string, AttributeValue>>()
+            //            {
+            //                new Dictionary<string, AttributeValue>()
+            //                {
+            //                    { "UserId", new AttributeValue {S = recordId.ToString()} }
+            //                }
+            //            }
+            //        }
+            //    }
+            //    }
+            //};
+            //var response = client.BatchGetItemAsync(request);
+
+            //// Check the response.
+            //var result = response.Result;
+            //var responses = result.Responses; // The attribute list in the response.
+
+            var batch = _DbContext.ScanAsync<T>(new List<ScanCondition>() {
+            new ScanCondition("UserId", ScanOperator.Equal,recordId)
+
+                }
+            );
+            return batch.GetNextSetAsync().Result;
+
         }
 
         //public T Get<K,S>(K recordId,string SortCulmnName,S sortKeyStart, S sortKeyEnd, bool descending = false)

@@ -123,7 +123,7 @@ namespace Notification_Fe
 
             services.AddSignalR();
 
-            //services.AddSingleton<IUserIdProvider, UsersProvider>();
+            services.AddSingleton<IUserIdProvider, UsersProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

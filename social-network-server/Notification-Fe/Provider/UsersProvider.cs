@@ -10,8 +10,7 @@ namespace Notification_Fe.Provider
     {
         public string GetUserId(HubConnectionContext connection)
         {
-            return "34b4940f-9dfb-481e-a011-f16cb8ee8dd7";
-            //return connection.User.Claims;
+            return connection.User?.FindFirst("UserId")?.Value;
         }
     }
 }

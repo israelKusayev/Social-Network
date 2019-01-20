@@ -15,71 +15,130 @@ namespace Notification_Fe.Controllers
     {
         IHubContext<NotificationsHub> _hub;
         NotificationsManager _notificationsManager;
-        public NotificationController(IHubContext<NotificationsHub> hub,IConfiguration configuration)
+        public NotificationController(IHubContext<NotificationsHub> hub, IConfiguration configuration)
         {
             _hub = hub;
             _notificationsManager = new NotificationsManager(configuration);
-            var res =configuration.GetValue<string>("key");
+            //_notificationsManager.AddToHistory("")
+            var res = configuration.GetValue<string>("key");
         }
 
-
-        [HttpPost]
-        [Route("UserLikePost")]
-        public IActionResult UserLikePost(PostActionDto action)
+        [HttpGet]
+        [Route("GetNotifications/{userId}")]
+        public IActionResult GetNotifications(string userId)
         {
-            // actionId = 0
             try
             {
-                //_hub.Clients.User(action.ReciverId).SendAsync("getNotification", action).Wait();
-                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok(_notificationsManager.GetNotifications(userId));
             }
             catch (Exception e)
             {
                 //TODO: add logger
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return Ok();
+        }
+
+        [HttpPost]
+        [Route("UserLikePost")]
+        public IActionResult UserLikePost(PostActionDto action)
+        {
+            try
+            {
+                action.ActionId = 0;
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         [Route("UserLikeComment")]
         public ActionResult UserLikeComment(CommentActionDto action)
         {
-            // actionId = 1
-            return Ok();
+            try
+            {
+                action.ActionId = 1;
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         [Route("CommentOnPost")]
         public ActionResult CommentOnPost(CommentActionDto action)
         {
-            // actionId = 2
-            return Ok();
+            try
+            {
+                action.ActionId = 2;
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         [Route("ReferenceInPost")]
         public ActionResult ReferenceInPost(PostActionDto action)
         {
-            // actionId = 3
-            return Ok();
+            try
+            {
+                action.ActionId = 3;
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         [Route("ReferenceInComment")]
         public ActionResult ReferenceInComment(CommentActionDto action)
         {
-            // actionId = 4
-            return Ok();
+            try
+            {
+                action.ActionId = 4;
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         [Route("Follow")]
         public ActionResult Follow(UsersActionDto action)
         {
-            // actionId = 5
-            return Ok();
+            try
+            {
+                action.ActionId = 5;
+                _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                //TODO: add logger
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
-      
+
     }
 }

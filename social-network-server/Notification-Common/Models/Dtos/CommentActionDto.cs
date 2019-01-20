@@ -11,5 +11,7 @@ namespace Notification_Common.Models.Dtos
         public string CommentId { get; set; }
         public string ReciverId { get; set; }
 
+        public int ActionId { get; set; }
+
     }
 }
