@@ -28,18 +28,10 @@ namespace Identity_Bl.Managers
                 }
                 return true;
             }
-            catch (InvalidAlgorithmException)
-            {
-                return false;
-            }
-            catch (IntegrityException)
-            {
-                return false;
-            }
-            catch (JoseException)
-            {
-                return false;
-            }
+            catch (InvalidAlgorithmException) { return false; }
+            catch (IntegrityException) { return false; }
+            catch (JoseException) { return false; }
+            catch (ArgumentOutOfRangeException) { return false; }
         }
 
         public string GetUserId(string token)

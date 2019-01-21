@@ -2,17 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace NotificationFe.Providers
+namespace Notification_Fe.Provider
 {
-    public class UserIdProvider : IUserIdProvider
+    public class UsersProvider : IUserIdProvider
     {
         public string GetUserId(HubConnectionContext connection)
         {
-            var userId = connection.User.FindFirst("username")?.Value;
-            return userId;
+            return connection.User?.FindFirst("UserId")?.Value;
         }
     }
 }

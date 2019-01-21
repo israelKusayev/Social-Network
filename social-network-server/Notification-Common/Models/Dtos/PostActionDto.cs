@@ -9,5 +9,7 @@ namespace Notification_Common.Models.Dtos
         public User User { get; set; }
         public string PostId { get; set; }
         public string ReciverId { get; set; }
+
+        public int ActionId { get; set; }
     }
 }
