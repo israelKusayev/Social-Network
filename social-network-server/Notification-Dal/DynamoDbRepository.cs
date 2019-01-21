@@ -1,8 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.DynamoDBv2.Model;
-using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 using Notification_Common.Interfaces.Repositories;
 using System.Collections.Generic;
@@ -65,15 +63,15 @@ namespace Notification_Dal
         {
             DynamoDBOperationConfig config = new DynamoDBOperationConfig()
             {
-                BackwardQuery = true
+                BackwardQuery = true,
             };
             var batch = _DbContext.ScanAsync<T>(new List<ScanCondition>() {
                   new ScanCondition("UserId", ScanOperator.Equal,recordId)
                 }
            , config);
             return batch.GetNextSetAsync().Result;
-
         }
+
 
         //public T Get<K,S>(K recordId,string SortCulmnName,S sortKeyStart, S sortKeyEnd, bool descending = false)
         //{

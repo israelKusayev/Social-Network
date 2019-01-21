@@ -1,4 +1,5 @@
-﻿using Social_Common.Interfaces.Managers;
+﻿using Social_Common.Interfaces.Helpers;
+using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
@@ -13,15 +14,18 @@ namespace SocialBl.Managers
     {
         private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
 
-        private IAmazonS3Uploader _s3Uploader;
-        private IPostsRepository _postsRepository;
+        private readonly IAmazonS3Uploader _s3Uploader;
+        private readonly IPostsRepository _postsRepository;
+        private readonly IServerComunication _serverComunication;
+
 
 
         public PostManager(IAmazonS3Uploader s3Uploader,
-            IPostsRepository postsRepository)
+            IPostsRepository postsRepository, IServerComunication serverComunication)
         {
             _s3Uploader = s3Uploader;
             _postsRepository = postsRepository;
+            _serverComunication = serverComunication;
         }
 
         public Post CreatePost(CreatePostDto postDto, User user)
@@ -47,14 +51,11 @@ namespace SocialBl.Managers
                 foreach (var reference in postDto.Referencing)
                 {
                     _postsRepository.CreateReference(postId, reference.UserId, reference.StartIndex, reference.EndIndex);
-                    using (var http = new HttpClient())
+
+                    if (user.UserId != reference.UserId)
                     {
                         object referencigNoification = new { user, postId, ReciverId = reference.UserId };
-                        var response = http.PostAsJsonAsync(_notificationsUrl + "/ReferenceInPost", referencigNoification).Result;
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            // todo logger
-                        }
+                        _serverComunication.NotifyUser("/ReferenceInPost", referencigNoification);
                     }
                 }
                 return post;

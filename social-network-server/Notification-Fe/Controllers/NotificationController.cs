@@ -36,7 +36,7 @@ namespace Notification_Fe.Controllers
             {
                 var token = Request.Headers["x-auth-token"][0];
 
-              var userId=  _tokenManager.GetUserId(token);
+                var userId = _tokenManager.GetUserId(token);
                 return Ok(_notificationsManager.GetNotifications(userId));
             }
             catch (Exception e)

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace Notification_Bl.Managers
 {
@@ -33,14 +34,13 @@ namespace Notification_Bl.Managers
                 UserId = UserId,
                 TimeStamp = timeStamp,
                 DataJson = JsonConvert.SerializeObject(pyload),
-                Methood = methood
             };
             _notificationsRepository.Add(item);
         }
 
-        public List<Notification> GetNotifications(string userId)
+        public List<string> GetNotifications(string userId)
         {
-            return _notificationsRepository.GetAll(userId);
+            return _notificationsRepository.GetAll(userId).Select(x=>x.DataJson).ToList();
         }
     }
 }

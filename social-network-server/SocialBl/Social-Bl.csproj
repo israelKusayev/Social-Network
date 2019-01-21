@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ServerComunication.cs" />
     <Compile Include="Managers\AmazonS3Uploader.cs" />
     <Compile Include="Managers\CommentsManager.cs" />
     <Compile Include="Managers\LikesManager.cs" />

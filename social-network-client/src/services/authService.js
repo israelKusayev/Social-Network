@@ -1,6 +1,6 @@
 import { Post, Put } from './httpService';
 import { setJwt } from './jwtService';
-import { Connect } from "./notificationsService";
+import { connect } from './notificationsService';
 const authUrl = process.env.REACT_APP_AUTH_URL;
 export async function register(data) {
   const res = await Post(authUrl + 'register', data);
@@ -12,7 +12,7 @@ export async function register(data) {
   const jwt = res.headers.get('x-auth-token');
   if (jwt) {
     setJwt(jwt);
-    Connect();
+    connect();
   }
 }
 
@@ -26,7 +26,7 @@ export async function login(data) {
   const jwt = res.headers.get('x-auth-token');
   if (jwt) {
     setJwt(jwt);
-    Connect();
+    connect();
   }
 }
 

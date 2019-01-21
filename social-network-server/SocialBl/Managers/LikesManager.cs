@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Social_Common.Interfaces.Helpers;
 using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
@@ -12,16 +13,18 @@ namespace SocialBl.Managers
 {
     public class LikesManager : ILikesManager
     {
-        string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
-        private ILikesRepository _likesRepository;
-        private IUsersRepository _usersRepository;
-        private IPostsRepository _postsRepository;
+        private readonly string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
+        private readonly ILikesRepository _likesRepository;
+        private readonly IUsersRepository _usersRepository;
+        private readonly IPostsRepository _postsRepository;
+        private readonly IServerComunication _serverComunication;
 
-        public LikesManager(ILikesRepository likesRepository, IUsersRepository usersRepository, IPostsRepository postsRepository)
+        public LikesManager(ILikesRepository likesRepository, IUsersRepository usersRepository, IPostsRepository postsRepository, IServerComunication serverComunication)
         {
             _likesRepository = likesRepository;
             _usersRepository = usersRepository;
             _postsRepository = postsRepository;
+            _serverComunication = serverComunication;
         }
 
         public bool LikeComment(User user, string commentId)
@@ -36,15 +39,11 @@ namespace SocialBl.Managers
                 return false;
             }
 
-            using (var http = new HttpClient())
+            string reciverId = _usersRepository.GetCommentPublish(commentId).UserId;
+            if (user.UserId != reciverId)
             {
-                object obj = new { commentId, user, postId = _postsRepository.GetPostIdByCommentId(commentId), ReciverId = _usersRepository.GetCommentPublish(commentId).UserId };
-
-                var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikeComment", obj).Result;
-                if (!response.IsSuccessStatusCode)
-                {
-                    // todo logger
-                }
+                object obj = new { commentId, user, postId = _postsRepository.GetPostIdByCommentId(commentId), ReciverId = reciverId };
+                _serverComunication.NotifyUser("/UserLikeComment", obj);
             }
             return true;
         }
@@ -74,15 +73,14 @@ namespace SocialBl.Managers
                 //TODO add log here
                 return false;
             }
-            using (var http = new HttpClient())
+
+            string reciverId = _usersRepository.GetPosting(postId).UserId;
+            if (user.UserId != reciverId)
             {
-                object obj = new { postId, user, ReciverId = _usersRepository.GetPosting(postId).UserId };
-                var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikePost", obj).Result;
-                if (!response.IsSuccessStatusCode)
-                {
-                    // todo logger
-                }
+                object obj = new { postId, user, ReciverId = reciverId };
+                _serverComunication.NotifyUser("/UserLikePost", obj);
             }
+
             return true;
         }
 

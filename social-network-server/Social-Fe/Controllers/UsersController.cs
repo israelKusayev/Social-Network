@@ -109,7 +109,6 @@ namespace Social_Fe.Controllers
         }
 
 
-
         [JWTAuth]
         [HttpGet]
         [Route("followers")]
@@ -119,7 +118,7 @@ namespace Social_Fe.Controllers
             string userId = _tokenManager.GetUserId(token);
             try
             {
-                return Ok(_usersManager.GetFollowers(userId));
+                return Ok( _usersManager.GetFollowers(userId));
             }
             catch (Exception ex)
             {
@@ -188,6 +187,5 @@ namespace Social_Fe.Controllers
                 return InternalServerError();
             }
         }
-
     }
 }
