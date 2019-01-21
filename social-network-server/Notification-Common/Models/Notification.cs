@@ -14,6 +14,6 @@ namespace Notification_Common.Models
         [DynamoDBRangeKey]
         public long TimeStamp { get; set; }
         public string DataJson {get; set;}
-        public string Methood { get; set; }
+      
     }
 }

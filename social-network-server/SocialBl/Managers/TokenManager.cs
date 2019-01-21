@@ -12,7 +12,7 @@ namespace SocialBl.Managers
     {
         public bool IsValid(string token)
         {
-            if (token == null||token=="null")
+            if (token == null || token == "null")
                 return false;
             string secretKey = ConfigurationManager.AppSettings["tokenSignKey"];
             try
@@ -29,18 +29,11 @@ namespace SocialBl.Managers
                 }
                 return true;
             }
-            catch (InvalidAlgorithmException)
-            {
-                return false;
-            }
-            catch (IntegrityException)
-            {
-                return false;
-            }
-            catch (JoseException)
-            {
-                return false;
-            }
+            catch (InvalidAlgorithmException) { return false; }
+            catch (IntegrityException) { return false; }
+            catch (JoseException) { return false; }
+            catch (ArgumentOutOfRangeException) { return false; }
+
         }
 
         public string GetUserId(string token)

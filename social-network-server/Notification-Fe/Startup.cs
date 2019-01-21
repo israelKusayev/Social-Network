@@ -45,9 +45,8 @@ namespace Notification_Fe
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            var res = Configuration.GetValue<string>("key");
-
-            var key = Encoding.UTF8.GetBytes("t2cVfLnZLjwhyS08X16C80WoDhfHDneILEmgKLvFut3RpBTijI4YYyUsV9mxMr-jpjHodhxbR5bTaSsb4Gxlhk0BwahTPuc9a6hRetdwZjp9opOHNyKJVG2fAws9MxFsoGUu9J7j-_C0VlzeA1bRLjZ34ZMjxslyMQ5VAEVwWs-pWorljHgfDAb-i0I7x7SiKBiKMJwvMYXN8Hb1sQcDcg3kWIiA5_QtLTE10bL3iZ9JyVz5G6AO0v2SVmAy-cmrdCWkqGhLCXH5TixpirgGjggAR4cVL8uFrQoaP3fxnzLJYk131XXlm3P8adwAuim7-UwIWjfazpQbwwY5I9kKDg");
+            var keyStr = Configuration.GetValue<string>("key");
+            var key = Encoding.UTF8.GetBytes(keyStr);
             services.AddAuthentication(options =>
             {
                 // Identity made Cookie authentication the default.
@@ -90,13 +89,19 @@ namespace Notification_Fe
                         accessToken = accessToken.Split(' ')[1];
                     else
                     {
-                        accessToken = context.Request.Query["access_token"];
+                        accessToken = context.Request.Headers["x-auth-token"];
+                        if (accessToken == null)
+                        {
+                            accessToken = context.Request.Query["access_token"];
+                        }
                     }
                     
                 // If the request is for our hub...
                 var path = context.HttpContext.Request.Path;
                     if (!string.IsNullOrEmpty(accessToken) &&
-                        (path.StartsWithSegments("/NotificationsHub")))
+                        (path.StartsWithSegments("/NotificationsHub") || 
+                        path.StartsWithSegments("/api/Notification")))
+                        
                     {
                     // Read the token out of the query string
                     context.Token = accessToken;
@@ -105,7 +110,6 @@ namespace Notification_Fe
                 },
                 OnTokenValidated = async context =>
                 {
-                    TokenManager tokenManager = new TokenManager();
                     JwtSecurityToken token = (JwtSecurityToken)context.SecurityToken;
                     string userId = token.Subject;
                     var claims = new List<Claim>

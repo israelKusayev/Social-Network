@@ -11,7 +11,6 @@ namespace Notification_Dal
 {
     public class DynamoDbRepository<T> : IDynamoDbRepository<T>
     {
-
         private DynamoDBContext _DbContext;
         IConfiguration _configuration;
         public DynamoDbRepository(IConfiguration configuration)
@@ -64,35 +63,14 @@ namespace Notification_Dal
 
         public List<T> GetAll<K>(K recordId)
         {
-            //AmazonDynamoDBClient client = new AmazonDynamoDBClient(new AmazonDynamoDBConfig(){user);
-            //var request = new BatchGetItemRequest()
-            //{
-            //    RequestItems = new Dictionary<string, KeysAndAttributes>()
-            //    {{
-            //        "Notifications", new KeysAndAttributes()
-            //        {
-            //            Keys= new List<Dictionary<string, AttributeValue>>()
-            //            {
-            //                new Dictionary<string, AttributeValue>()
-            //                {
-            //                    { "UserId", new AttributeValue {S = recordId.ToString()} }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    }
-            //};
-            //var response = client.BatchGetItemAsync(request);
-
-            //// Check the response.
-            //var result = response.Result;
-            //var responses = result.Responses; // The attribute list in the response.
-
+            DynamoDBOperationConfig config = new DynamoDBOperationConfig()
+            {
+                BackwardQuery = true
+            };
             var batch = _DbContext.ScanAsync<T>(new List<ScanCondition>() {
-            new ScanCondition("UserId", ScanOperator.Equal,recordId)
-
+                  new ScanCondition("UserId", ScanOperator.Equal,recordId)
                 }
-            );
+           , config);
             return batch.GetNextSetAsync().Result;
 
         }

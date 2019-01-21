@@ -31,40 +31,7 @@ class App extends Component {
 
   componentDidMount = async () => {
 
-
-   const res = await GetNotifications("0c5e3a22-114c-4a47-baf6-2de09d182d5f");
-  //  console.log(res);
-  //  const data =await res.json();
-  //  console.log(data[0]);
-  //  const j =JSON.parse( data[0].dataJson);
-  //  console.log(j);
-  //  const { notifications } = this.state;
-  //     notifications.push(j)
-  //     this.setState({ notifications })
-   
-    let connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:44340/NotificationsHub', {
-        accessTokenFactory: () => {
-          return getJwt();
-        }
-      })
-      .build();
-
-    connection.onclose(() => toast.error("notification servicev disconnected..."))
-
-    connection.on('getNotification', async (data) => {
-      console.log(data);
-
-      const { notifications } = this.state;
-      notifications.push(data)
-      this.setState({ notifications })
-    });
-
-    connection
-      .start()
-      .then(() => console.log('connected to signalR ...'))
-      .catch(() => console.log('connection faild...'));
-
+    
     window.onscroll = () => {
       if (window.pageYOffset <= 0) {
         this.setState({ pageUp: false });
