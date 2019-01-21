@@ -13,6 +13,7 @@ namespace SocialBl.Managers
     {
 
         private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
+        private string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
 
         IUsersRepository _usersRepository;
         public UsersManager(IUsersRepository usersRepository)
@@ -54,6 +55,7 @@ namespace SocialBl.Managers
             using (var http = new HttpClient())
             {
                 object followNoification = new { user, ReciverId = followedUserId };
+                http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
                 var response = http.PostAsJsonAsync(_notificationsUrl + "/Follow", followNoification).Result;
                 if (!response.IsSuccessStatusCode)
                 {

@@ -16,7 +16,7 @@ namespace SocialBl.Managers
         private IAmazonS3Uploader _s3Uploader;
 
         private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
-
+        private string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
 
         public CommentsManager(ICommentsRepository commentsRepository, IUsersRepository usersRepository,
             IAmazonS3Uploader s3Uploader)
@@ -45,7 +45,7 @@ namespace SocialBl.Managers
             using (var http = new HttpClient())
             {
                 object commentNotification = new { commentId = guid, user, postId = commentDto.PostId, ReciverId = _usersRepository.GetPosting(commentDto.PostId).UserId };
-
+                http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
                 var response = http.PostAsJsonAsync(_notificationsUrl + "/CommentOnPost", commentNotification).Result;
                 if (!response.IsSuccessStatusCode)
                 {

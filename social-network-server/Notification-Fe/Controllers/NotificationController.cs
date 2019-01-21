@@ -47,6 +47,7 @@ namespace Notification_Fe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
         [Route("UserLikePost")]
         public IActionResult UserLikePost(PostActionDto action)
         {
@@ -64,6 +65,7 @@ namespace Notification_Fe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
         [Route("UserLikeComment")]
         public ActionResult UserLikeComment(CommentActionDto action)
         {
@@ -81,6 +83,7 @@ namespace Notification_Fe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
         [Route("CommentOnPost")]
         public ActionResult CommentOnPost(CommentActionDto action)
         {
@@ -98,6 +101,7 @@ namespace Notification_Fe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
         [Route("ReferenceInPost")]
         public ActionResult ReferenceInPost(PostActionDto action)
         {
@@ -115,6 +119,7 @@ namespace Notification_Fe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
         [Route("ReferenceInComment")]
         public ActionResult ReferenceInComment(CommentActionDto action)
         {
@@ -132,6 +137,7 @@ namespace Notification_Fe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
         [Route("Follow")]
         public ActionResult Follow(UsersActionDto action)
         {

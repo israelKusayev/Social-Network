@@ -12,7 +12,9 @@ namespace SocialBl.Managers
 {
     public class LikesManager : ILikesManager
     {
-        string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
+        private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
+        private string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
+
         private ILikesRepository _likesRepository;
         private IUsersRepository _usersRepository;
         private IPostsRepository _postsRepository;
@@ -39,7 +41,7 @@ namespace SocialBl.Managers
             using (var http = new HttpClient())
             {
                 object obj = new { commentId, user, postId = _postsRepository.GetPostIdByCommentId(commentId), ReciverId = _usersRepository.GetCommentPublish(commentId).UserId };
-
+                http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
                 var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikeComment", obj).Result;
                 if (!response.IsSuccessStatusCode)
                 {
@@ -77,6 +79,7 @@ namespace SocialBl.Managers
             using (var http = new HttpClient())
             {
                 object obj = new { postId, user, ReciverId = _usersRepository.GetPosting(postId).UserId };
+                http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
                 var response = http.PostAsJsonAsync(_notificationsUrl + "/UserLikePost", obj).Result;
                 if (!response.IsSuccessStatusCode)
                 {
