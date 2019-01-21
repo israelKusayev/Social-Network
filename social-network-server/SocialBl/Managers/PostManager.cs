@@ -12,6 +12,7 @@ namespace SocialBl.Managers
     public class PostManager : IPostManager
     {
         private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
+        private string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
 
         private IAmazonS3Uploader _s3Uploader;
         private IPostsRepository _postsRepository;
@@ -50,6 +51,7 @@ namespace SocialBl.Managers
                     using (var http = new HttpClient())
                     {
                         object referencigNoification = new { user, postId, ReciverId = reference.UserId };
+                        http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
                         var response = http.PostAsJsonAsync(_notificationsUrl + "/ReferenceInPost", referencigNoification).Result;
                         if (!response.IsSuccessStatusCode)
                         {

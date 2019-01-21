@@ -125,6 +125,11 @@ namespace Notification_Fe
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddAuthorization(options => 
+            {
+                options.AddPolicy("ServerOnly", policy => policy.RequireClaim("IsServer", "True"));
+            });
+
             services.AddSignalR();
 
             services.AddSingleton<IUserIdProvider, UsersProvider>();
