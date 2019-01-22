@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using log4net;
+using Newtonsoft.Json;
 using Social_Common.Interfaces.Helpers;
 using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
@@ -7,6 +8,7 @@ using Social_Common.Models.Dtos;
 using System;
 using System.Configuration;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 
 namespace SocialBl.Managers
@@ -17,6 +19,7 @@ namespace SocialBl.Managers
         private readonly IUsersRepository _usersRepository;
         private readonly IPostsRepository _postsRepository;
         private readonly IServerComunication _serverComunication;
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public LikesManager(ILikesRepository likesRepository, IUsersRepository usersRepository, IPostsRepository postsRepository, IServerComunication serverComunication)
         {
@@ -34,7 +37,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                //TODO add log here
+                _log.Error(e);
                 return false;
             }
 
@@ -56,7 +59,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                //TODO add log here
+                _log.Error(e);
                 return false;
             }
         }
@@ -69,7 +72,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                //TODO add log here
+                _log.Error(e);
                 return false;
             }
 
@@ -92,7 +95,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                //TODO add log here
+                _log.Error(e);
                 return false;
             }
         }

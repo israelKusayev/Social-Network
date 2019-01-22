@@ -4,10 +4,13 @@ using Identity_Common.Interfaces.Managers;
 using Identity_Common.Loggers;
 using Identity_Common.models;
 using Identity_Fe.Attributes;
+using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using System.Web.Http;
 
 namespace Identity_Fe.Controllers
@@ -16,16 +19,15 @@ namespace Identity_Fe.Controllers
     {
         private readonly IIdentiryManager _identityManager;
         private readonly IRquestsValidator _rquestsValidator;
-        private readonly LoggerManager _logger;
 
-        public UsersIdentityController(IIdentiryManager identiryManager,
-            IRquestsValidator rquestsValidator)
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public UsersIdentityController(IIdentiryManager identiryManager, IRquestsValidator rquestsValidator)
         {
             _identityManager = identiryManager;
             _rquestsValidator = rquestsValidator;
-            string path = ConfigurationManager.AppSettings["IdentityLogsPath"];
-            _logger = new LoggerManager(new FileLogger(), path);
         }
+
 
         [HttpPost]
         [JWTAuth]
@@ -50,7 +52,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e.ToString());
+                _log.Error(e.ToString());
                 return InternalServerError();
             }
         }
@@ -83,7 +85,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e.ToString());
+                _log.Error(e.ToString());
                 return InternalServerError();
             }
         }
@@ -111,7 +113,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e.ToString());
+                _log.Error(e.ToString());
                 return InternalServerError();
             }
         }

@@ -10,14 +10,18 @@ using System.Net.Http;
 using System.Web.Http;
 using Authorization_Common.Exceptions;
 using System.Linq;
+using log4net;
+using System.Reflection;
 
 namespace Authorization_Fe.Controllers
 {
     public class AuthController : ApiController
     {
-        ITokenBuilder _token;
-        IAuthManager _authManager;
-        IFaceBookTokenValidator _facebookValidator;
+        private readonly ITokenBuilder _token;
+        private readonly IAuthManager _authManager;
+        private readonly IFaceBookTokenValidator _facebookValidator;
+
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public AuthController(ITokenBuilder token, IAuthManager authManager,
             IFaceBookTokenValidator facebookValidator)
@@ -51,7 +55,8 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
-                return InternalServerError(new Exception("Something went worng"));
+                _log.Error(e);
+                return InternalServerError();
             }
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -88,6 +93,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -123,6 +129,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
 
@@ -148,6 +155,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -174,6 +182,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }

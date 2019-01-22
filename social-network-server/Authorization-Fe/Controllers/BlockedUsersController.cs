@@ -1,6 +1,8 @@
 ﻿using Authorization_Common.Interfaces.Managers;
 using Authorization_Fe.Attributes;
+using log4net;
 using System;
+using System.Reflection;
 using System.Web.Http;
 
 namespace Authorization_Fe.Controllers
@@ -8,6 +10,7 @@ namespace Authorization_Fe.Controllers
     public class BlockedUsersController : ApiController
     {
         private IBlockedUsersManager _blockedUsersManager;
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public BlockedUsersController(IBlockedUsersManager blockedUsersManager)
         {
@@ -29,6 +32,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -48,6 +52,7 @@ namespace Authorization_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }

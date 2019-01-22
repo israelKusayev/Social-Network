@@ -40,7 +40,7 @@ namespace SocialDal.Repositories.Neo4j
                     "(me: User{ UserId: '" + userId + "'}) " +
                 "WHERE NOT EXISTS((posting) -[:Blocked] - (me)) " +
                     "AND(me.UserId = posting.UserId OR " +
-                    "p.Visability = 0 OR (p.Visability = 1 " +
+                   $"p.Visability = {(int)PostVisabilityOptions.All} OR (p.Visability = {(int)PostVisabilityOptions.Followers} " +
                     "AND EXISTS((me) -[:Following]->(posting)))) " +
                     "AND(EXISTS((p) -[:Recomended]->(me)) " +
                         "OR EXISTS((p) -[:Referencing]->(me)) " +
