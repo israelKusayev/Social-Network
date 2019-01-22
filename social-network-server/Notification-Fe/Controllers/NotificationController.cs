@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using log4net;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -158,5 +159,29 @@ namespace Notification_Fe.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize(Policy = "ServerOnly")]
+        [Route("RecommendFollwers")]
+        public ActionResult RecommendFollwers([FromBody]List<FollowRecommendationDto> followRecommendations)
+        {
+            try
+            {
+                foreach (FollowRecommendationDto rec in followRecommendations)
+                {
+                    object action = new
+                    {
+                        actionId = 6,
+                        recomendedId = rec.RecommededUserId
+                    };
+                    _notificationsManager.SendNotification(_hub, rec.UserId, "getNotification", action);
+                }
+                    return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

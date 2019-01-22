@@ -1,6 +1,8 @@
-﻿using Social_Common.Interfaces.Helpers;
+﻿using log4net;
+using Social_Common.Interfaces.Helpers;
 using System.Configuration;
 using System.Net.Http;
+using System.Reflection;
 
 namespace SocialBl.Helpers
 {
@@ -8,6 +10,7 @@ namespace SocialBl.Helpers
     {
         private readonly string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
         private readonly string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public void NotifyUser(string action, object obj)
         {
@@ -17,7 +20,7 @@ namespace SocialBl.Helpers
                 var response = http.PostAsJsonAsync(_notificationsUrl + action, obj).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    // todo logger
+                    _log.Error(response.ToString());
                 }
             }
         }
