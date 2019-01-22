@@ -33,7 +33,7 @@ namespace Notification_Bl.Managers
             {
                 UserId = UserId,
                 TimeStamp = timeStamp,
-                DataJson = JsonConvert.SerializeObject(pyload),
+                DataJson = JsonConvert.SerializeObject(pyload)
             };
             _notificationsRepository.Add(item);
         }
