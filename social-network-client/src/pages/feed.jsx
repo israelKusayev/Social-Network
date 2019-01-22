@@ -30,7 +30,6 @@ class Feed extends Component {
         let { posts, index } = this.state;
         index += this.pageSize;
         posts.push(...data.Posts);
-        console.log(data);
 
         this.setState({ posts, index, reloadMorePosts: true, loader: false });
       } else {

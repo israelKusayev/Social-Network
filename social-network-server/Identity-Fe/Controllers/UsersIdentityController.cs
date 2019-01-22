@@ -4,28 +4,30 @@ using Identity_Common.Interfaces.Managers;
 using Identity_Common.Loggers;
 using Identity_Common.models;
 using Identity_Fe.Attributes;
+using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using System.Web.Http;
 
 namespace Identity_Fe.Controllers
 {
     public class UsersIdentityController : ApiController
     {
-        private IIdentiryManager _identityManager;
-        private IRquestsValidator _rquestsValidator;
-        private LoggerManager _logger;
+        private readonly IIdentiryManager _identityManager;
+        private readonly IRquestsValidator _rquestsValidator;
 
-        public UsersIdentityController(IIdentiryManager identiryManager,
-            IRquestsValidator rquestsValidator)
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public UsersIdentityController(IIdentiryManager identiryManager, IRquestsValidator rquestsValidator)
         {
             _identityManager = identiryManager;
             _rquestsValidator = rquestsValidator;
-            string path = ConfigurationManager.AppSettings["IdentityLogsPath"];
-            _logger = new LoggerManager(new FileLogger(), path);
         }
+
 
         [HttpPost]
         [JWTAuth]
@@ -36,10 +38,8 @@ namespace Identity_Fe.Controllers
                 string tokenId = new TokenManager().GetUserId(Request.Headers.GetValues("x-auth-token").First());
                 if (user.UserId == null) user.UserId = tokenId;
                 string errors = _rquestsValidator.ValidateUser(user, tokenId);
-                if (errors != null)
-                {
-                    return BadRequest(errors);
-                }
+                if (errors != null) return BadRequest(errors);
+
                 var success = _identityManager.CreateUser(user);
                 if (success)
                 {
@@ -52,9 +52,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                string err = e.ToString();
-                _logger.Log(err);
-
+                _log.Error(e.ToString());
                 return InternalServerError();
             }
         }
@@ -87,8 +85,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                string err = e.ToString();
-                _logger.Log(err);
+                _log.Error(e.ToString());
                 return InternalServerError();
             }
         }
@@ -100,13 +97,10 @@ namespace Identity_Fe.Controllers
             try
             {
                 string tokenId = new TokenManager().GetUserId(Request.Headers.GetValues("x-auth-token").First());
-                if (user.UserId == null)
-                    user.UserId = tokenId;
+                if (user.UserId == null) user.UserId = tokenId;
                 string errors = _rquestsValidator.ValidateUser(user, tokenId);
-                if (errors != null)
-                {
-                    return BadRequest(errors);
-                }
+                if (errors != null) return BadRequest(errors);
+
                 var seccess = _identityManager.UpdateUser(user);
                 if (seccess)
                 {
@@ -119,8 +113,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                string err = e.ToString();
-                _logger.Log(err);
+                _log.Error(e.ToString());
                 return InternalServerError();
             }
         }

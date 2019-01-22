@@ -8,7 +8,7 @@ namespace Social_Common.Interfaces.Repositories
         void Create(Post post, string postedByUserId);
         void CreateReference(string postId, string userId, int startIdx, int endIdx);
         PostListDto GetFeed(int startIdx, int count, string userId);
-        ReturnedPostDto getPost(string userId, string postId);
+        ReturnedPostDto GetPost(string userId, string postId);
         string GetPostIdByCommentId(string commentId);
     }
 }

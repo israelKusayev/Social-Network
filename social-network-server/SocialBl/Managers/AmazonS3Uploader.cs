@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using log4net;
 using Social_Common.Interfaces.Managers;
 
 namespace SocialBl.Managers
 {
     public class AmazonS3Uploader : IAmazonS3Uploader
     {
-        static readonly string bucketUrl = ConfigurationManager.AppSettings["s3Key"];
-        static readonly string bucketName = "social-network-posts-images";
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly string bucketUrl = ConfigurationManager.AppSettings["s3Key"];
+        private static readonly string bucketName = "social-network-posts-images";
 
         public string UploadFile(string image, string guid)
         {
@@ -45,9 +48,9 @@ namespace SocialBl.Managers
                 }
                 return bucketUrl + key;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                // todo write to logger
+                _log.Error(e);
                 return null;
             }
         }

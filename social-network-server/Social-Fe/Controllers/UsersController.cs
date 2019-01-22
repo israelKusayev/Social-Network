@@ -1,8 +1,10 @@
-﻿using Social_Common.Interfaces.Managers;
+﻿using log4net;
+using Social_Common.Interfaces.Managers;
 using Social_Common.Models;
 using Social_Fe.Attributes;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Web.Http;
 
 namespace Social_Fe.Controllers
@@ -10,8 +12,9 @@ namespace Social_Fe.Controllers
     [RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
-        IUsersManager _usersManager;
-        ITokenManager _tokenManager;
+        private readonly IUsersManager _usersManager;
+        private readonly ITokenManager _tokenManager;
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public UsersController(IUsersManager usersManager, ITokenManager tokenManager)
         {
@@ -41,8 +44,9 @@ namespace Social_Fe.Controllers
                 string userId = _tokenManager.GetUserId(token);
                 return Ok(_usersManager.GetUsers(searchQuery, userId));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -85,8 +89,9 @@ namespace Social_Fe.Controllers
             {
                 return Ok(_usersManager.IsFollow(userId, followedUserId));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -102,12 +107,12 @@ namespace Social_Fe.Controllers
             {
                 return Ok(_usersManager.GetFollowing(userId));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
-
 
 
         [JWTAuth]
@@ -121,8 +126,9 @@ namespace Social_Fe.Controllers
             {
                 return Ok(_usersManager.GetFollowers(userId));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -167,8 +173,9 @@ namespace Social_Fe.Controllers
             {
                 return Ok(_usersManager.IsBlocked(userId, otherUserId));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -183,11 +190,11 @@ namespace Social_Fe.Controllers
             {
                 return Ok(_usersManager.GetBlockedUsers(userId));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
-
     }
 }

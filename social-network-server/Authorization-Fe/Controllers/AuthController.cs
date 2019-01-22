@@ -10,14 +10,18 @@ using System.Net.Http;
 using System.Web.Http;
 using Authorization_Common.Exceptions;
 using System.Linq;
+using log4net;
+using System.Reflection;
 
 namespace Authorization_Fe.Controllers
 {
     public class AuthController : ApiController
     {
-        ITokenBuilder _token;
-        IAuthManager _authManager;
-        IFaceBookTokenValidator _facebookValidator;
+        private readonly ITokenBuilder _token;
+        private readonly IAuthManager _authManager;
+        private readonly IFaceBookTokenValidator _facebookValidator;
+
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public AuthController(ITokenBuilder token, IAuthManager authManager,
             IFaceBookTokenValidator facebookValidator)
@@ -26,6 +30,7 @@ namespace Authorization_Fe.Controllers
             _token = token;
             _facebookValidator = facebookValidator;
         }
+
         [Route("api/register")]
         [HttpPost]
         public IHttpActionResult Register([FromBody] RegisterDTO model)
@@ -48,9 +53,10 @@ namespace Authorization_Fe.Controllers
                 _authManager.AddUserToIdentity(auth.UserId, model.Username, model.Email, token);
                 _authManager.AddUserToSocial(auth.UserId, model.Username, token);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return InternalServerError(new Exception("Something went worng"));
+                _log.Error(e);
+                return InternalServerError();
             }
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -85,8 +91,9 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest(ube.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -120,8 +127,9 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest(ube.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
 
@@ -145,8 +153,9 @@ namespace Authorization_Fe.Controllers
                 }
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -155,19 +164,27 @@ namespace Authorization_Fe.Controllers
         [Route("api/refreshToken")]
         public IHttpActionResult RefreshToken()
         {
-            if (Request.Headers.Contains("x-auth-token"))
+            try
             {
-                string token = Request.Headers.GetValues("x-auth-token").First();
-                token = _authManager.RefreshToken(token);
-                if (token != null)
+                if (Request.Headers.Contains("x-auth-token"))
                 {
-                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                    response.Headers.Add("x-auth-token", token);
-                    return ResponseMessage(response);
+                    string token = Request.Headers.GetValues("x-auth-token").First();
+                    token = _authManager.RefreshToken(token);
+                    if (token != null)
+                    {
+                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                        response.Headers.Add("x-auth-token", token);
+                        return ResponseMessage(response);
+                    }
+                    return BadRequest("invalid token");
                 }
-                return BadRequest("invalid token");
+                return BadRequest("No token was given");
             }
-            return BadRequest("No token was given");
+            catch (Exception e)
+            {
+                _log.Error(e);
+                return InternalServerError();
+            }
         }
     }
 }

@@ -2,12 +2,9 @@
 using Authorization_Common.Interfaces.Repositories;
 using Authorization_Common.Models;
 using Jose;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Security.Claims;
 using System.Text;
 
 namespace Authorization_Bl
@@ -32,10 +29,9 @@ namespace Authorization_Bl
                     { "iat",iat  },
                     { "aud","social network"},
                     { "username",username},
-                    { "IsAdmin", isAdmin },
-                    { "Claims", JsonConvert.SerializeObject(new Claim(ClaimTypes.Name,"israel")) }
+                    { "IsAdmin", isAdmin }
+                    //{ "Claims", JsonConvert.SerializeObject(new Claim(ClaimTypes.Name,"israel")) }
                 };
-
 
 
             string key = ConfigurationManager.AppSettings["tokenSignKey"];

@@ -1,4 +1,6 @@
-﻿using Social_Common.Interfaces.Repositories;
+﻿using Social_Common.Interfaces.Helpers;
+using Social_Common.Interfaces.Repositories;
+using SocialBl.Helpers;
 using SocialDal.Repositories.Neo4j;
 using Unity;
 
@@ -12,6 +14,7 @@ namespace SocialBl
             container.RegisterSingleton<IPostsRepository, Neo4jPostsRepository>();
             container.RegisterSingleton<ILikesRepository, Neo4jLikesRepository>();
             container.RegisterSingleton<ICommentsRepository, Neo4jCommentsRepository>();
+            container.RegisterSingleton<IServerComunication, ServerComunication>();
         }
     }
 }

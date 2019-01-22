@@ -8,7 +8,7 @@ namespace Identity_Bl.Managers
 {
     public class IdentiryManager : IIdentiryManager
     {
-        private IDynamoDbRepository<User> _usersIdentityRepository;
+        private readonly IDynamoDbRepository<User> _usersIdentityRepository;
 
         public IdentiryManager(IDynamoDbRepository<User> usersIdentityRepository)
         {

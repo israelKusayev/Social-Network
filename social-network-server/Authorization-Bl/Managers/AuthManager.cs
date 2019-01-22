@@ -43,7 +43,7 @@ namespace Authorization_Bl.Managers
         public UserAuth Login(LoginDTO model)
         {
             var user = _authRepository.Get(model.Username);
-            if (user == null || !PasswordHasher.Verify(model.Password,user.Password))
+            if (user == null || !PasswordHasher.Verify(model.Password, user.Password))
             {
                 return null;
             }
@@ -99,7 +99,7 @@ namespace Authorization_Bl.Managers
         }
 
         /// <summary>
-        /// create new node in neo4j
+        /// create new user node in neo4j
         /// </summary>
         public bool AddUserToSocial(string userId, string username, string token)
         {

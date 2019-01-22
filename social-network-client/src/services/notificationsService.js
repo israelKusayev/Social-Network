@@ -1,28 +1,38 @@
 import { Get } from './httpService';
-import { getJwt } from "./jwtService";
+import { getJwt } from './jwtService';
 import { toast } from 'react-toastify';
 import * as signalR from '@aspnet/signalr';
 
-
-
 const notificationUrl = process.env.REACT_APP_NOTIFICATIONS_URL + 'Notification';
 
+let notifications = [];
+let connection = null;
+let listener = null;
+let unreadCountListener = null;
 
-let connection;
-export async function Connect() {
+export function registerUnreadCount(func) {
+  unreadCountListener = func;
+}
 
+export function register(func) {
+  listener = func;
+}
+
+export function unregister() {
+  listener = null;
+}
+export async function connect() {
+  if (connection !== null) return;
 
   if (getJwt()) {
-
-    const res = await GetNotifications();
-    //  console.log(res);
-    //  const data =await res.json();
-    //  console.log(data[0]);
-    //  const j =JSON.parse( data[0].dataJson);
-    //  console.log(j);
-    //  const { notifications } = this.state;
-    //     notifications.push(j)
-    //     this.setState({ notifications })
+    const res = await await Get(`${notificationUrl}/GetNotifications`, true);
+    if (res.status === 200) {
+      const data = await res.json();
+      data.forEach((element) => {
+        notifications.unshift(JSON.parse(element));
+      });
+      if (listener) listener(notifications);
+    }
 
     connection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:44340/NotificationsHub', {
@@ -32,14 +42,14 @@ export async function Connect() {
       })
       .build();
 
-    connection.onclose(() => toast.error("notification servicev disconnected..."))
+    connection.onclose(() => toast.error('notification servicev disconnected...'));
 
     connection.on('getNotification', async (data) => {
+      if (unreadCountListener) unreadCountListener();
+      if (listener) listener(data);
       console.log(data);
 
-      let notifications = []
-      notifications.push(data)
-
+      notifications.unshift(data);
     });
 
     connection
@@ -49,6 +59,6 @@ export async function Connect() {
   }
 }
 
-export async function GetNotifications() {
-  return await Get(`${notificationUrl}/GetNotifications`, true);
+export function GetNotifications() {
+  return [...notifications];
 }

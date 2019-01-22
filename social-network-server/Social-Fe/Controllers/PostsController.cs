@@ -1,17 +1,21 @@
-﻿using Social_Common.Interfaces.Managers;
+﻿using log4net;
+using Social_Common.Interfaces.Managers;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Web.Http;
 
 namespace Social_Fe.Controllers
 {
     public class PostsController : ApiController
     {
-        IPostManager _postManager;
-        ITokenManager _tokenManager;
+        private readonly IPostManager _postManager;
+        private readonly ITokenManager _tokenManager;
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public PostsController(IPostManager postManager, ITokenManager tokenManager)
         {
             _postManager = postManager;
@@ -44,11 +48,12 @@ namespace Social_Fe.Controllers
             {
                 var token = Request.Headers.GetValues("x-auth-token").First();
                 var userId = _tokenManager.GetUserId(token);
-                ReturnedPostDto post = _postManager.GetPost(userId,postId);
+                ReturnedPostDto post = _postManager.GetPost(userId, postId);
                 return Ok(post);
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }
@@ -68,6 +73,7 @@ namespace Social_Fe.Controllers
             }
             catch (Exception e)
             {
+                _log.Error(e);
                 return InternalServerError();
             }
         }

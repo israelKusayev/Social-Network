@@ -20,6 +20,8 @@ class Followers extends Component {
     }
   };
 
+  componentWillUnmount = () => {};
+
   followBack = async (user) => {
     const res = await follow(user.userId);
     if (res.status !== 200) {

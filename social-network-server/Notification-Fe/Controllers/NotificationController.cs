@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Reflection;
+using log4net;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Notification_Bl.Managers;
 using Notification_Common.Interfaces.Managers;
 using Notification_Common.Models.Dtos;
@@ -16,16 +19,17 @@ namespace Notification_Fe.Controllers
     [ApiController]
     public class NotificationController : ControllerBase
     {
-        IHubContext<NotificationsHub> _hub;
-        NotificationsManager _notificationsManager;
-        ITokenManager _tokenManager;
-        public NotificationController(IHubContext<NotificationsHub> hub, IConfiguration configuration)
+        private readonly IHubContext<NotificationsHub> _hub;
+        private readonly ITokenManager _tokenManager;
+        private readonly INotificationsManager _notificationsManager;
+        private readonly ILogger<NotificationController> _logger;
+
+        public NotificationController(IHubContext<NotificationsHub> hub, IConfiguration configuration, INotificationsManager notificationsManager, ITokenManager tokenManager, ILogger<NotificationController> logger)
         {
+            _logger = logger;
             _hub = hub;
-            _notificationsManager = new NotificationsManager(configuration);
-            //_notificationsManager.AddToHistory("")
-            var res = configuration.GetValue<string>("key");
-            _tokenManager = new TokenManager();
+            _notificationsManager = notificationsManager;
+            _tokenManager = tokenManager;
         }
 
         [Authorize]
@@ -37,12 +41,12 @@ namespace Notification_Fe.Controllers
             {
                 var token = Request.Headers["x-auth-token"][0];
 
-              var userId=  _tokenManager.GetUserId(token);
+                var userId = _tokenManager.GetUserId(token);
                 return Ok(_notificationsManager.GetNotifications(userId));
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -60,7 +64,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -78,7 +82,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -96,7 +100,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -114,7 +118,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -132,7 +136,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -150,7 +154,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -175,7 +179,7 @@ namespace Notification_Fe.Controllers
             }
             catch (Exception e)
             {
-                //TODO: add logger
+                _logger.LogError(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

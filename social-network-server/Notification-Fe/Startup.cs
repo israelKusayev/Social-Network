@@ -13,8 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Notification_Bl.Managers;
+using Notification_Bl;
 using Notification_Fe.Provider;
 using NotificationFe.Hubs;
 
@@ -22,7 +23,7 @@ namespace Notification_Fe
 {
     public class Startup
     {
-        public Startup(/*IConfiguration configuration,*/ IHostingEnvironment env)
+        public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -133,11 +134,14 @@ namespace Notification_Fe
             services.AddSignalR();
 
             services.AddSingleton<IUserIdProvider, UsersProvider>();
+            DependencyInjectionBl.RegisterTypes(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddLog4Net();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

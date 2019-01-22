@@ -39,14 +39,14 @@ namespace SocialDal.Repositories.Neo4j
                 "(me:User{UserId:'" + userId + "'})" +
                 "WHERE NOT EXISTS((posting)-[:Blocked]-(me)) AND " +
                 "NOT EXISTS((u)-[:Blocked]-(me)) AND" +
-                $" (p.Visability={(int)PostVisabilityOptions.All} OR " +
+                $" (p.Visability={(int)PostVisabilityOptions.All} OR me.UserId = posting.UserId OR " +
                 $"(p.Visability={(int)PostVisabilityOptions.Followers} AND EXISTS( (me)-[:Following]->(posting) )) )" +
                 "OPTIONAL MATCH(c)-[rel:Referencing]->(ref:User) " +
                 "OPTIONAL MATCH(c)<-[l:Like]- (: User) " +
                 "RETURN c AS Comment, u AS CreatedBy, p.PostId AS PostId, " +
                 "EXISTS( (c) <-[:Like]-(me) ) AS IsLiked, " +
-                "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
-                "ORDER BY c.CreatedOn DESC";         
+                "COUNT(DISTINCT l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
+                "ORDER BY c.CreatedOn DESC";
             var res = Query(query);
             return DeserializeComments(res);
         }
@@ -85,7 +85,7 @@ namespace SocialDal.Repositories.Neo4j
             dto.Content = (string)commentProps[nameof(dto.Content)];
             dto.CreatedOn = DateTime.Parse((string)commentProps[nameof(dto.CreatedOn)]).ToUniversalTime();
             dto.ImgUrl = commentProps.ContainsKey(nameof(dto.ImgUrl)) ? (string)commentProps[nameof(dto.ImgUrl)] : null;
-            dto.CommentId = (string)commentProps[nameof(dto.CommentId)];   
+            dto.CommentId = (string)commentProps[nameof(dto.CommentId)];
         }
 
         private static List<ReferencingDto> ExtractRefences(IRecord record)

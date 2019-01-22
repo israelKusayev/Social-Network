@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import RouteProtector from '../HOC/routeProtector';
+import { register, unregister, GetNotifications } from '../services/notificationsService';
 
 class Notifications extends Component {
-  handleNotificationClick = (notification) => {
+  state = {
+    notifications: []
+  };
 
+  componentDidMount() {
+    register(this.whenNotified);
+    const notifications = GetNotifications();
+    this.setState({ notifications });
+  }
+
+  handleNotificationClick = (notification) => {
     switch (notification.actionId) {
       case 0:
       case 2:
@@ -14,11 +24,10 @@ class Notifications extends Component {
       }
       case 1:
       case 4:
-      case 6:
-        {
-          this.props.history.push('/comment/' + notification.postId);
-          break;
-        }
+      case 6: {
+        this.props.history.push('/comment/' + notification.postId);
+        break;
+      }
       case 5: {
         this.props.history.push('/profile/' + notification.user.userId);
         break;
@@ -28,6 +37,7 @@ class Notifications extends Component {
         break;
     }
   };
+
   action = [
     'like your post',
     'like your comment',
@@ -37,16 +47,43 @@ class Notifications extends Component {
     'followed you'
   ];
 
+  whenNotified = (data) => {
+    console.log(data);
+
+    const { notifications } = this.state;
+    if (Array.isArray(data)) {
+      console.log('is array');
+
+      console.log(notifications);
+
+      notifications.unshift(...data);
+
+      console.log(notifications);
+    } else {
+      console.log('is singal');
+
+      console.log(notifications);
+
+      notifications.unshift(data);
+      console.log(notifications);
+    }
+
+    this.setState({ notifications });
+  };
+
+  componentWillUnmount = () => {
+    unregister();
+  };
+
   goToUserProfile = (e) => e.stopPropagation();
 
   render() {
-    console.log(this.props)
+    if (this.state.notifications.length === 0) return <h2 className="text-danger">No notifications yet</h2>;
     return (
       <div>
-        <h1>Notifications</h1>
-        <div className="row">
+        <div className="row mt-4">
           <div className="col-md-8 offset-2">
-            {this.props.notifications.map((n,i) => {
+            {this.state.notifications.map((n, i) => {
               return (
                 <div
                   className="alert alert-dark app-bg text-white cursor-p text-center font-size-bigger"
