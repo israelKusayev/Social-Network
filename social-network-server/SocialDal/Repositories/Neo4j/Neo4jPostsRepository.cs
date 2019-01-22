@@ -49,10 +49,10 @@ namespace SocialDal.Repositories.Neo4j
                         "OR me.UserId = posting.UserId ) " +
                 "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
                 "OPTIONAL MATCH(p)-[rel:Referencing]->(ref:User)" +
-                "RETURN " +
+                "RETURN DISTINCT " +
                     "p AS Post, posting AS CreatedBy, " +
                     "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
-                    "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
+                    "COUNT(DISTINCT l) AS Likes, COLLECT(DISTINCT {rel:rel,user:ref}) AS Referencing " +
                 $"ORDER BY p.CreatedOn DESC SKIP {startIdx} LIMIT {count}";
             var res = Query(query);
             PostListDto postListDto = new PostListDto()

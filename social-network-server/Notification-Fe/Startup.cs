@@ -145,7 +145,7 @@ namespace Notification_Fe
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseCors(builder => builder
@@ -155,7 +155,7 @@ namespace Notification_Fe
                         .AllowCredentials());
 
             app.UseAuthentication();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSignalR(routes =>
