@@ -46,7 +46,7 @@ namespace SocialDal.Repositories.Neo4j
                 "RETURN c AS Comment, u AS CreatedBy, p.PostId AS PostId, " +
                 "EXISTS( (c) <-[:Like]-(me) ) AS IsLiked, " +
                 "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing " +
-                "ORDER BY c.CreatedOn DESC";         
+                "ORDER BY c.CreatedOn DESC";
             var res = Query(query);
             return DeserializeComments(res);
         }
@@ -85,7 +85,7 @@ namespace SocialDal.Repositories.Neo4j
             dto.Content = (string)commentProps[nameof(dto.Content)];
             dto.CreatedOn = DateTime.Parse((string)commentProps[nameof(dto.CreatedOn)]).ToUniversalTime();
             dto.ImgUrl = commentProps.ContainsKey(nameof(dto.ImgUrl)) ? (string)commentProps[nameof(dto.ImgUrl)] : null;
-            dto.CommentId = (string)commentProps[nameof(dto.CommentId)];   
+            dto.CommentId = (string)commentProps[nameof(dto.CommentId)];
         }
 
         private static List<ReferencingDto> ExtractRefences(IRecord record)

@@ -12,7 +12,7 @@ namespace SocialDal.Repositories.Neo4j
 {
     public class Neo4jPostsRepository : Neo4jBaseRepository, IPostsRepository
     {
-        private static int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
+        private static readonly int _maxPostsPerPage = int.Parse(ConfigurationManager.AppSettings["MaxPostsPerPage"]);
 
         public void Create(Post post, string postedByUserId)
         {
@@ -126,7 +126,7 @@ namespace SocialDal.Repositories.Neo4j
             dto.Visability = (PostVisabilityOptions)((long)postProps[nameof(dto.Visability)]);
         }
 
-        public ReturnedPostDto getPost(string userId, string postId)
+        public ReturnedPostDto GetPost(string userId, string postId)
         {
             string query = "MATCH(p: Post{PostId:'" + postId + "'}) -[:PostedBy]->(posting: User), " +
                     "(me: User{ UserId: '" + userId + "'}) " +
@@ -147,7 +147,6 @@ namespace SocialDal.Repositories.Neo4j
             string query = "MATCH(: Comment{CommentId:'" + commentId + "'}) -[:CommentedOn]->(p: Post) return p.PostId";
             var res = Query(query);
             return (string)res.Single()[0];
-
         }
     }
 }

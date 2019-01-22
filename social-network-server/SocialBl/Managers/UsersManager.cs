@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Social_Common.Interfaces.Helpers;
 using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
@@ -11,16 +13,14 @@ namespace SocialBl.Managers
 {
     public class UsersManager : IUsersManager
     {
+        private readonly IUsersRepository _usersRepository;
+        private readonly IServerComunication _serverComunication;
 
-        private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
-        private string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
-
-        IUsersRepository _usersRepository;
-        public UsersManager(IUsersRepository usersRepository)
+        public UsersManager(IUsersRepository usersRepository, IServerComunication serverComunication)
         {
             _usersRepository = usersRepository;
+            _serverComunication = serverComunication;
         }
-
 
         public bool AddUser(User user)
         {
@@ -52,15 +52,11 @@ namespace SocialBl.Managers
                 // todo logger
                 return false;
             }
-            using (var http = new HttpClient())
+
+            if (user.UserId != followedUserId)
             {
                 object followNoification = new { user, ReciverId = followedUserId };
-                http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
-                var response = http.PostAsJsonAsync(_notificationsUrl + "/Follow", followNoification).Result;
-                if (!response.IsSuccessStatusCode)
-                {
-                    // todo logger
-                }
+                _serverComunication.NotifyUser("/Follow", followNoification);
             }
             return true;
         }
@@ -131,6 +127,5 @@ namespace SocialBl.Managers
         {
             return _usersRepository.GetFollowers(userId);
         }
-
     }
 }

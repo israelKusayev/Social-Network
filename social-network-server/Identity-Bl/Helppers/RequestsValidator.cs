@@ -25,7 +25,5 @@ namespace Identity_Bl.Helppers
             }
             return errors.Count == 0 ? null : String.Join(",", errors);
         }
-
-
     }
 }

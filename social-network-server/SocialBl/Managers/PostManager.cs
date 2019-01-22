@@ -1,4 +1,5 @@
-﻿using Social_Common.Interfaces.Managers;
+﻿using Social_Common.Interfaces.Helpers;
+using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
 using Social_Common.Models.Dtos;
@@ -11,18 +12,16 @@ namespace SocialBl.Managers
 {
     public class PostManager : IPostManager
     {
-        private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
-        private string _serverToken = ConfigurationManager.AppSettings["ServerToken"];
-
-        private IAmazonS3Uploader _s3Uploader;
-        private IPostsRepository _postsRepository;
-
+        private readonly IAmazonS3Uploader _s3Uploader;
+        private readonly IPostsRepository _postsRepository;
+        private readonly IServerComunication _serverComunication;
 
         public PostManager(IAmazonS3Uploader s3Uploader,
-            IPostsRepository postsRepository)
+            IPostsRepository postsRepository, IServerComunication serverComunication)
         {
             _s3Uploader = s3Uploader;
             _postsRepository = postsRepository;
+            _serverComunication = serverComunication;
         }
 
         public Post CreatePost(CreatePostDto postDto, User user)
@@ -48,15 +47,11 @@ namespace SocialBl.Managers
                 foreach (var reference in postDto.Referencing)
                 {
                     _postsRepository.CreateReference(postId, reference.UserId, reference.StartIndex, reference.EndIndex);
-                    using (var http = new HttpClient())
+
+                    if (user.UserId != reference.UserId)
                     {
                         object referencigNoification = new { user, postId, ReciverId = reference.UserId };
-                        http.DefaultRequestHeaders.Add("x-auth-token", _serverToken);
-                        var response = http.PostAsJsonAsync(_notificationsUrl + "/ReferenceInPost", referencigNoification).Result;
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            // todo logger
-                        }
+                        _serverComunication.NotifyUser("/ReferenceInPost", referencigNoification);
                     }
                 }
                 return post;
@@ -70,7 +65,7 @@ namespace SocialBl.Managers
 
         public ReturnedPostDto GetPost(string userId, string postId)
         {
-            return _postsRepository.getPost(userId, postId);
+            return _postsRepository.GetPost(userId, postId);
         }
 
         public PostListDto GetPosts(int start, int count, string userId)

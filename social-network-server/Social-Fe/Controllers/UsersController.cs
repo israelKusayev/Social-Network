@@ -109,7 +109,6 @@ namespace Social_Fe.Controllers
         }
 
 
-
         [JWTAuth]
         [HttpGet]
         [Route("followers")]
@@ -188,6 +187,5 @@ namespace Social_Fe.Controllers
                 return InternalServerError();
             }
         }
-
     }
 }
