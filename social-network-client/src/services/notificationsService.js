@@ -26,11 +26,13 @@ export async function connect() {
 
   if (getJwt()) {
     const res = await await Get(`${notificationUrl}/GetNotifications`, true);
-    const data = await res.json();
-    data.forEach((element) => {
-      notifications.unshift(JSON.parse(element));
-    });
-    if (listener) listener(notifications);
+    if (res.status === 200) {
+      const data = await res.json();
+      data.forEach((element) => {
+        notifications.unshift(JSON.parse(element));
+      });
+      if (listener) listener(notifications);
+    }
 
     connection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:44340/NotificationsHub', {
@@ -47,7 +49,7 @@ export async function connect() {
       if (listener) listener(data);
       console.log(data);
 
-      notifications.push(data);
+      notifications.unshift(data);
     });
 
     connection

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ProfileTemplate from './profileTemplate';
-import { convertJsonToUser } from '../converters/userConvertor';
+import { convertJsonToUser } from '../utils/userConvertor';
 import User from '../models/user';
 import { getUser, follow, Isfollow, unfollow, blockUser } from '../services/usersService';
 import { toast } from 'react-toastify';

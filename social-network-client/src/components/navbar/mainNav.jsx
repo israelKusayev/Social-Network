@@ -6,7 +6,7 @@ import { registerUnreadCount } from '../../services/notificationsService';
 
 class MainNav extends Component {
   state = {
-    notificationsCount: 2
+    notificationsCount: 0
   };
 
   componentDidMount = () => {

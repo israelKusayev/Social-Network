@@ -1,4 +1,5 @@
-﻿using Social_Common.Interfaces.Helpers;
+﻿using log4net;
+using Social_Common.Interfaces.Helpers;
 using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
 using Social_Common.Models;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
+using System.Reflection;
 
 namespace SocialBl.Managers
 {
@@ -16,6 +18,7 @@ namespace SocialBl.Managers
         private readonly IUsersRepository _usersRepository;
         private readonly IAmazonS3Uploader _s3Uploader;
         private readonly IServerComunication _serverComunication;
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public CommentsManager(ICommentsRepository commentsRepository, IUsersRepository usersRepository,
             IAmazonS3Uploader s3Uploader, IServerComunication serverComunication)
@@ -37,7 +40,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                //TODO: add logger here
+                _log.Error(e);
                 return false;
             }
 
@@ -78,7 +81,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                //TODO: add logger here
+                _log.Error(e);
                 return null;
             }
         }

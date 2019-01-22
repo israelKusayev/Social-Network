@@ -8,16 +8,17 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Notification_Common.Interfaces.Managers;
 
 namespace Notification_Bl.Managers
 {
-    public class NotificationsManager
+    public class NotificationsManager : INotificationsManager
     {
-        private IDynamoDbRepository<Notification> _notificationsRepository;
+        private readonly IDynamoDbRepository<Notification> _notificationsRepository;
 
-        public NotificationsManager(IConfiguration configuration)
+        public NotificationsManager(IConfiguration configuration, IDynamoDbRepository<Notification> notificationsRepository)
         {
-            _notificationsRepository = new DynamoDbRepository<Notification>(configuration);
+            _notificationsRepository = notificationsRepository;
         }
 
         public void SendNotification<T>(IHubContext<T> hub, string UserId, string methood, object pyload) where T : Hub
@@ -40,7 +41,7 @@ namespace Notification_Bl.Managers
 
         public List<string> GetNotifications(string userId)
         {
-            return _notificationsRepository.GetAll(userId).Select(x=>x.DataJson).ToList();
+            return _notificationsRepository.GetAll(userId).Select(x => x.DataJson).ToList();
         }
     }
 }

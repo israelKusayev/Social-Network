@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import User from '../../models/user';
 import ProfileTemplate from '../profileTemplate';
 import { getUsername, getUserId } from '../../services/jwtService';
-import { convertJsonToUser } from '../../converters/userConvertor';
+import { convertJsonToUser } from '../../utils/userConvertor';
 import { getUser, updateUser } from '../../services/usersService';
 import { toast } from 'react-toastify';
 

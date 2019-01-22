@@ -1,20 +1,15 @@
 ﻿using Social_Common.Interfaces.Managers;
-using Social_Common.Models.Dtos;
 using Social_Fe.Attributes;
-using SocialBl.Managers;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace Social_Fe.Controllers
 {
     public class LikesController : ApiController
     {
-        private ILikesManager _likesManager;
-        private ITokenManager _tokenManager;
+        private readonly ILikesManager _likesManager;
+        private readonly ITokenManager _tokenManager;
+        
 
         public LikesController(ILikesManager likesManager, ITokenManager tokenManager)
         {

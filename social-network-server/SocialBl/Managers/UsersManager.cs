@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
 using Social_Common.Interfaces.Helpers;
 using Social_Common.Interfaces.Managers;
 using Social_Common.Interfaces.Repositories;
@@ -15,6 +17,7 @@ namespace SocialBl.Managers
     {
         private readonly IUsersRepository _usersRepository;
         private readonly IServerComunication _serverComunication;
+        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public UsersManager(IUsersRepository usersRepository, IServerComunication serverComunication)
         {
@@ -31,7 +34,8 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                // todo logger
+
+                _log.Error(e);
                 return false;
             }
         }
@@ -49,7 +53,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                // todo logger
+                _log.Error(e);
                 return false;
             }
 
@@ -80,7 +84,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                // todo logger
+                _log.Error(e);
                 return false;
             }
         }
@@ -94,7 +98,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                // todo logger
+                _log.Error(e);
                 return false;
             }
         }
@@ -113,7 +117,7 @@ namespace SocialBl.Managers
             }
             catch (Exception e)
             {
-                // todo logger
+                _log.Error(e);
                 return false;
             }
         }
