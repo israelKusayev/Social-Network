@@ -14,9 +14,9 @@ namespace Identity_Fe.Controllers
 {
     public class UsersIdentityController : ApiController
     {
-        private IIdentiryManager _identityManager;
-        private IRquestsValidator _rquestsValidator;
-        private LoggerManager _logger;
+        private readonly IIdentiryManager _identityManager;
+        private readonly IRquestsValidator _rquestsValidator;
+        private readonly LoggerManager _logger;
 
         public UsersIdentityController(IIdentiryManager identiryManager,
             IRquestsValidator rquestsValidator)
@@ -36,10 +36,8 @@ namespace Identity_Fe.Controllers
                 string tokenId = new TokenManager().GetUserId(Request.Headers.GetValues("x-auth-token").First());
                 if (user.UserId == null) user.UserId = tokenId;
                 string errors = _rquestsValidator.ValidateUser(user, tokenId);
-                if (errors != null)
-                {
-                    return BadRequest(errors);
-                }
+                if (errors != null) return BadRequest(errors);
+
                 var success = _identityManager.CreateUser(user);
                 if (success)
                 {
@@ -52,9 +50,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                string err = e.ToString();
-                _logger.Log(err);
-
+                _logger.Log(e.ToString());
                 return InternalServerError();
             }
         }
@@ -87,8 +83,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                string err = e.ToString();
-                _logger.Log(err);
+                _logger.Log(e.ToString());
                 return InternalServerError();
             }
         }
@@ -100,13 +95,10 @@ namespace Identity_Fe.Controllers
             try
             {
                 string tokenId = new TokenManager().GetUserId(Request.Headers.GetValues("x-auth-token").First());
-                if (user.UserId == null)
-                    user.UserId = tokenId;
+                if (user.UserId == null) user.UserId = tokenId;
                 string errors = _rquestsValidator.ValidateUser(user, tokenId);
-                if (errors != null)
-                {
-                    return BadRequest(errors);
-                }
+                if (errors != null) return BadRequest(errors);
+
                 var seccess = _identityManager.UpdateUser(user);
                 if (seccess)
                 {
@@ -119,8 +111,7 @@ namespace Identity_Fe.Controllers
             }
             catch (Exception e)
             {
-                string err = e.ToString();
-                _logger.Log(err);
+                _logger.Log(e.ToString());
                 return InternalServerError();
             }
         }

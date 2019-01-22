@@ -13,7 +13,6 @@ namespace SocialBl.Managers
 {
     public class LikesManager : ILikesManager
     {
-        private readonly string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
         private readonly ILikesRepository _likesRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly IPostsRepository _postsRepository;

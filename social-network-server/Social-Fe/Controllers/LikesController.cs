@@ -28,7 +28,7 @@ namespace Social_Fe.Controllers
         public IHttpActionResult LikePost(string postId)
         {
             var token = Request.Headers.GetValues("x-auth-token").First();
-            
+
             if (_likesManager.LikePost(_tokenManager.GetUser(token), postId))
             {
                 return Ok();

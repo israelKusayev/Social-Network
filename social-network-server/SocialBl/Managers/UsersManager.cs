@@ -13,9 +13,6 @@ namespace SocialBl.Managers
 {
     public class UsersManager : IUsersManager
     {
-
-        private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
-
         private readonly IUsersRepository _usersRepository;
         private readonly IServerComunication _serverComunication;
 
@@ -24,7 +21,6 @@ namespace SocialBl.Managers
             _usersRepository = usersRepository;
             _serverComunication = serverComunication;
         }
-
 
         public bool AddUser(User user)
         {
@@ -131,6 +127,5 @@ namespace SocialBl.Managers
         {
             return _usersRepository.GetFollowers(userId);
         }
-
     }
 }

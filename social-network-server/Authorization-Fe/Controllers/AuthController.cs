@@ -26,6 +26,7 @@ namespace Authorization_Fe.Controllers
             _token = token;
             _facebookValidator = facebookValidator;
         }
+
         [Route("api/register")]
         [HttpPost]
         public IHttpActionResult Register([FromBody] RegisterDTO model)
@@ -48,7 +49,7 @@ namespace Authorization_Fe.Controllers
                 _authManager.AddUserToIdentity(auth.UserId, model.Username, model.Email, token);
                 _authManager.AddUserToSocial(auth.UserId, model.Username, token);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError(new Exception("Something went worng"));
             }
@@ -85,7 +86,7 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest(ube.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -120,7 +121,7 @@ namespace Authorization_Fe.Controllers
             {
                 return BadRequest(ube.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -145,7 +146,7 @@ namespace Authorization_Fe.Controllers
                 }
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -155,19 +156,26 @@ namespace Authorization_Fe.Controllers
         [Route("api/refreshToken")]
         public IHttpActionResult RefreshToken()
         {
-            if (Request.Headers.Contains("x-auth-token"))
+            try
             {
-                string token = Request.Headers.GetValues("x-auth-token").First();
-                token = _authManager.RefreshToken(token);
-                if (token != null)
+                if (Request.Headers.Contains("x-auth-token"))
                 {
-                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                    response.Headers.Add("x-auth-token", token);
-                    return ResponseMessage(response);
+                    string token = Request.Headers.GetValues("x-auth-token").First();
+                    token = _authManager.RefreshToken(token);
+                    if (token != null)
+                    {
+                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                        response.Headers.Add("x-auth-token", token);
+                        return ResponseMessage(response);
+                    }
+                    return BadRequest("invalid token");
                 }
-                return BadRequest("invalid token");
+                return BadRequest("No token was given");
             }
-            return BadRequest("No token was given");
+            catch (Exception e)
+            {
+                return InternalServerError();
+            }
         }
     }
 }

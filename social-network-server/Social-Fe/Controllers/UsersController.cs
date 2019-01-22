@@ -118,7 +118,7 @@ namespace Social_Fe.Controllers
             string userId = _tokenManager.GetUserId(token);
             try
             {
-                return Ok( _usersManager.GetFollowers(userId));
+                return Ok(_usersManager.GetFollowers(userId));
             }
             catch (Exception ex)
             {

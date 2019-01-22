@@ -44,7 +44,7 @@ namespace Social_Fe.Controllers
             {
                 var token = Request.Headers.GetValues("x-auth-token").First();
                 var userId = _tokenManager.GetUserId(token);
-                ReturnedPostDto post = _postManager.GetPost(userId,postId);
+                ReturnedPostDto post = _postManager.GetPost(userId, postId);
                 return Ok(post);
             }
             catch (Exception e)

@@ -1,6 +1,7 @@
 ﻿using Authorization_Common.Interfaces.Helppers;
 using Authorization_Common.Models.DTO;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Dynamic;
@@ -73,11 +74,10 @@ namespace Authorization_Bl.Helppers
                 var x = settings[name];
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return false;
             }
-
         }
     }
 }

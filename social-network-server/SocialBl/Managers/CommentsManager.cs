@@ -76,8 +76,7 @@ namespace SocialBl.Managers
             {
                 return _commentsRepository.GetComments(userId, postId);
             }
-            catch
-            (Exception e)
+            catch (Exception e)
             {
                 //TODO: add logger here
                 return null;

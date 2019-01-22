@@ -12,13 +12,9 @@ namespace SocialBl.Managers
 {
     public class PostManager : IPostManager
     {
-        private string _notificationsUrl = ConfigurationManager.AppSettings["NotificationsServiceUrl"];
-
         private readonly IAmazonS3Uploader _s3Uploader;
         private readonly IPostsRepository _postsRepository;
         private readonly IServerComunication _serverComunication;
-
-
 
         public PostManager(IAmazonS3Uploader s3Uploader,
             IPostsRepository postsRepository, IServerComunication serverComunication)
@@ -69,7 +65,7 @@ namespace SocialBl.Managers
 
         public ReturnedPostDto GetPost(string userId, string postId)
         {
-            return _postsRepository.getPost(userId, postId);
+            return _postsRepository.GetPost(userId, postId);
         }
 
         public PostListDto GetPosts(int start, int count, string userId)
