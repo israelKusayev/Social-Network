@@ -22,7 +22,7 @@ class Followers extends Component {
 
   componentWillUnmount = () => {};
 
-  followBack = async (user) => {
+  followBack = async user => {
     const res = await follow(user.userId);
     if (res.status !== 200) {
       toast.error('faild to follow, try again.');
@@ -31,7 +31,7 @@ class Followers extends Component {
     }
   };
 
-  unfollow = async (user) => {
+  unfollow = async user => {
     const res = await unfollow(user.userId);
     if (res.status !== 200) {
       toast.error('faild to unfollow, try again.');
@@ -40,14 +40,14 @@ class Followers extends Component {
     }
   };
 
-  changeFollowState = (user) => {
+  changeFollowState = user => {
     const followers = [...this.state.followers];
     const index = followers.indexOf(user);
     followers[index].isFollowing = !followers[index].isFollowing;
     this.setState({ followers });
   };
 
-  blockUser = async (user) => {
+  blockUser = async user => {
     const res = await blockUser(user.userId);
 
     if (res.status !== 200) {
@@ -66,20 +66,23 @@ class Followers extends Component {
       <div>
         <h1>Followers</h1>
         {followers.length !== 0 ? (
-          followers.map((user) => {
+          followers.map(user => {
             return (
               <FollowerTab
                 key={user.userId}
                 rightBtnName={'Block'}
                 onRightBtnClicked={() => this.blockUser(user)}
                 leftBtnName={user.isFollowing ? 'unfollow' : 'Follow back'}
-                onLeftBtnClicked={user.isFollowing ? () => this.unfollow(user) : () => this.followBack(user)}
+                onLeftBtnClicked={
+                  user.isFollowing ? () => this.unfollow(user) : () => this.followBack(user)
+                }
                 name={user.username}
+                id={user.userId}
               />
             );
           })
         ) : (
-          <h2 className="text-danger">No one is following you</h2>
+          <h2 className='text-danger'>No one is following you</h2>
         )}
       </div>
     );
