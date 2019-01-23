@@ -128,5 +128,12 @@ namespace Authorization_Bl.Managers
                 return false;
             return true;
         }
+
+        public bool IsNewFacebookUser(string facebookId)
+        {
+            if (_oAuthRepository.Get(facebookId) != null)
+                return false;
+            return true;
+        }
     }
 }
