@@ -90,8 +90,9 @@ namespace Identity_Fe.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [JWTAuth]
+        [Route("api/usersIdentity/update")]
         public IHttpActionResult Update([FromBody]User user)
         {
             try
