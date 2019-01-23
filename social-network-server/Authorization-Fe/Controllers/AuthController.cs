@@ -139,7 +139,7 @@ namespace Authorization_Fe.Controllers
 
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/resetPassword")]
         public IHttpActionResult ResetPassword(ResetPasswordDTO model)
         {
