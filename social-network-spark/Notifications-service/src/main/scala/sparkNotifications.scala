@@ -17,10 +17,10 @@ object sparkNotifications {
     conf.setAppName("SocialNotifications")
     val sc = new SparkContext(conf)
     val neo = Neo4j(sc)
-    val df = neo.cypher("MATCH(u:User)-[:Following]->(:User)-[f:Following]->(u2:User) WHERE u2.UserId <> u.UserId AND NOT EXISTS((u)-[:Blocked]-(u2)) AND NOT EXISTS((u)-[:Following]-(u2)) RETURN u.UserId AS UserId,u2.UserId AS RecommededUserId").partitions(1).batch(100).loadDataFrame
-    val res = df.groupBy("UserId", "RecommededUserId").count().filter("count>=2").select("UserId","RecommededUserId") .toDF("UserId","RecommededUserId")
+    val df = neo.cypher("MATCH(u:User)-[:Following]->(:User)-[f:Following]->(u2:User) WHERE u2.UserId <> u.UserId AND NOT EXISTS((u)-[:Blocked]-(u2)) AND NOT EXISTS((u)-[:Following]->(u2)) RETURN u.UserId AS UserId,u2.UserId AS RecommededUserId ,u2.UserName AS RecommededName").partitions(1).batch(100).loadDataFrame
+    val res = df.groupBy("UserId", "RecommededUserId","RecommededName").count().filter("count>=2").select("UserId","RecommededUserId","RecommededName") .toDF("UserId","RecommededUserId","RecommededName")
     var str = res.toJSON.collect.mkString("[", "," , "]" )
-    println(str)
+    //println(str)
     val ServerUrl ="http://SocialNotifications.com/api/Notification/RecommendFollwers"
     var LocalUrl = "http://localhost:65291/api/Notification/RecommendFollwers"
     val serverToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTb2NpYWxOb3RpZmljYXRpb25TcGFyayIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoyMTQ3MDAwMDAwLCJhdWQiOiJzb2NpYWwgbmV0d29yayIsIklzU2VydmVyIjoiVHJ1ZSJ9.WcGm_5jrZF7UoF0XhYY020iL3uAprreX7x9AFat_GEU"
@@ -29,7 +29,7 @@ object sparkNotifications {
       .header("Charset", "UTF-8")
       .header("x-auth-token",serverToken)
       .option(HttpOptions.readTimeout(10000)).asString
-    println(httpResult);
+    //println(httpResult);
 
 
   }
