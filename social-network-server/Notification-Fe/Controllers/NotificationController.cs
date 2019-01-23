@@ -12,6 +12,7 @@ using Notification_Bl.Managers;
 using Notification_Common.Interfaces.Managers;
 using Notification_Common.Models.Dtos;
 using NotificationFe.Hubs;
+using Notification_Common.Models;
 
 namespace Notification_Fe.Controllers
 {
@@ -171,7 +172,11 @@ namespace Notification_Fe.Controllers
                     object action = new
                     {
                         actionId = 6,
-                        recomendedId = rec.RecommededUserId
+                        user = new User
+                        {
+                            UserId = rec.RecommededUserId,
+                            UserName = rec.RecommededName
+                        }
                     };
                     _notificationsManager.SendNotification(_hub, rec.UserId, "getNotification", action);
                 }
