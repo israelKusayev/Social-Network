@@ -116,8 +116,12 @@ namespace Authorization_Fe.Controllers
                 UserFacebook facebookUser = _authManager.LoginFacebook(model);
 
                 var token = _token.GenerateKey(facebookUser.UserId, model.Username, facebookUser.IsAdmin, facebookToken);
-                _authManager.AddUserToIdentity(facebookUser.UserId, model.Username, model.Email, token);
-                _authManager.AddUserToSocial(facebookUser.UserId, model.Username, token);
+
+                if (_authManager.IsNewFacebookUser(model.FacebookId))
+                {
+                    _authManager.AddUserToIdentity(facebookUser.UserId, model.Username, model.Email, token);
+                    _authManager.AddUserToSocial(facebookUser.UserId, model.Username, token);
+                }
 
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Headers.Add("x-auth-token", token);
