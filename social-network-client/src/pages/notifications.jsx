@@ -48,24 +48,12 @@ class Notifications extends Component {
   ];
 
   whenNotified = (data) => {
-    console.log(data);
 
     const { notifications } = this.state;
     if (Array.isArray(data)) {
-      console.log('is array');
-
-      console.log(notifications);
-
       notifications.unshift(...data);
-
-      console.log(notifications);
     } else {
-      console.log('is singal');
-
-      console.log(notifications);
-
       notifications.unshift(data);
-      console.log(notifications);
     }
 
     this.setState({ notifications });
