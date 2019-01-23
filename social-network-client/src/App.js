@@ -21,7 +21,6 @@ import './styles/autoComplete.css';
 import './styles/pageUp.css';
 import 'react-toastify/dist/ReactToastify.css';
 import UserProfile from './components/userProfile';
-import './services/xmppService';
 import { connect } from './services/notificationsService';
 
 class App extends Component {
