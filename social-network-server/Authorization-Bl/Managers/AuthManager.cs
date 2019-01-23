@@ -119,7 +119,7 @@ namespace Authorization_Bl.Managers
             var data = _tokenValidator.ValidaleRefreshToken(token);
             if (data == null)
                 return data;
-            return _tokenBuilder.GenerateKey((string)data.sub, (string)data.username, (bool)data.IsAdmin);
+            return _tokenBuilder.GenerateKey((string)data.sub, (string)data.username, (bool)data.isAdmin);
         }
 
         private bool IsBlocked(string userId)
