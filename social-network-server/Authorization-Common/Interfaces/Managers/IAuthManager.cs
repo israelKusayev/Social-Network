@@ -13,5 +13,6 @@ namespace Authorization_Common.Interfaces.Managers
 
         string RefreshToken(string token);
         bool AddUserToSocial(string userId, string username, string token);
+        bool IsNewFacebookUser(string facebookId);
     }
 }

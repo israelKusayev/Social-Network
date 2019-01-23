@@ -16,7 +16,7 @@ namespace Authorization_Fe.Attributes
                 dynamic data = new TokenValidator().ValidaleToken(token);
                 try
                 {
-                    return data != null ? (bool)data.IsAdmin : false;
+                    return data != null ? (bool)data.isAdmin : false;
                 }
                 catch (RuntimeBinderException)
                 {

@@ -2,46 +2,34 @@ import jwtDecode from 'jwt-decode';
 const tokenKey = 'token';
 
 export function getJwt() {
-  return localStorage.getItem(tokenKey);
+    return localStorage.getItem(tokenKey);
 }
 
 export function setJwt(jwt) {
-  localStorage.setItem(tokenKey, jwt);
+    localStorage.setItem(tokenKey, jwt);
 }
 
 export function deleteJwt() {
-  localStorage.removeItem(tokenKey);
+    localStorage.removeItem(tokenKey);
 }
 
 export function getUserId() {
-  try {
-    const payload = jwtDecode(getJwt());
-    return payload.sub;
-  } catch (error) {
-    alert('please connect again...');
-    deleteJwt();
-    window.location.reload();
-  }
+    try {
+        const payload = jwtDecode(getJwt());
+        return payload.sub;
+    } catch (error) {
+        alert('please connect again...');
+        deleteJwt();
+        window.location.reload();
+    }
 }
 export function getUsername() {
-  try {
-    const payload = jwtDecode(getJwt());
-    return payload.username;
-  } catch (error) {
-    alert('please connect again...');
-    deleteJwt();
-    window.location.reload();
-  }
-}
-
-export function getUserClaim() {
-  try {
-    const payload = jwtDecode(getJwt());
-    console.log(payload.Claims);
-    return payload.Claims;
-  } catch (error) {
-    alert('please connect again...');
-    deleteJwt();
-    window.location.reload();
-  }
+    try {
+        const payload = jwtDecode(getJwt());
+        return payload.username;
+    } catch (error) {
+        alert('please connect again...');
+        deleteJwt();
+        window.location.reload();
+    }
 }

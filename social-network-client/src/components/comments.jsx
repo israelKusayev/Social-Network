@@ -20,7 +20,6 @@ export default class Comments extends React.Component {
       toast.error('something went wrong');
     } else {
       const data = await res.json();
-      console.log("data",data);
       
       this.setState({ comments: data });
     }

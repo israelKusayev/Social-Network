@@ -28,7 +28,6 @@ class App extends Component {
   state = { pageUp: false };
 
   componentDidMount = async () => {
-    console.log('app rendered');
 
     await connect();
     window.onscroll = () => {
