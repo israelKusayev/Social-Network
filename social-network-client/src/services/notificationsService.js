@@ -35,7 +35,7 @@ export async function connect() {
         }
 
         connection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:44340/NotificationsHub', {
+            .withUrl(process.env.REACT_APP_SIGNALR_URL, {
                 accessTokenFactory: () => {
                     return getJwt();
                 }
