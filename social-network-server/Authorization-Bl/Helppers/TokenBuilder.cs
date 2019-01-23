@@ -20,9 +20,7 @@ namespace Authorization_Bl
         {
             int ttl = int.Parse(ConfigurationManager.AppSettings["TokenTTL"]);
             long exp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 60 * ttl;
-            //long exp = (long)(DateTime.UtcNow.AddMinutes(ttl) - new DateTime(1970, 1, 1)).TotalSeconds;
             long iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            //long iat = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
             var payload = new Dictionary<string, object>()
                 {

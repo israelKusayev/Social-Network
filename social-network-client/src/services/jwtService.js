@@ -18,7 +18,6 @@ export function getUserId() {
         const payload = jwtDecode(getJwt());
         return payload.sub;
     } catch (error) {
-        alert('please connect again...');
         deleteJwt();
         window.location.reload();
     }
@@ -28,7 +27,6 @@ export function getUsername() {
         const payload = jwtDecode(getJwt());
         return payload.username;
     } catch (error) {
-        alert('please connect again...');
         deleteJwt();
         window.location.reload();
     }

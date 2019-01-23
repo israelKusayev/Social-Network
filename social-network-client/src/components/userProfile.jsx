@@ -11,8 +11,9 @@ import {
 } from '../services/usersService';
 import { toast } from 'react-toastify';
 import { getUserId } from '../services/jwtService';
+import RouteProtector from '../HOC/routeProtector';
 
-export default class UserProfile extends Component {
+ class UserProfile extends Component {
     state = {
         user: new User(),
         isFollow: false
@@ -123,3 +124,5 @@ export default class UserProfile extends Component {
         );
     }
 }
+
+export default RouteProtector(UserProfile)
