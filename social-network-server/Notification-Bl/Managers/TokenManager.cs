@@ -18,7 +18,8 @@ namespace Notification_Bl.Managers
                 string paylod = JWT.Decode(token, Encoding.ASCII.GetBytes(secretKey));
                 dynamic data = JObject.Parse(paylod);
 
-                long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                //long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                 if (data.iat > now || data.exp < now ||
                    data.aud != "social network")
                 {
