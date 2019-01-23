@@ -1,6 +1,5 @@
 import { Get } from './httpService';
 import { getJwt } from './jwtService';
-import { toast } from 'react-toastify';
 import * as signalR from '@aspnet/signalr';
 
 const notificationUrl = process.env.REACT_APP_NOTIFICATIONS_URL + 'Notification';
@@ -25,7 +24,7 @@ export async function connect() {
   if (connection !== null) return;
 
   if (getJwt()) {
-    const res = await await Get(`${notificationUrl}/GetNotifications`, true);
+    const res = await Get(`${notificationUrl}/GetNotifications`, true);
     if (res.status === 200) {
       const data = await res.json();
       data.forEach((element) => {
@@ -42,8 +41,6 @@ export async function connect() {
       })
       .build();
 
-    connection.onclose(() => toast.error('notification servicev disconnected...'));
-
     connection.on('getNotification', async (data) => {
       if (unreadCountListener) unreadCountListener();
       if (listener) listener(data);
@@ -57,6 +54,12 @@ export async function connect() {
       .then(() => console.log('connected to signalR ...'))
       .catch(() => console.log('connection faild...'));
   }
+}
+
+export async function closeConnection() {
+  notifications = [];
+  await connection.stop();
+  connection = null;
 }
 
 export function GetNotifications() {

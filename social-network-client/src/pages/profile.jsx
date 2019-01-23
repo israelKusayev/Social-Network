@@ -6,13 +6,15 @@ import Following from '../components/profile/following';
 import BlockedUsers from '../components/profile/blockedUsers';
 import MyProfile from '../components/profile/myProfile';
 import { deleteJwt } from '../services/jwtService';
+import { closeConnection } from '../services/notificationsService';
 
 class Profile extends Component {
   state = {
     selected: 'MyProfile'
   };
-  handleSelect = ({ name }) => {
+  handleSelect = async ({ name }) => {
     if (name === 'Logout') {
+      await closeConnection();
       deleteJwt();
       this.props.history.replace('/login');
     } else {

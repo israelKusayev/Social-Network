@@ -17,7 +17,6 @@ export default class UserProfile extends Component {
       this.props.history.replace('/profile');
     }
     const userId = this.props.match.params.id;
-    this.setState({ isFollow: true });
     await this.getUser(userId);
     await this.isFollow(userId);
   };
@@ -35,6 +34,7 @@ export default class UserProfile extends Component {
     const res = await Isfollow(userId);
     if (res.status === 200) {
       const isFollow = await res.json();
+
       this.setState({ isFollow });
     } else {
       this.props.history.goBack();
@@ -90,6 +90,7 @@ export default class UserProfile extends Component {
 
   render() {
     const { user } = this.state;
+    console.log(this.state.isFollow);
 
     return (
       <>

@@ -29,8 +29,7 @@ namespace Authorization_Bl
                     { "iat",iat  },
                     { "aud","social network"},
                     { "username",username},
-                    { "IsAdmin", isAdmin }
-                    //{ "Claims", JsonConvert.SerializeObject(new Claim(ClaimTypes.Name,"israel")) }
+                    { "isAdmin", isAdmin }
                 };
 
 

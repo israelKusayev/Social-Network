@@ -78,7 +78,7 @@ class Notifications extends Component {
   goToUserProfile = (e) => e.stopPropagation();
 
   render() {
-    if (this.state.notifications.length === 0) return <h2 className="text-danger">No notifications yet</h2>;
+    if (this.state.notifications.length === 0) return <h2 className="mt-3">No notifications yet</h2>;
     return (
       <div>
         <div className="row mt-4">
