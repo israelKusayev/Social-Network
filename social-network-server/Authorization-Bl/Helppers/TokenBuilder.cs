@@ -19,8 +19,10 @@ namespace Authorization_Bl
         public string GenerateKey(string userId, string username, bool isAdmin = false, string facebookToken = null)
         {
             int ttl = int.Parse(ConfigurationManager.AppSettings["TokenTTL"]);
-            long exp = (long)(DateTime.UtcNow.AddMinutes(ttl) - new DateTime(1970, 1, 1)).TotalSeconds;
-            long iat = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            long exp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 60 * ttl;
+            //long exp = (long)(DateTime.UtcNow.AddMinutes(ttl) - new DateTime(1970, 1, 1)).TotalSeconds;
+            long iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            //long iat = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
             var payload = new Dictionary<string, object>()
                 {

@@ -15,7 +15,8 @@ namespace Authorization_Bl.Helppers
                 return null;
             dynamic data = ValidateSignature(token);
             int refrshTime = int.Parse(ConfigurationManager.AppSettings["RefreshTime"]) * 60;
-            long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            //long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             if (data.iat > now || data.exp < now - refrshTime ||
                data.aud != "social network")
             {
@@ -30,7 +31,8 @@ namespace Authorization_Bl.Helppers
                 return null;
             dynamic data = ValidateSignature(token);
 
-            long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            //long now = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             if (data.iat > now || data.exp < now ||
                 data.aud != "social network")
             {
