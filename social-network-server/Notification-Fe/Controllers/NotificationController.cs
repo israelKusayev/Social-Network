@@ -10,6 +10,8 @@ using Notification_Common.Models.Dtos;
 using NotificationFe.Hubs;
 using System;
 using System.Collections.Generic;
+using Notification_Common.Models;
+
 
 namespace Notification_Fe.Controllers
 {
@@ -168,8 +170,14 @@ namespace Notification_Fe.Controllers
                 {
                     object action = new
                     {
+
                         actionId = NotificationAction.FollowRecomendation,
                         recomendedId = rec.RecommededUserId
+                        user = new User
+                        {
+                            UserId = rec.RecommededUserId,
+                            UserName = rec.RecommededName
+                        }
                     };
                     _notificationsManager.SendNotification(_hub, rec.UserId, "getNotification", action);
                 }

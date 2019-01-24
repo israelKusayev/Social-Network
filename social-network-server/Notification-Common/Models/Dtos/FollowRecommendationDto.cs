@@ -8,5 +8,6 @@ namespace Notification_Common.Models.Dtos
     {
         public string UserId { get; set; }
         public string RecommededUserId { get; set; }
+        public string RecommededName { get; set; }
     }
 }

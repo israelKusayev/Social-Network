@@ -163,7 +163,7 @@ export default class Comments extends React.Component {
                   </div>
                   {error && <div classNmae="alert alert-danger">{error}</div>}
                   <div className="form-group ">
-                    <ImagePicker onUpload={this.handleImageSelect} />
+                    <ImagePicker onUpload={this.handleImageSelect} image={this.state.data.image} />
                   </div>
                   <button type="submit" className="btn btn-pink">
                     Add
