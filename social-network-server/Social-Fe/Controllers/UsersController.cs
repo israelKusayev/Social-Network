@@ -179,6 +179,7 @@ namespace Social_Fe.Controllers
                 return InternalServerError();
             }
         }
+
         [JWTAuth]
         [HttpGet]
         [Route("blockedUsers")]

@@ -11,7 +11,6 @@ namespace SocialDal.Repositories.Neo4j
 {
     public class Neo4jCommentsRepository : Neo4jBaseRepository, ICommentsRepository
     {
-
         public void Create(Comment comment, string userId, string postId)
         {
             Create(comment);

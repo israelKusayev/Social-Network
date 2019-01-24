@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Notification_Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,6 @@ namespace Notification_Common.Models.Dtos
         public string ReciverId { get; set; }
 
         [JsonProperty("actionId")]
-        public int ActionId { get; set; }
+        public NotificationAction Action { get; set; }
     }
 }
