@@ -140,7 +140,7 @@ class CreatePost extends Component {
                       <div className="form-group row">
                         <label className="col-4 col-form-label">Image</label>
                         <div className="col-8">
-                          <ImagePicker onUpload={this.handleImageSelect} />
+                          <ImagePicker onUpload={this.handleImageSelect} image = {this.state.data.image} />
                         </div>
                       </div>
 

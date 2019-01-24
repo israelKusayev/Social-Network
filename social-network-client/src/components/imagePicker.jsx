@@ -8,6 +8,10 @@ export default class ImagePicker extends Component {
 
   onChange = () => {
     var file = this.refs.file.files[0];
+    if (!file) {
+      this.props.onUpload(null);
+       return;
+    }
     var fileType = file['type'];
     var ValidImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
     if (!ValidImageTypes.includes(fileType)) {
