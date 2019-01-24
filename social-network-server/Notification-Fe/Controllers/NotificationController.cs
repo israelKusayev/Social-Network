@@ -172,7 +172,7 @@ namespace Notification_Fe.Controllers
                     {
 
                         actionId = NotificationAction.FollowRecomendation,
-                        recomendedId = rec.RecommededUserId
+                        recomendedId = rec.RecommededUserId,
                         user = new User
                         {
                             UserId = rec.RecommededUserId,
