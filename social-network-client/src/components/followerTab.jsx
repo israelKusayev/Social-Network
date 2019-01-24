@@ -7,10 +7,7 @@ export default function FollowerTab(props) {
       <div className='follow row'>
         <div className='col-md-6'>
           {props.id ? (
-            <Link
-              className='font-size-bigger align-middle text-dark bold'
-              to={'/profile/' + props.id}
-            >
+            <Link className='font-size-bigger align-middle text-dark bold' to={'/profile/' + props.id}>
               <span className='font-size-bigger align-middle'>{props.name}</span>
             </Link>
           ) : (

@@ -17,7 +17,7 @@ namespace Identity_Bl.Managers.Tests
         public void IsValid_validTokenReturnsTrue()
         {
             //normal token
-            string validToken = GenerateKey(DateTime.UtcNow,15, "social network");
+            string validToken = GenerateKey(DateTime.UtcNow, 15, "social network");
             TokenManager tokenManager = new TokenManager();
             Assert.IsTrue(tokenManager.IsValid(validToken));
         }
@@ -61,7 +61,7 @@ namespace Identity_Bl.Managers.Tests
             Assert.IsFalse(tokenManager.IsValid(invalidToken));
         }
 
-        private string GenerateKey(DateTime startTime, int ttl,string aud)
+        private string GenerateKey(DateTime startTime, int ttl, string aud)
         {
             long exp = (long)(startTime.AddMinutes(ttl) - new DateTime(1970, 1, 1)).TotalSeconds;
             long iat = (long)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;

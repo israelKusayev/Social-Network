@@ -21,6 +21,7 @@ namespace Social_Fe.Controllers
             _postManager = postManager;
             _tokenManager = tokenManager;
         }
+
         [JWTAuth]
         [HttpPost]
         public IHttpActionResult CreatePost(CreatePostDto post)
@@ -57,7 +58,6 @@ namespace Social_Fe.Controllers
                 return InternalServerError();
             }
         }
-
 
         [JWTAuth]
         [HttpGet]

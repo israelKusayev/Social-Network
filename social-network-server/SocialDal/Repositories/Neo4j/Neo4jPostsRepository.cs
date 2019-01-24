@@ -20,8 +20,8 @@ namespace SocialDal.Repositories.Neo4j
 
             string postedByQuery = $@"MATCH (p:Post),(u:User)
                 WHERE p.PostId = '{post.PostId}' AND u.UserId = '{postedByUserId}'
-                CREATE(p) -[r:PostedBy]->(u)
-                RETURN type(r)";
+                CREATE(p) -[r:PostedBy]->(u)";
+
             Query(postedByQuery);
         }
 
@@ -30,6 +30,25 @@ namespace SocialDal.Repositories.Neo4j
             string query = "MATCH (p:Post{PostId:'" + postId + "'}), (u:User{UserId:'" + userId + "'}) " +
                 "CREATE (p)-[:Referencing{StartIndex:" + startIdx + ",EndIndex:" + endIdx + "}]->(u)";
             Query(query);
+        }
+
+        public ReturnedPostDto GetPost(string userId, string postId)
+        {
+            string query = "MATCH(p: Post{PostId:'" + postId + "'}) -[:PostedBy]->(posting: User), " +
+                    "(me: User{ UserId: '" + userId + "'}) " +
+                "WHERE NOT EXISTS((posting) -[:Blocked] - (me))   " +
+                  "AND(me.UserId = posting.UserId OR " +
+                   $"p.Visability = {(int)PostVisabilityOptions.All} OR (p.Visability = {(int)PostVisabilityOptions.Followers} " +
+                    "AND EXISTS((me) -[:Following]->(posting)))) " +
+                "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
+                "OPTIONAL MATCH(p)-[rel:Referencing]->(ref:User) " +
+                "RETURN " +
+                    "p AS Post, posting AS CreatedBy, " +
+                    "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
+                    "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing ";
+            var res = Query(query);
+            var post = DeserializePost(res.Single());
+            return post;
         }
 
         public PostListDto GetFeed(int startIdx, int count, string userId)
@@ -60,6 +79,13 @@ namespace SocialDal.Repositories.Neo4j
                 Posts = DeserializeFeed(res)
             };
             return postListDto;
+        }
+
+        public string GetPostIdByCommentId(string commentId)
+        {
+            string query = "MATCH(: Comment{CommentId:'" + commentId + "'}) -[:CommentedOn]->(p: Post) return p.PostId";
+            var res = Query(query);
+            return (string)res.Single()[0];
         }
 
         private static List<ReturnedPostDto> DeserializeFeed(IEnumerable<IRecord> records)
@@ -124,29 +150,6 @@ namespace SocialDal.Repositories.Neo4j
             dto.ImgUrl = postProps.ContainsKey(nameof(dto.ImgUrl)) ? (string)postProps[nameof(dto.ImgUrl)] : null;
             dto.PostId = (string)postProps[nameof(dto.PostId)];
             dto.Visability = (PostVisabilityOptions)((long)postProps[nameof(dto.Visability)]);
-        }
-
-        public ReturnedPostDto GetPost(string userId, string postId)
-        {
-            string query = "MATCH(p: Post{PostId:'" + postId + "'}) -[:PostedBy]->(posting: User), " +
-                    "(me: User{ UserId: '" + userId + "'}) " +
-                "WHERE NOT EXISTS((posting) -[:Blocked] - (me))   " +
-                "OPTIONAL MATCH(p)< -[l: Like] - (: User) " +
-                "OPTIONAL MATCH(p)-[rel:Referencing]->(ref:User) " +
-                "RETURN " +
-                    "p AS Post, posting AS CreatedBy, " +
-                    "EXISTS( (p) < -[:Like]-(me) ) AS IsLiked, " +
-                    "COUNT(l) AS Likes, COLLECT({rel:rel,user:ref}) AS Referencing ";
-            var res = Query(query);
-            var post = DeserializePost(res.Single());
-            return post;
-        }
-
-        public string GetPostIdByCommentId(string commentId)
-        {
-            string query = "MATCH(: Comment{CommentId:'" + commentId + "'}) -[:CommentedOn]->(p: Post) return p.PostId";
-            var res = Query(query);
-            return (string)res.Single()[0];
         }
     }
 }

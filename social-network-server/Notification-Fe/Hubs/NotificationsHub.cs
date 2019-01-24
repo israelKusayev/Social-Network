@@ -14,10 +14,5 @@ namespace NotificationFe.Hubs
         {
 
         }
-
-        //public void SendNotification(string data, string destination)
-        //{
-        //    Clients.User(destination).SendAsync("sendNotification", data);
-        //}
     }
 }

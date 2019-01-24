@@ -12,14 +12,14 @@ namespace Identity_Bl.Helppers
 {
     public class RequestsValidator : IRquestsValidator
     {
-        public string ValidateUser(User user,string tokenId)
+        public string ValidateUser(User user, string tokenId)
         {
             List<string> errors = new List<string>();
             if (user.Age < 0)
                 errors.Add("age most be positive integer");
             if (user.Email != null && !new EmailAddressAttribute().IsValid(user.Email))
                 errors.Add("invalid email address");
-            if(user.UserId!= tokenId)
+            if (user.UserId != tokenId)
             {
                 errors.Add("user missing requiered previliges");
             }

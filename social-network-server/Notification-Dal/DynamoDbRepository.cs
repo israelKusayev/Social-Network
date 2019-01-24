@@ -11,6 +11,7 @@ namespace Notification_Dal
     {
         private DynamoDBContext _DbContext;
         IConfiguration _configuration;
+
         public DynamoDbRepository(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -71,31 +72,5 @@ namespace Notification_Dal
            , config);
             return batch.GetNextSetAsync().Result;
         }
-
-
-        //public T Get<K,S>(K recordId,string SortCulmnName,S sortKeyStart, S sortKeyEnd, bool descending = false)
-        //{
-        //    DynamoDBOperationConfig conf = new DynamoDBOperationConfig
-        //    {
-        //        ConditionalOperator = ConditionalOperatorValues.And,
-        //        BackwardQuery = descending,
-        //    };
-        //    conf.QueryFilter.Add(new ScanCondition(SortCulmnName, ScanOperator.Between, sortKeyStart, sortKeyEnd));         
-        //    return _DbContext.LoadAsync<T>(recordId, SortCulmnName).Result;
-        //}
-
-        //public List<T> Get<K, S>(K recordId, Dictionary<string, AttributeValue> startKey = null, int take =0, string SortCulmnName =null,
-        //    S sortKeyStart= default(S) , S sortKeyEnd =default(S) , bool descending = false)
-        //{
-        //    ScanRequest req = new ScanRequest();
-        //    if (startKey != null)
-        //        req.ExclusiveStartKey = startKey;
-        //    if (take != 0)
-        //        req.Limit = take;
-        //    if()
-        //    {
-        //        req.ScanFilter.Add(SortCulmnName, Condition.)
-        //    }
-        //}
     }
 }

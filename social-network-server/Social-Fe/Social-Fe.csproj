@@ -135,10 +135,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Social-Common\Social-Common.csproj">
       <Project>{D1CE3436-9D17-433F-B11B-02780E747FF8}</Project>

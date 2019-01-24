@@ -1,17 +1,15 @@
-﻿using System;
-using System.Reflection;
-using log4net;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Notification_Bl.Managers;
+using Notification_Common.Enums;
 using Notification_Common.Interfaces.Managers;
 using Notification_Common.Models.Dtos;
 using NotificationFe.Hubs;
+using System;
+using System.Collections.Generic;
 
 namespace Notification_Fe.Controllers
 {
@@ -58,7 +56,7 @@ namespace Notification_Fe.Controllers
         {
             try
             {
-                action.ActionId = 0;
+                action.Action = NotificationAction.LikePost;
                 _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
                 return Ok();
             }
@@ -76,7 +74,7 @@ namespace Notification_Fe.Controllers
         {
             try
             {
-                action.ActionId = 1;
+                action.Action = NotificationAction.LikeComment;
                 _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
                 return Ok();
             }
@@ -94,7 +92,7 @@ namespace Notification_Fe.Controllers
         {
             try
             {
-                action.ActionId = 2;
+                action.Action = NotificationAction.CommentedOnPost;
                 _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
                 return Ok();
             }
@@ -112,7 +110,7 @@ namespace Notification_Fe.Controllers
         {
             try
             {
-                action.ActionId = 3;
+                action.Action = NotificationAction.MentionedInPost;
                 _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
                 return Ok();
             }
@@ -130,7 +128,7 @@ namespace Notification_Fe.Controllers
         {
             try
             {
-                action.ActionId = 4;
+                action.Action = NotificationAction.MentionedInComment;
                 _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
                 return Ok();
             }
@@ -148,7 +146,7 @@ namespace Notification_Fe.Controllers
         {
             try
             {
-                action.ActionId = 5;
+                action.Action = NotificationAction.Followed;
                 _notificationsManager.SendNotification(_hub, action.ReciverId, "getNotification", action);
                 return Ok();
             }
@@ -170,12 +168,12 @@ namespace Notification_Fe.Controllers
                 {
                     object action = new
                     {
-                        actionId = 6,
+                        actionId = NotificationAction.FollowRecomendation,
                         recomendedId = rec.RecommededUserId
                     };
                     _notificationsManager.SendNotification(_hub, rec.UserId, "getNotification", action);
                 }
-                    return Ok();
+                return Ok();
             }
             catch (Exception e)
             {

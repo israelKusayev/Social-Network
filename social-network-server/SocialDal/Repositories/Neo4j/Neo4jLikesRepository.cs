@@ -9,8 +9,8 @@ namespace SocialDal.Repositories.Neo4j
         {
             string query = "MATCH (u:User{UserId:'" + userId + "'})," +
                 "(o:" + objectType + "{" + objectType + "Id:'" + objectId + "'})" +
-                "CREATE (u)-[r:Like]->(o)" +
-                "RETURN type(r)";
+                "CREATE (u)-[r:Like]->(o)";
+
             Query(query);
         }
 
