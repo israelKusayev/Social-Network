@@ -3,16 +3,19 @@ import React, { Component } from 'react';
 export default class ImagePicker extends Component {
   state = {
     file: [],
-    imgSrc: '',
     error: ''
   };
 
   onChange = () => {
     var file = this.refs.file.files[0];
+    if (!file) {
+      this.props.onUpload(null);
+       return;
+    }
     var fileType = file['type'];
     var ValidImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
     if (!ValidImageTypes.includes(fileType)) {
-      this.setState({ error: 'You can opload only photos', imgSrc: '' });
+      this.setState({ error: 'You can opload only photos' });
       this.props.onUpload('');
       return;
     }
@@ -24,7 +27,6 @@ export default class ImagePicker extends Component {
       this.props.onUpload(reader.result);
 
       this.setState({
-        imgSrc: [reader.result],
         error: ''
       });
     };
@@ -40,7 +42,7 @@ export default class ImagePicker extends Component {
           </label>
         </div>
 
-        <img className="card-img-bottom mt-4" src={this.state.imgSrc} alt="" />
+        <img className="card-img-bottom mt-4" src={this.props.image} alt="" />
         {this.state.error && <div className="alert alert-danger">{this.state.error} </div>}
       </div>
     );
